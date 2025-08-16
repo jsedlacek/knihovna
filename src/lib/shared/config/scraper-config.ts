@@ -8,7 +8,7 @@ export const GOODREADS_BASE_URL = "https://www.goodreads.com";
 // --- File Configuration ---
 
 // --- Scraping Configuration ---
-export const MAX_PAGES = 1;
+export const MAX_PAGES = Infinity;
 export const CONCURRENCY = 20; // Number of concurrent requests
 export const RETRY_ATTEMPTS = 3;
 export const RETRY_DELAY = 1000; // milliseconds

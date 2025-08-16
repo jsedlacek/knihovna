@@ -1,11 +1,8 @@
 import * as cheerio from "cheerio";
 import type { AnyNode } from "domhandler";
-import type {
-  MlpBook,
-  DownloadLinks,
-  CombinedBook,
-} from "#@/lib/shared/types/book-types.ts";
+import type { MlpBook, DownloadLinks } from "#@/lib/shared/types/book-types.ts";
 import { fetchHtml, createUrl } from "#@/lib/server/utils/fetch-utils.ts";
+
 import {
   cleanTitle,
   cleanAuthorName,
@@ -15,7 +12,6 @@ import {
 import {
   MLP_START_URL,
   MLP_BASE_URL,
-  CONCURRENCY,
   MAX_PAGES,
 } from "#@/lib/shared/config/scraper-config.ts";
 
@@ -136,9 +132,9 @@ export function parseMlpDownloadLinks(reservationHtml: string): {
 }
 
 /**
- * Scrape download links and additional details from MLP book detail page.
+ * Scrape details and download links from an MLP book detail page.
  */
-export async function scrapeMlpDownloadLinks(
+export async function scrapeMlpBookDetails(
   detailUrl: string,
 ): Promise<DownloadLinks> {
   try {
@@ -178,7 +174,7 @@ export async function scrapeMlpDownloadLinks(
 /**
  * Scrape books from MLP listing pages.
  */
-async function scrapeMlpListingPages(): Promise<
+export async function scrapeMlpListingPages(): Promise<
   Omit<
     MlpBook,
     "pdfUrl" | "epubUrl" | "partTitle" | "imageUrl" | "description"
@@ -229,107 +225,4 @@ async function scrapeMlpListingPages(): Promise<
   console.log(`Found ${validBooks.length} books from listing pages.`);
 
   return validBooks;
-}
-
-/**
- * Enrich basic book data with download links and additional details.
- */
-async function enrichBooksWithDetails(
-  basicBooks: Omit<
-    MlpBook,
-    "pdfUrl" | "epubUrl" | "partTitle" | "imageUrl" | "description"
-  >[],
-  existingBooks: CombinedBook[],
-): Promise<MlpBook[]> {
-  const existingDetailUrls = new Set(
-    existingBooks.map((book) => book.detailUrl),
-  );
-
-  // Separate books into those that need detail scraping and those that don't
-  const booksNeedingDetails = basicBooks.filter(
-    (book) => !existingDetailUrls.has(book.detailUrl),
-  );
-  const booksWithExistingDetails = basicBooks.filter((book) =>
-    existingDetailUrls.has(book.detailUrl),
-  );
-
-  console.log(
-    `${booksNeedingDetails.length} books need detail scraping, ${booksWithExistingDetails.length} already have details.`,
-  );
-
-  const enrichedBooks: MlpBook[] = [];
-  const queue = [...booksNeedingDetails];
-
-  // Only scrape details for books that don't already exist
-  const processDetail = async () => {
-    while (queue.length > 0) {
-      const basicBook = queue.shift();
-      if (!basicBook) continue;
-
-      const progress = enrichedBooks.length + 1;
-      console.log(
-        `[${progress}/${booksNeedingDetails.length}] Fetching details: ${basicBook.title}`,
-      );
-      const details = await scrapeMlpDownloadLinks(basicBook.detailUrl);
-      enrichedBooks.push({ ...basicBook, ...details });
-    }
-  };
-
-  if (booksNeedingDetails.length > 0) {
-    const workers = Array(CONCURRENCY).fill(null).map(processDetail);
-    await Promise.all(workers);
-  }
-
-  // For books with existing details, create MlpBook objects from existing data
-  const existingMlpBooks: MlpBook[] = booksWithExistingDetails.map(
-    (basicBook) => {
-      const existingBook = existingBooks.find(
-        (book) => book.detailUrl === basicBook.detailUrl,
-      );
-      if (existingBook) {
-        // Return the existing book data (which includes detail info)
-        return {
-          title: existingBook.title,
-          partTitle: existingBook.partTitle,
-          author: existingBook.author,
-          publisher: existingBook.publisher,
-          year: existingBook.year,
-          detailUrl: existingBook.detailUrl,
-          pdfUrl: existingBook.pdfUrl,
-          epubUrl: existingBook.epubUrl,
-          imageUrl: existingBook.imageUrl,
-          description: existingBook.description,
-        };
-      }
-      // Fallback to basic info (shouldn't happen but just in case)
-      return {
-        ...basicBook,
-        partTitle: null,
-        pdfUrl: null,
-        epubUrl: null,
-        imageUrl: null,
-        description: null,
-      };
-    },
-  );
-
-  return [...enrichedBooks, ...existingMlpBooks];
-}
-
-/**
- * Main function to scrape all MLP book data.
- */
-export async function scrapeMlp(
-  existingBooks: CombinedBook[],
-): Promise<MlpBook[]> {
-  console.log("Starting MLP scraping...");
-
-  // First, scrape all books from listing pages
-  const basicBooks = await scrapeMlpListingPages();
-
-  // Then enrich with detailed information
-  const enrichedBooks = await enrichBooksWithDetails(basicBooks, existingBooks);
-
-  console.log(`✅ Found ${enrichedBooks.length} books from MLP.`);
-  return enrichedBooks;
 }

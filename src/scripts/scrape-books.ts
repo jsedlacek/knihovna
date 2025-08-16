@@ -6,9 +6,14 @@ import type {
   CombinedBook,
   MlpBook,
   ScrapingOptions,
+  GoodreadsData,
 } from "#@/lib/shared/types/book-types.ts";
-import { scrapeMlp } from "#@/lib/server/scrapers/mlp-scraper.ts";
-import { scrapeGoodreadsBatch } from "#@/lib/server/scrapers/goodreads-scraper.ts";
+import {
+  scrapeMlpListingPages,
+  scrapeMlpBookDetails,
+} from "#@/lib/server/scrapers/mlp-scraper.ts";
+import { scrapeGoodreads } from "#@/lib/server/scrapers/goodreads-scraper.ts";
+import { processBatch } from "#@/lib/server/utils/concurrency-utils.ts";
 import {
   loadExistingBooks,
   saveBooks,
@@ -198,9 +203,63 @@ async function main() {
 
   // 2. Scrape all books from MLP (unless in goodreads-only mode)
   if (!argv.goodreadsOnly) {
-    const mlpContext = argv.forceMlp ? [] : existingBooks; // Empty context forces re-scraping
-    allMlpBooks = await scrapeMlp(mlpContext);
-    console.log(`✅ Found ${allMlpBooks.length} books from MLP.`);
+    // Scrape basic info for all books from the listing pages
+    const basicMlpBooks = await scrapeMlpListingPages();
+
+    // Determine which books need their details scraped
+    const existingDetailUrls = new Set(
+      existingBooks.map((book) => book.detailUrl),
+    );
+    const booksNeedingDetails = argv.forceMlp
+      ? basicMlpBooks // Force mode: scrape details for all books
+      : basicMlpBooks.filter((book) => !existingDetailUrls.has(book.detailUrl));
+
+    console.log(
+      `${booksNeedingDetails.length} new MLP books need detail scraping.`,
+    );
+
+    // Scrape details for new books
+    let newlyScrapedBooks: MlpBook[] = [];
+    if (booksNeedingDetails.length > 0) {
+      newlyScrapedBooks = await processBatch({
+        items: booksNeedingDetails,
+        concurrency: CONCURRENCY,
+        onProgress: (progress, total, item) => {
+          console.log(
+            `[${progress}/${total}] Fetching MLP details: ${item.title}`,
+          );
+        },
+        processItem: async (basicBook) => {
+          const details = await scrapeMlpBookDetails(basicBook.detailUrl);
+          return { ...basicBook, ...details };
+        },
+      });
+    }
+
+    // Combine newly scraped books with existing books that were not re-scraped
+    const unchangedBooks = argv.forceMlp
+      ? []
+      : existingBooks
+          .filter((existingBook) =>
+            basicMlpBooks.some(
+              (basicBook) => basicBook.detailUrl === existingBook.detailUrl,
+            ),
+          )
+          .map((book) => ({
+            title: book.title,
+            partTitle: book.partTitle,
+            author: book.author,
+            publisher: book.publisher,
+            year: book.year,
+            imageUrl: book.imageUrl,
+            detailUrl: book.detailUrl,
+            pdfUrl: book.pdfUrl,
+            epubUrl: book.epubUrl,
+            description: book.description,
+          }));
+
+    allMlpBooks = [...newlyScrapedBooks, ...unchangedBooks];
+    console.log(`✅ Found ${allMlpBooks.length} total books from MLP.`);
   } else {
     // In goodreads-only mode, use existing books as MLP books
     allMlpBooks = existingBooks.map((book) => ({
@@ -232,21 +291,20 @@ async function main() {
   );
 
   // 4. Scrape Goodreads for books that need it
-  let goodreadsDataList: Array<{
-    rating: number | null;
-    ratingsCount: number | null;
-    url: string | null;
-    genres: string[];
-  }> = [];
+  let goodreadsDataList: GoodreadsData[] = [];
 
   if (booksForGoodreads.length > 0 && !argv.mlpOnly) {
     console.log(
       `🔍 Starting Goodreads scraping for ${booksForGoodreads.length} books...`,
     );
-    goodreadsDataList = await scrapeGoodreadsBatch(
-      booksForGoodreads,
-      CONCURRENCY,
-    );
+    goodreadsDataList = await processBatch({
+      items: booksForGoodreads,
+      concurrency: CONCURRENCY,
+      onProgress: (progress, total, item) => {
+        console.log(`[${progress}/${total}] Processing: ${item.title}`);
+      },
+      processItem: scrapeGoodreads,
+    });
   } else {
     // Fill with empty data for books that weren't processed
     goodreadsDataList = booksForGoodreads.map(() => ({
