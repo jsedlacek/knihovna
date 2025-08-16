@@ -31,8 +31,8 @@ export interface Book extends MlpBookListing, MlpBookDetails, GoodreadsData {
   goodreadsScrapedAt: string | null;
 }
 
-// Helper type for combined MLP data (listing + details)
-export type MlpBookData = MlpBookListing & MlpBookDetails;
+// A complete book object from the MLP source
+export type MlpBook = MlpBookListing & MlpBookDetails;
 
 // Legacy interfaces for backwards compatibility during transition
 export interface PublisherInfo {

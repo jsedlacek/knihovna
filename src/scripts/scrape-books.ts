@@ -2,13 +2,7 @@
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import type {
-  Book,
-  MlpBookListing,
-  MlpBookData,
-  ScrapingOptions,
-  GoodreadsData,
-} from "#@/lib/shared/types/book-types.ts";
+import type { Book, MlpBookListing } from "#@/lib/shared/types/book-types.ts";
 import {
   scrapeMlpListingPages,
   scrapeMlpBookDetails,
@@ -18,7 +12,6 @@ import { processBatch } from "#@/lib/server/utils/concurrency-utils.ts";
 import {
   loadExistingBooks,
   saveBooks,
-  mergeBooks,
 } from "#@/lib/server/utils/file-utils.ts";
 import { saveScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
 import { withRetry } from "#@/lib/server/utils/retry-utils.ts";
@@ -31,108 +24,10 @@ import {
 } from "#@/lib/shared/config/scraper-config.ts";
 
 /**
- * Determine which books need Goodreads processing.
- */
-function getBooksForGoodreads(
-  allMlpBooks: MlpBookData[],
-  existingBooks: Book[],
-  options: ScrapingOptions,
-): MlpBookData[] {
-  if (options.mlpOnly) {
-    return [];
-  }
-
-  return allMlpBooks.filter((book) => {
-    const existingBook = existingBooks.find(
-      (existing) => existing.detailUrl === book.detailUrl,
-    );
-
-    if (options.forceGoodreads) {
-      // Force mode: process all books
-      return true;
-    }
-
-    // Normal mode: process if book doesn't exist, or exists but missing Goodreads data
-    return !existingBook || (!existingBook.rating && !existingBook.url);
-  });
-}
-
-/**
- * Combine MLP books with Goodreads data to create Book objects.
- */
-function combineBooksWithGoodreadsData(
-  allMlpBooks: MlpBookData[],
-  goodreadsDataList: GoodreadsData[],
-  existingBooks: Book[],
-  options: ScrapingOptions,
-): Book[] {
-  const newCombinedBooks: Book[] = [];
-  const currentTimestamp = new Date().toISOString();
-  const existingBooksMap = new Map(
-    existingBooks.map((book) => [book.detailUrl, book]),
-  );
-
-  // Determine which books were processed for Goodreads
-  const booksForGoodreads = getBooksForGoodreads(
-    allMlpBooks,
-    existingBooks,
-    options,
-  );
-  const processedForGoodreadsMap = new Map(
-    booksForGoodreads.map((book, index) => [book.detailUrl, index]),
-  );
-
-  // Process all MLP books
-  for (const mlpBook of allMlpBooks) {
-    const goodreadsIndex = processedForGoodreadsMap.get(mlpBook.detailUrl);
-
-    if (goodreadsIndex !== undefined && goodreadsDataList[goodreadsIndex]) {
-      // Book was processed for Goodreads - use new data
-      const goodreadsData = goodreadsDataList[goodreadsIndex];
-      newCombinedBooks.push({
-        ...mlpBook,
-        ...goodreadsData,
-        mlpScrapedAt: currentTimestamp,
-        goodreadsScrapedAt: currentTimestamp,
-      });
-    } else {
-      // Book was not processed for Goodreads - preserve existing or use defaults
-      const existingBook = existingBooksMap.get(mlpBook.detailUrl);
-
-      if (existingBook && !options.mlpOnly) {
-        // Update MLP data while preserving existing Goodreads data
-        newCombinedBooks.push({
-          ...mlpBook,
-          rating: existingBook.rating,
-          ratingsCount: existingBook.ratingsCount,
-          url: existingBook.url,
-          genres: existingBook.genres,
-          mlpScrapedAt: currentTimestamp,
-          goodreadsScrapedAt: existingBook.goodreadsScrapedAt,
-        });
-      } else {
-        // For books not yet processed for Goodreads, add them with empty Goodreads data
-        newCombinedBooks.push({
-          ...mlpBook,
-          rating: null,
-          ratingsCount: null,
-          url: null,
-          genres: [],
-          mlpScrapedAt: currentTimestamp,
-          goodreadsScrapedAt: null,
-        });
-      }
-    }
-  }
-
-  return newCombinedBooks;
-}
-
-/**
  * Main scraping function.
  */
 async function main() {
-  // Parse command line arguments
+  // 1. Parse command line arguments
   const argv = await yargs(hideBin(process.argv))
     .usage("Usage: $0 [options]")
     .example("$0", "Normal scraping: MLP + Goodreads for new books only")
@@ -191,66 +86,93 @@ async function main() {
     .help()
     .alias("help", "h").argv;
 
-  console.log("🚀 Starting the v2 scraping process...");
+  console.log("🚀 Starting the scraping process...");
 
   if (argv.forceMlp) {
     console.log(
-      "🔄 Force MLP mode: Will re-scrape all MLP books regardless of existing data",
+      "🔄 Force MLP mode: Will re-scrape all MLP books regardless of existing data.",
     );
   }
   if (argv.forceGoodreads) {
     console.log(
-      "🔄 Force Goodreads mode: Will re-scrape all Goodreads data regardless of existing ratings",
+      "🔄 Force Goodreads mode: Will re-scrape all Goodreads data regardless of existing ratings.",
     );
   }
   if (argv.mlpOnly) {
-    console.log("📚 MLP only mode: Skipping Goodreads scraping");
+    console.log("📚 MLP only mode: Skipping Goodreads scraping.");
   }
   if (argv.goodreadsOnly) {
-    console.log("⭐ Goodreads only mode: Skipping MLP scraping");
+    console.log("⭐ Goodreads only mode: Skipping MLP scraping.");
   }
 
-  // 1. Load existing books
+  // 2. Initialization: Load existing books into a Map for efficient updates.
   const existingBooks = await loadExistingBooks();
+  const booksMap = new Map<string, Book>(
+    existingBooks.map((book) => [book.detailUrl, book]),
+  );
+  console.log(`📚 Found ${booksMap.size} existing books.`);
 
-  let allMlpBooks: MlpBookData[] = [];
+  const oneMonthAgo = new Date();
+  oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
 
-  // 2. Scrape all books from MLP (unless in goodreads-only mode)
+  // 3. MLP Scraping Phase (skipped if in goodreads-only mode)
   if (!argv.goodreadsOnly) {
-    // Scrape basic info for all books from the listing pages
+    console.log(" scraping MLP...");
     const basicMlpBooks: MlpBookListing[] = await scrapeMlpListingPages();
 
-    // Determine which books need their details scraped
-    const existingBooksMap = new Map(
-      existingBooks.map((book) => [book.detailUrl, book]),
-    );
-    const booksNeedingDetails = argv.forceMlp
-      ? basicMlpBooks // Force mode: scrape details for all books
-      : basicMlpBooks.filter((book) => {
-          const existingBook = existingBooksMap.get(book.detailUrl);
-          // Scrape if the book is new, or if it's missing download links
-          return !existingBook || !existingBook.pdfUrl || !existingBook.epubUrl;
+    // Add new books to the map
+    let newBooksCount = 0;
+    for (const basicBook of basicMlpBooks) {
+      if (!booksMap.has(basicBook.detailUrl)) {
+        booksMap.set(basicBook.detailUrl, {
+          ...basicBook,
+          partTitle: null,
+          imageUrl: null,
+          description: null,
+          pdfUrl: null,
+          epubUrl: null,
+          rating: null,
+          ratingsCount: null,
+          url: null,
+          genres: [],
+          mlpScrapedAt: null,
+          goodreadsScrapedAt: null,
         });
+        newBooksCount++;
+      }
+    }
+
+    if (newBooksCount > 0) {
+      console.log(`+ Discovered ${newBooksCount} new books from MLP.`);
+    }
+
+    // Identify books needing MLP detail scraping
+    const booksNeedingMlpDetails = Array.from(booksMap.values()).filter(
+      (book) => {
+        if (argv.forceMlp) return true;
+        const isOutOfDate =
+          !book.mlpScrapedAt || new Date(book.mlpScrapedAt) < oneMonthAgo;
+        return isOutOfDate;
+      },
+    );
 
     console.log(
-      `${booksNeedingDetails.length} new MLP books need detail scraping.`,
+      `[MLP] ${booksNeedingMlpDetails.length} books need detail scraping (new, or outdated).`,
     );
 
-    // Scrape details for new books
-    let newlyScrapedBooks: MlpBookData[] = [];
-    if (booksNeedingDetails.length > 0) {
-      newlyScrapedBooks = await processBatch({
-        items: booksNeedingDetails,
+    if (booksNeedingMlpDetails.length > 0) {
+      await processBatch({
+        items: booksNeedingMlpDetails,
         concurrency: CONCURRENCY,
         onProgress: (progress, total, item) => {
           console.log(
-            `[${progress}/${total}] Fetching MLP details: ${item.title}`,
+            `[MLP ${progress}/${total}] Fetching details: ${item.title}`,
           );
         },
-        processItem: async (basicBook) => {
+        processItem: async (book) => {
           try {
             const details = await withRetry(
-              () => scrapeMlpBookDetails(basicBook.detailUrl),
+              () => scrapeMlpBookDetails(book.detailUrl),
               {
                 retries: RETRY_COUNT,
                 delay: RETRY_DELAY,
@@ -258,150 +180,97 @@ async function main() {
                 maxDelay: RETRY_MAX_DELAY,
                 onRetry: (error, attempt) => {
                   console.warn(
-                    `[RETRY ${attempt}/${RETRY_COUNT}] Failed fetching MLP details for "${basicBook.title}": ${error.message}`,
+                    `[RETRY ${attempt}/${RETRY_COUNT}] Failed MLP details for "${book.title}": ${error.message}`,
                   );
                 },
               },
             );
-            return { ...basicBook, ...details } as MlpBookData;
+
+            const existingBook = booksMap.get(book.detailUrl)!;
+            booksMap.set(book.detailUrl, {
+              ...existingBook,
+              ...details,
+              mlpScrapedAt: new Date().toISOString(),
+            });
           } catch (error) {
             console.error(
-              `[ERROR] Failed to fetch MLP details for "${basicBook.title}" after all retries. Skipping.`,
+              `[ERROR] Failed MLP details for "${book.title}" after all retries. Skipping.`,
             );
-            return {
-              ...basicBook,
-              partTitle: null,
-              imageUrl: null,
-              description: null,
-              pdfUrl: null,
-              epubUrl: null,
-            } as MlpBookData;
           }
         },
       });
     }
-
-    // Combine newly scraped books with existing books that were not re-scraped
-
-    const unchangedBooks = argv.forceMlp
-      ? []
-      : existingBooks
-          .filter((existingBook) =>
-            basicMlpBooks.some(
-              (basicBook) => basicBook.detailUrl === existingBook.detailUrl,
-            ),
-          )
-          .map(
-            (book): MlpBookData => ({
-              title: book.title,
-              partTitle: book.partTitle,
-              author: book.author,
-              publisher: book.publisher,
-              year: book.year,
-              imageUrl: book.imageUrl,
-              detailUrl: book.detailUrl,
-              pdfUrl: book.pdfUrl,
-              epubUrl: book.epubUrl,
-              description: book.description,
-            }),
-          );
-
-    allMlpBooks = [...newlyScrapedBooks, ...unchangedBooks];
-    console.log(`✅ Found ${allMlpBooks.length} total books from MLP.`);
-  } else {
-    // In goodreads-only mode, use existing books as MLP books
-    allMlpBooks = existingBooks.map(
-      (book): MlpBookData => ({
-        title: book.title,
-        partTitle: book.partTitle,
-        author: book.author,
-        publisher: book.publisher,
-        year: book.year,
-        imageUrl: book.imageUrl,
-        detailUrl: book.detailUrl,
-        pdfUrl: book.pdfUrl,
-        epubUrl: book.epubUrl,
-        description: book.description,
-      }),
-    );
-
-    console.log(
-      `📚 Using ${allMlpBooks.length} existing books for Goodreads processing.`,
-    );
+    console.log(`✅ MLP scraping complete. Total books: ${booksMap.size}.`);
   }
 
-  // 3. Determine which books need Goodreads processing
-  const booksForGoodreads = getBooksForGoodreads(
-    allMlpBooks,
-    existingBooks,
-    argv,
-  );
-
-  console.log(
-    `📋 ${booksForGoodreads.length} books need Goodreads processing, ${allMlpBooks.length - booksForGoodreads.length} already complete.`,
-  );
-
-  // 4. Scrape Goodreads for books that need it
-  let goodreadsDataList: GoodreadsData[] = [];
-
-  if (booksForGoodreads.length > 0 && !argv.mlpOnly) {
-    console.log(
-      `🔍 Starting Goodreads scraping for ${booksForGoodreads.length} books...`,
-    );
-    goodreadsDataList = await processBatch({
-      items: booksForGoodreads,
-      concurrency: CONCURRENCY,
-      onProgress: (progress, total, item) => {
-        console.log(`[${progress}/${total}] Processing: ${item.title}`);
-      },
-      processItem: (book) =>
-        withRetry(() => scrapeGoodreads(book), {
-          retries: RETRY_COUNT,
-          delay: RETRY_DELAY,
-          factor: RETRY_FACTOR,
-          maxDelay: RETRY_MAX_DELAY,
-          onRetry: (error, attempt) => {
-            console.warn(
-              `[RETRY ${attempt}/${RETRY_COUNT}] Failed fetching Goodreads data for "${book.title}": ${error.message}`,
-            );
-          },
-        }),
+  // 4. Goodreads Scraping Phase (skipped if in mlp-only mode)
+  if (!argv.mlpOnly) {
+    console.log(" scraping Goodreads...");
+    const booksForGoodreads = Array.from(booksMap.values()).filter((book) => {
+      if (argv.forceGoodreads) return true;
+      const isOutOfDate =
+        !book.goodreadsScrapedAt ||
+        new Date(book.goodreadsScrapedAt) < oneMonthAgo;
+      return isOutOfDate;
     });
-  } else {
-    // Fill with empty data for books that weren't processed
-    goodreadsDataList = booksForGoodreads.map(() => ({
-      rating: null,
-      ratingsCount: null,
-      url: null,
-      genres: [],
-    }));
+
+    console.log(
+      `[Goodreads] ${booksForGoodreads.length} books need processing (outdated).`,
+    );
+
+    if (booksForGoodreads.length > 0) {
+      await processBatch({
+        items: booksForGoodreads,
+        concurrency: CONCURRENCY,
+        onProgress: (progress, total, item) => {
+          console.log(
+            `[Goodreads ${progress}/${total}] Processing: ${item.title}`,
+          );
+        },
+        processItem: async (book) => {
+          try {
+            const goodreadsData = await withRetry(() => scrapeGoodreads(book), {
+              retries: RETRY_COUNT,
+              delay: RETRY_DELAY,
+              factor: RETRY_FACTOR,
+              maxDelay: RETRY_MAX_DELAY,
+              onRetry: (error, attempt) => {
+                console.warn(
+                  `[RETRY ${attempt}/${RETRY_COUNT}] Failed Goodreads for "${book.title}": ${error.message}`,
+                );
+              },
+            });
+
+            const existingBook = booksMap.get(book.detailUrl)!;
+            booksMap.set(book.detailUrl, {
+              ...existingBook,
+              ...goodreadsData,
+              goodreadsScrapedAt: new Date().toISOString(),
+            });
+          } catch (error) {
+            console.error(
+              `[ERROR] Failed to fetch Goodreads data for "${book.title}" after all retries. Skipping.`,
+            );
+          }
+        },
+      });
+    }
+    console.log("✅ Goodreads scraping complete.");
   }
 
-  // 5. Combine books with Goodreads data
-  const newBooks = combineBooksWithGoodreadsData(
-    allMlpBooks,
-    goodreadsDataList,
-    existingBooks,
-    argv,
-  );
+  // 5. Finalization
+  const allBooks = Array.from(booksMap.values());
+  console.log(`📚 Total books to save: ${allBooks.length}`);
 
-  // 6. Merge with existing books
-  const allCombinedBooks = mergeBooks(existingBooks, newBooks, {
-    forceMlp: argv.forceMlp,
-    goodreadsOnly: argv.goodreadsOnly,
-  });
+  // Save the results to a JSON file
+  await saveBooks(allBooks);
 
-  console.log(
-    `📚 Total books: ${allCombinedBooks.length} (${existingBooks.length} existing + ${newBooks.length} new/updated)`,
-  );
-
-  // 7. Save the results to a JSON file
-  await saveBooks(allCombinedBooks);
-
-  // 8. Save the timestamp of successful completion
+  // Save the timestamp of successful completion
   await saveScrapingTimestamp();
 
-  console.log("🎉 Scraping complete!");
+  console.log(
+    `🎉 Scraping complete! Saved ${allBooks.length} total books to file.`,
+  );
 }
 
 main().catch((error) => {
