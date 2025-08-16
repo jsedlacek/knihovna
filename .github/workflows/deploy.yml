@@ -1,7 +1,10 @@
 name: Deploy
 
 on:
-    push:
+    workflow_run:
+        workflows: ["CI"]
+        types:
+            - completed
         branches: [main]
     schedule:
         # Run nightly at 2 AM UTC
@@ -15,6 +18,7 @@ concurrency:
 jobs:
     deploy:
         runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
 
         steps:
             - name: Checkout code
