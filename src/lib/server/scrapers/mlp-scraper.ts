@@ -1,6 +1,9 @@
 import * as cheerio from "cheerio";
 import type { AnyNode } from "domhandler";
-import type { MlpBook, DownloadLinks } from "#@/lib/shared/types/book-types.ts";
+import type {
+  MlpBookListing,
+  MlpBookDetails,
+} from "#@/lib/shared/types/book-types.ts";
 import { fetchHtml, createUrl } from "#@/lib/server/utils/fetch-utils.ts";
 
 import {
@@ -21,10 +24,7 @@ import {
 function parseMlpBookData(
   item: cheerio.Cheerio<AnyNode>,
   layoutType: "grid" | "row",
-): Omit<
-  MlpBook,
-  "pdfUrl" | "epubUrl" | "partTitle" | "imageUrl" | "description"
-> | null {
+): MlpBookListing | null {
   try {
     let titleElement, authorElement, publisherElement, coverLinkElement;
 
@@ -65,7 +65,7 @@ function parseMlpBookData(
  */
 export function parseMlpBookDetails(
   detailHtml: string,
-): Omit<DownloadLinks, "pdfUrl" | "epubUrl"> {
+): Omit<MlpBookDetails, "pdfUrl" | "epubUrl"> {
   try {
     const $detail = cheerio.load(detailHtml);
 
@@ -136,7 +136,7 @@ export function parseMlpDownloadLinks(reservationHtml: string): {
  */
 export async function scrapeMlpBookDetails(
   detailUrl: string,
-): Promise<DownloadLinks> {
+): Promise<MlpBookDetails> {
   const detailHtml = await fetchHtml(detailUrl);
   const details = parseMlpBookDetails(detailHtml);
 
@@ -163,12 +163,7 @@ export async function scrapeMlpBookDetails(
 /**
  * Scrape books from MLP listing pages.
  */
-export async function scrapeMlpListingPages(): Promise<
-  Omit<
-    MlpBook,
-    "pdfUrl" | "epubUrl" | "partTitle" | "imageUrl" | "description"
-  >[]
-> {
+export async function scrapeMlpListingPages(): Promise<MlpBookListing[]> {
   console.log("Starting MLP listing pages scraping...");
   let currentPageUrl: string | null = MLP_START_URL;
   let pageCount = 0;

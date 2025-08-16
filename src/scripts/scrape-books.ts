@@ -3,8 +3,9 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import type {
-  CombinedBook,
-  MlpBook,
+  Book,
+  MlpBookListing,
+  MlpBookData,
   ScrapingOptions,
   GoodreadsData,
 } from "#@/lib/shared/types/book-types.ts";
@@ -33,10 +34,10 @@ import {
  * Determine which books need Goodreads processing.
  */
 function getBooksForGoodreads(
-  allMlpBooks: MlpBook[],
-  existingBooks: CombinedBook[],
+  allMlpBooks: MlpBookData[],
+  existingBooks: Book[],
   options: ScrapingOptions,
-): MlpBook[] {
+): MlpBookData[] {
   if (options.mlpOnly) {
     return [];
   }
@@ -57,20 +58,16 @@ function getBooksForGoodreads(
 }
 
 /**
- * Combine MLP books with Goodreads data to create CombinedBook objects.
+ * Combine MLP books with Goodreads data to create Book objects.
  */
 function combineBooksWithGoodreadsData(
-  allMlpBooks: MlpBook[],
-  goodreadsDataList: Array<{
-    rating: number | null;
-    ratingsCount: number | null;
-    url: string | null;
-    genres: string[];
-  }>,
-  existingBooks: CombinedBook[],
+  allMlpBooks: MlpBookData[],
+  goodreadsDataList: GoodreadsData[],
+  existingBooks: Book[],
   options: ScrapingOptions,
-): CombinedBook[] {
-  const newCombinedBooks: CombinedBook[] = [];
+): Book[] {
+  const newCombinedBooks: Book[] = [];
+  const currentTimestamp = new Date().toISOString();
   const existingBooksMap = new Map(
     existingBooks.map((book) => [book.detailUrl, book]),
   );
@@ -92,7 +89,12 @@ function combineBooksWithGoodreadsData(
     if (goodreadsIndex !== undefined && goodreadsDataList[goodreadsIndex]) {
       // Book was processed for Goodreads - use new data
       const goodreadsData = goodreadsDataList[goodreadsIndex];
-      newCombinedBooks.push({ ...mlpBook, ...goodreadsData });
+      newCombinedBooks.push({
+        ...mlpBook,
+        ...goodreadsData,
+        mlpScrapedAt: currentTimestamp,
+        goodreadsScrapedAt: currentTimestamp,
+      });
     } else {
       // Book was not processed for Goodreads - preserve existing or use defaults
       const existingBook = existingBooksMap.get(mlpBook.detailUrl);
@@ -105,6 +107,8 @@ function combineBooksWithGoodreadsData(
           ratingsCount: existingBook.ratingsCount,
           url: existingBook.url,
           genres: existingBook.genres,
+          mlpScrapedAt: currentTimestamp,
+          goodreadsScrapedAt: existingBook.goodreadsScrapedAt,
         });
       } else {
         // For books not yet processed for Goodreads, add them with empty Goodreads data
@@ -114,6 +118,8 @@ function combineBooksWithGoodreadsData(
           ratingsCount: null,
           url: null,
           genres: [],
+          mlpScrapedAt: currentTimestamp,
+          goodreadsScrapedAt: null,
         });
       }
     }
@@ -207,12 +213,12 @@ async function main() {
   // 1. Load existing books
   const existingBooks = await loadExistingBooks();
 
-  let allMlpBooks: MlpBook[] = [];
+  let allMlpBooks: MlpBookData[] = [];
 
   // 2. Scrape all books from MLP (unless in goodreads-only mode)
   if (!argv.goodreadsOnly) {
     // Scrape basic info for all books from the listing pages
-    const basicMlpBooks = await scrapeMlpListingPages();
+    const basicMlpBooks: MlpBookListing[] = await scrapeMlpListingPages();
 
     // Determine which books need their details scraped
     const existingBooksMap = new Map(
@@ -231,7 +237,7 @@ async function main() {
     );
 
     // Scrape details for new books
-    let newlyScrapedBooks: MlpBook[] = [];
+    let newlyScrapedBooks: MlpBookData[] = [];
     if (booksNeedingDetails.length > 0) {
       newlyScrapedBooks = await processBatch({
         items: booksNeedingDetails,
@@ -257,7 +263,7 @@ async function main() {
                 },
               },
             );
-            return { ...basicBook, ...details };
+            return { ...basicBook, ...details } as MlpBookData;
           } catch (error) {
             console.error(
               `[ERROR] Failed to fetch MLP details for "${basicBook.title}" after all retries. Skipping.`,
@@ -269,13 +275,14 @@ async function main() {
               description: null,
               pdfUrl: null,
               epubUrl: null,
-            };
+            } as MlpBookData;
           }
         },
       });
     }
 
     // Combine newly scraped books with existing books that were not re-scraped
+
     const unchangedBooks = argv.forceMlp
       ? []
       : existingBooks
@@ -284,35 +291,40 @@ async function main() {
               (basicBook) => basicBook.detailUrl === existingBook.detailUrl,
             ),
           )
-          .map((book) => ({
-            title: book.title,
-            partTitle: book.partTitle,
-            author: book.author,
-            publisher: book.publisher,
-            year: book.year,
-            imageUrl: book.imageUrl,
-            detailUrl: book.detailUrl,
-            pdfUrl: book.pdfUrl,
-            epubUrl: book.epubUrl,
-            description: book.description,
-          }));
+          .map(
+            (book): MlpBookData => ({
+              title: book.title,
+              partTitle: book.partTitle,
+              author: book.author,
+              publisher: book.publisher,
+              year: book.year,
+              imageUrl: book.imageUrl,
+              detailUrl: book.detailUrl,
+              pdfUrl: book.pdfUrl,
+              epubUrl: book.epubUrl,
+              description: book.description,
+            }),
+          );
 
     allMlpBooks = [...newlyScrapedBooks, ...unchangedBooks];
     console.log(`✅ Found ${allMlpBooks.length} total books from MLP.`);
   } else {
     // In goodreads-only mode, use existing books as MLP books
-    allMlpBooks = existingBooks.map((book) => ({
-      title: book.title,
-      partTitle: book.partTitle,
-      author: book.author,
-      publisher: book.publisher,
-      year: book.year,
-      imageUrl: book.imageUrl,
-      detailUrl: book.detailUrl,
-      pdfUrl: book.pdfUrl,
-      epubUrl: book.epubUrl,
-      description: book.description,
-    }));
+    allMlpBooks = existingBooks.map(
+      (book): MlpBookData => ({
+        title: book.title,
+        partTitle: book.partTitle,
+        author: book.author,
+        publisher: book.publisher,
+        year: book.year,
+        imageUrl: book.imageUrl,
+        detailUrl: book.detailUrl,
+        pdfUrl: book.pdfUrl,
+        epubUrl: book.epubUrl,
+        description: book.description,
+      }),
+    );
+
     console.log(
       `📚 Using ${allMlpBooks.length} existing books for Goodreads processing.`,
     );
@@ -366,7 +378,7 @@ async function main() {
   }
 
   // 5. Combine books with Goodreads data
-  const newCombinedBooks = combineBooksWithGoodreadsData(
+  const newBooks = combineBooksWithGoodreadsData(
     allMlpBooks,
     goodreadsDataList,
     existingBooks,
@@ -374,13 +386,13 @@ async function main() {
   );
 
   // 6. Merge with existing books
-  const allCombinedBooks = mergeBooks(existingBooks, newCombinedBooks, {
+  const allCombinedBooks = mergeBooks(existingBooks, newBooks, {
     forceMlp: argv.forceMlp,
     goodreadsOnly: argv.goodreadsOnly,
   });
 
   console.log(
-    `📚 Total books: ${allCombinedBooks.length} (${existingBooks.length} existing + ${newCombinedBooks.length} new/updated)`,
+    `📚 Total books: ${allCombinedBooks.length} (${existingBooks.length} existing + ${newBooks.length} new/updated)`,
   );
 
   // 7. Save the results to a JSON file

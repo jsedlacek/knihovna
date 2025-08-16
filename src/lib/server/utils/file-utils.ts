@@ -1,13 +1,13 @@
 import { existsSync } from "node:fs";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
-import type { CombinedBook } from "#@/lib/shared/types/book-types.ts";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { OUTPUT_FILE } from "#@/lib/server/config.ts";
 
 /**
  * Load existing books from the output file if it exists.
  */
-export async function loadExistingBooks(): Promise<CombinedBook[]> {
+export async function loadExistingBooks(): Promise<Book[]> {
   if (!existsSync(OUTPUT_FILE)) {
     console.log("No existing data file found. Starting fresh scrape.");
     return [];
@@ -15,7 +15,7 @@ export async function loadExistingBooks(): Promise<CombinedBook[]> {
 
   try {
     const fileContent = await readFile(OUTPUT_FILE, "utf-8");
-    const existingBooks: CombinedBook[] = JSON.parse(fileContent);
+    const existingBooks: Book[] = JSON.parse(fileContent);
     console.log(
       `📚 Loaded ${existingBooks.length} existing books from ${OUTPUT_FILE}`,
     );
@@ -30,7 +30,7 @@ export async function loadExistingBooks(): Promise<CombinedBook[]> {
 /**
  * Save books to the output file.
  */
-export async function saveBooks(books: CombinedBook[]): Promise<void> {
+export async function saveBooks(books: Book[]): Promise<void> {
   try {
     // Ensure the directory exists before writing the file
     const outputDir = dirname(OUTPUT_FILE);
@@ -49,9 +49,7 @@ export async function saveBooks(books: CombinedBook[]): Promise<void> {
 /**
  * Create a map of existing books by detailUrl for fast lookup.
  */
-export function createBookMap(
-  books: CombinedBook[],
-): Map<string, CombinedBook> {
+export function createBookMap(books: Book[]): Map<string, Book> {
   return new Map(books.map((book) => [book.detailUrl, book]));
 }
 
@@ -59,11 +57,11 @@ export function createBookMap(
  * Merge new books with existing books, avoiding duplicates.
  */
 export function mergeBooks(
-  existingBooks: CombinedBook[],
-  newBooks: CombinedBook[],
+  existingBooks: Book[],
+  newBooks: Book[],
   options: { forceMlp?: boolean; goodreadsOnly?: boolean } = {},
-): CombinedBook[] {
-  let existingBooksMap: Map<string, CombinedBook>;
+): Book[] {
+  let existingBooksMap: Map<string, Book>;
 
   if (options.forceMlp || options.goodreadsOnly) {
     // In force MLP mode or goodreads-only mode, start fresh or use existing as base

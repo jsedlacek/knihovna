@@ -1,16 +1,22 @@
-export interface MlpBook {
+// Data scraped from an MLP listing page
+export interface MlpBookListing {
   title: string;
-  partTitle: string | null;
   author: string;
   publisher: string | null;
   year: number | null;
   detailUrl: string;
-  pdfUrl: string | null;
-  epubUrl: string | null;
-  imageUrl: string | null;
-  description: string | null;
 }
 
+// Data scraped from an MLP book detail page
+export interface MlpBookDetails {
+  partTitle: string | null;
+  imageUrl: string | null;
+  description: string | null;
+  pdfUrl: string | null;
+  epubUrl: string | null;
+}
+
+// Data scraped from Goodreads
 export interface GoodreadsData {
   rating: number | null;
   ratingsCount: number | null;
@@ -18,26 +24,17 @@ export interface GoodreadsData {
   genres: string[];
 }
 
-export interface CombinedBook extends MlpBook, GoodreadsData {}
-
-// Main Book interface used throughout the application
-export interface Book {
-  title: string;
-  partTitle: string | null;
-  author: string;
-  publisher: string;
-  year: number;
-  detailUrl: string;
-  pdfUrl: string;
-  epubUrl: string;
-  imageUrl: string;
-  description: string;
-  rating: number | null;
-  ratingsCount: number | null;
-  url: string | null;
-  genres: string[] | null | undefined;
+// The canonical Book object, combining all data sources.
+// This is the format used in the final books.json file.
+export interface Book extends MlpBookListing, MlpBookDetails, GoodreadsData {
+  mlpScrapedAt: string | null;
+  goodreadsScrapedAt: string | null;
 }
 
+// Helper type for combined MLP data (listing + details)
+export type MlpBookData = MlpBookListing & MlpBookDetails;
+
+// Legacy interfaces for backwards compatibility during transition
 export interface PublisherInfo {
   publisher: string | null;
   year: number | null;

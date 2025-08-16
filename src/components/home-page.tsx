@@ -138,7 +138,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                   </div>
                   <div className="flex gap-2">
                     <a
-                      href={book.epubUrl}
+                      href={book.epubUrl || undefined}
                       className="bg-primary text-primary-foreground px-3 py-1 text-xs font-mono border border-border hover:bg-primary/90 inline-block"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -147,7 +147,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                     </a>
                     {book.pdfUrl && (
                       <a
-                        href={book.pdfUrl}
+                        href={book.pdfUrl || undefined}
                         className="bg-secondary text-secondary-foreground px-3 py-1 text-xs font-mono border border-border hover:bg-secondary/90 inline-block"
                         target="_blank"
                         rel="noopener noreferrer"
