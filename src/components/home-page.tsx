@@ -11,9 +11,9 @@ interface HomePageProps {
 }
 
 export default function HomePage({ books }: HomePageProps) {
-  // Filter books with a rating of 4.0 or higher
+  // Filter books with a rating of 4.0 or higher and have EPUB download links
   const filteredBooks = books.filter(
-    (book) => book.rating !== null && book.rating >= 4.0,
+    (book) => book.rating !== null && book.rating >= 4.0 && book.epubUrl,
   );
 
   // Sort all books by score
@@ -131,14 +131,16 @@ export default function HomePage({ books }: HomePageProps) {
                     >
                       STÁHNOUT EPUB
                     </a>
-                    <a
-                      href={book.pdfUrl}
-                      className="bg-secondary text-secondary-foreground px-3 py-1 text-xs font-mono border border-border hover:bg-secondary/90 inline-block"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      ZOBRAZIT PDF
-                    </a>
+                    {book.pdfUrl && (
+                      <a
+                        href={book.pdfUrl}
+                        className="bg-secondary text-secondary-foreground px-3 py-1 text-xs font-mono border border-border hover:bg-secondary/90 inline-block"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        ZOBRAZIT PDF
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
