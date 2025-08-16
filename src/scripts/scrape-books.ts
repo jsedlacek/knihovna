@@ -20,7 +20,14 @@ import {
   mergeBooks,
 } from "#@/lib/server/utils/file-utils.ts";
 import { saveScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
-import { CONCURRENCY } from "#@/lib/shared/config/scraper-config.ts";
+import { withRetry } from "#@/lib/server/utils/retry-utils.ts";
+import {
+  CONCURRENCY,
+  RETRY_COUNT,
+  RETRY_DELAY,
+  RETRY_FACTOR,
+  RETRY_MAX_DELAY,
+} from "#@/lib/shared/config/scraper-config.ts";
 
 /**
  * Determine which books need Goodreads processing.
@@ -235,7 +242,20 @@ async function main() {
           );
         },
         processItem: async (basicBook) => {
-          const details = await scrapeMlpBookDetails(basicBook.detailUrl);
+          const details = await withRetry(
+            () => scrapeMlpBookDetails(basicBook.detailUrl),
+            {
+              retries: RETRY_COUNT,
+              delay: RETRY_DELAY,
+              factor: RETRY_FACTOR,
+              maxDelay: RETRY_MAX_DELAY,
+              onRetry: (error, attempt) => {
+                console.warn(
+                  `[RETRY ${attempt}/${RETRY_COUNT}] Failed fetching MLP details for "${basicBook.title}": ${error.message}`,
+                );
+              },
+            },
+          );
           return { ...basicBook, ...details };
         },
       });
@@ -308,7 +328,18 @@ async function main() {
       onProgress: (progress, total, item) => {
         console.log(`[${progress}/${total}] Processing: ${item.title}`);
       },
-      processItem: scrapeGoodreads,
+      processItem: (book) =>
+        withRetry(() => scrapeGoodreads(book), {
+          retries: RETRY_COUNT,
+          delay: RETRY_DELAY,
+          factor: RETRY_FACTOR,
+          maxDelay: RETRY_MAX_DELAY,
+          onRetry: (error, attempt) => {
+            console.warn(
+              `[RETRY ${attempt}/${RETRY_COUNT}] Failed fetching Goodreads data for "${book.title}": ${error.message}`,
+            );
+          },
+        }),
     });
   } else {
     // Fill with empty data for books that weren't processed

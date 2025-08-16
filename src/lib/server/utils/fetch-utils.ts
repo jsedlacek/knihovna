@@ -1,7 +1,7 @@
 import {
   USER_AGENT,
   ACCEPT_LANGUAGE,
-  RETRY_ATTEMPTS,
+  RETRY_COUNT,
   RETRY_DELAY,
 } from "#@/lib/shared/config/scraper-config.ts";
 
@@ -10,7 +10,7 @@ import {
  */
 export async function fetchHtml(
   url: string,
-  retries = RETRY_ATTEMPTS,
+  retries = RETRY_COUNT,
   delay = RETRY_DELAY,
 ): Promise<string> {
   for (const i of Array.from({ length: retries }, (_, index) => index)) {
