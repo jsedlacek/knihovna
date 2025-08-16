@@ -1,0 +1,41 @@
+{
+  "name": "knihovna",
+  "version": "1.0.0",
+  "description": "Czech e-books static site",
+  "type": "module",
+  "imports": {
+    "#@/*": "./src/*"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "tsc --noEmit",
+    "scrape": "node src/scripts/scrape-books.ts",
+    "test": "node --test test/**/*.test.ts src/**/*.test.ts",
+    "test:watch": "node --test --watch test/**/*.test.ts src/**/*.test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@astrojs/react": "^4.3.0",
+    "@tailwindcss/vite": "^4.1.12",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "astro": "^5.13.2",
+    "cheerio": "^1.1.2",
+    "domhandler": "^5.0.3",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "tailwindcss": "^4.1.12",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@astrojs/ts-plugin": "^1.10.4",
+    "@types/yargs": "^17.0.32",
+    "typescript": "^5.9.2"
+  }
+}

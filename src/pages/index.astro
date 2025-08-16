@@ -1,0 +1,25 @@
+---
+// This runs at build time on the server
+import fs from "fs";
+import path from "path";
+import Layout from "#@/layouts/layout.astro";
+import HomePage from "#@/components/home-page.tsx";
+
+// Read the books data at build time
+const booksPath = path.join(process.cwd(), "data", "books.json");
+let books = [];
+
+try {
+    const booksData = fs.readFileSync(booksPath, "utf-8");
+    books = JSON.parse(booksData);
+} catch (error) {
+    console.warn(
+        "Could not read books.json, using empty array:",
+        error instanceof Error ? error.message : String(error),
+    );
+}
+---
+
+<Layout title="Nejlepší e-knihy zdarma">
+    <HomePage books={books} client:load />
+</Layout>
