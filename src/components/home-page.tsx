@@ -58,16 +58,23 @@ export default function HomePage({ books }: HomePageProps) {
                 key={`${book.title}-${book.author}-${index}`}
                 className="bg-card p-4 border border-border flex gap-4"
               >
-                <img
-                  src={book.imageUrl || placeholderCover.src}
-                  onError={(e) => {
-                    const img = e.currentTarget;
-                    if (img.src !== placeholderCover.src)
-                      img.src = placeholderCover.src;
-                  }}
-                  alt={`${book.title} book cover`}
-                  className="w-20 h-30 object-cover border border-border flex-shrink-0"
-                />
+                <a
+                  href={book.detailUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-shrink-0"
+                >
+                  <img
+                    src={book.imageUrl || placeholderCover.src}
+                    onError={(e) => {
+                      const img = e.currentTarget;
+                      if (img.src !== placeholderCover.src)
+                        img.src = placeholderCover.src;
+                    }}
+                    alt={`${book.title} book cover`}
+                    className="w-20 h-30 object-cover border border-border hover:opacity-80 transition-opacity"
+                  />
+                </a>
                 <div className="flex-1">
                   <h3 className="font-bold text-sm mb-2">
                     {book.author} – {book.title}
