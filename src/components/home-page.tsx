@@ -10,8 +10,13 @@ interface HomePageProps {
 }
 
 export default function HomePage({ books }: HomePageProps) {
+  // Filter books with a rating of 4.0 or higher
+  const filteredBooks = books.filter(
+    (book) => book.rating !== null && book.rating >= 4.0,
+  );
+
   // Sort all books by score
-  const sortedBooks = sortBooksByScore(books);
+  const sortedBooks = sortBooksByScore(filteredBooks);
 
   // Enable score display for debugging (set to true to show scores)
   const showScores = false;
