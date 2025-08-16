@@ -1,42 +1,22 @@
 import {
   USER_AGENT,
   ACCEPT_LANGUAGE,
-  RETRY_COUNT,
-  RETRY_DELAY,
 } from "#@/lib/shared/config/scraper-config.ts";
 
 /**
- * A simple fetch wrapper with a user-agent header and basic retry logic.
+ * A simple fetch wrapper with a user-agent header.
  */
-export async function fetchHtml(
-  url: string,
-  retries = RETRY_COUNT,
-  delay = RETRY_DELAY,
-): Promise<string> {
-  for (const i of Array.from({ length: retries }, (_, index) => index)) {
-    try {
-      const response = await fetch(url, {
-        headers: {
-          "User-Agent": USER_AGENT,
-          "Accept-Language": ACCEPT_LANGUAGE,
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status} for ${url}`);
-      }
-      return await response.text();
-    } catch (error) {
-      if (i === retries - 1) {
-        console.error(
-          `Failed to fetch ${url} after ${retries} attempts:`,
-          error,
-        );
-        throw error;
-      }
-      await new Promise((resolve) => setTimeout(resolve, delay * 2 ** i));
-    }
+export async function fetchHtml(url: string): Promise<string> {
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent": USER_AGENT,
+      "Accept-Language": ACCEPT_LANGUAGE,
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status} for ${url}`);
   }
-  throw new Error(`Failed to fetch ${url}`);
+  return await response.text();
 }
 
 /**
