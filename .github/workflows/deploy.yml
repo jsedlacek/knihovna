@@ -1,0 +1,54 @@
+name: Deploy
+
+on:
+    push:
+        branches: [main]
+    schedule:
+        # Run nightly at 2 AM UTC
+        - cron: "0 2 * * *"
+    workflow_dispatch: # Allow manual triggering
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "24"
+                  cache: "npm"
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Restore data cache
+              uses: actions/cache@v4
+              with:
+                  path: data/
+                  key: data-cache-${{ github.run_id }}
+                  restore-keys: |
+                      data-cache-
+
+            - name: Run scraper
+              run: npm run scrape
+
+            - name: Build site
+              run: npm run build
+
+            - name: Deploy to Cloudflare Workers
+              uses: cloudflare/wrangler-action@v3
+              with:
+                  apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+                  command: pages deploy dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }}
+
+            - name: Save data cache
+              if: always()
+              uses: actions/cache/save@v4
+              with:
+                  path: data/
+                  key: data-cache-${{ github.run_id }}
