@@ -207,12 +207,16 @@ async function main() {
     const basicMlpBooks = await scrapeMlpListingPages();
 
     // Determine which books need their details scraped
-    const existingDetailUrls = new Set(
-      existingBooks.map((book) => book.detailUrl),
+    const existingBooksMap = new Map(
+      existingBooks.map((book) => [book.detailUrl, book]),
     );
     const booksNeedingDetails = argv.forceMlp
       ? basicMlpBooks // Force mode: scrape details for all books
-      : basicMlpBooks.filter((book) => !existingDetailUrls.has(book.detailUrl));
+      : basicMlpBooks.filter((book) => {
+          const existingBook = existingBooksMap.get(book.detailUrl);
+          // Scrape if the book is new, or if it's missing download links
+          return !existingBook || !existingBook.pdfUrl || !existingBook.epubUrl;
+        });
 
     console.log(
       `${booksNeedingDetails.length} new MLP books need detail scraping.`,
