@@ -1,5 +1,6 @@
 import { existsSync } from "node:fs";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { dirname } from "node:path";
 import type { CombinedBook } from "#@/lib/shared/types/book-types.ts";
 import { OUTPUT_FILE } from "#@/lib/server/config.ts";
 
@@ -31,6 +32,10 @@ export async function loadExistingBooks(): Promise<CombinedBook[]> {
  */
 export async function saveBooks(books: CombinedBook[]): Promise<void> {
   try {
+    // Ensure the directory exists before writing the file
+    const outputDir = dirname(OUTPUT_FILE);
+    await mkdir(outputDir, { recursive: true });
+
     await writeFile(OUTPUT_FILE, JSON.stringify(books, null, 2));
     console.log(
       `✅ Successfully saved ${books.length} books to ${OUTPUT_FILE}`,
