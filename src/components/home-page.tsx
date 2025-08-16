@@ -27,7 +27,12 @@ export default function HomePage({ books }: HomePageProps) {
         <div className="max-w-4xl mx-auto p-6">
           <h1 className="text-lg font-bold mb-2">Nejlepší e-knihy zdarma</h1>
           <div className="text-sm text-muted-foreground">
-            Aktualizováno: {new Date().toLocaleDateString("cs-CZ")}
+            Aktualizováno:{" "}
+            {new Date().toLocaleDateString("cs-CZ", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </div>
         </div>
       </header>
@@ -37,18 +42,15 @@ export default function HomePage({ books }: HomePageProps) {
         <section className="space-y-4">
           <div className="text-sm leading-relaxed space-y-4">
             <p>
-              Na jednom místě zde najdete moderní romány, klasiku, poezii i
-              divadelní hry – všechny s hodnocením od čtenářů 4,0 a vyšším. Ke
-              stažení zdarma z městské knihovny.
+              Tady najdete moderní romány, klasiku, poezii i divadlo – všechno,
+              co má od čtenářů aspoň čtyři hvězdičky. A hlavně zdarma ke stažení
+              z městské knihovny.
             </p>
           </div>
         </section>
 
         {/* All books sorted by score */}
         <section className="space-y-4">
-          <h2 className="text-base font-bold border-b border-border pb-2">
-            Všechny knihy
-          </h2>
           <div className="space-y-4">
             {sortedBooks.map((book, index) => (
               <div
@@ -162,6 +164,17 @@ export default function HomePage({ books }: HomePageProps) {
               rel="noopener noreferrer"
             >
               Goodreads
+            </a>
+          </div>
+          <div className="mt-2">
+            Autor:{" "}
+            <a
+              href="https://jakub.contact/"
+              className="text-blue-600 hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Jakub Sedlacek
             </a>
           </div>
         </div>
