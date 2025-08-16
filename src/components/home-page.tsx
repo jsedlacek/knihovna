@@ -131,23 +131,25 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                         {" | "}Skóre: {formatBookScore(book)}
                       </span>
                     )}
-                    {" | "}Rok: {book.year}
+                    {book.year && `${" | "}Rok: ${book.year}`}
                     {book.genres &&
                       book.genres.length > 0 &&
                       ` | Žánr: ${book.genres.join(", ")}`}
                   </div>
                   <div className="flex gap-2">
-                    <a
-                      href={book.epubUrl || undefined}
-                      className="bg-primary text-primary-foreground px-3 py-1 text-xs font-mono border border-border hover:bg-primary/90 inline-block"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      STÁHNOUT EPUB
-                    </a>
+                    {book.epubUrl && (
+                      <a
+                        href={book.epubUrl}
+                        className="bg-primary text-primary-foreground px-3 py-1 text-xs font-mono border border-border hover:bg-primary/90 inline-block"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        STÁHNOUT EPUB
+                      </a>
+                    )}
                     {book.pdfUrl && (
                       <a
-                        href={book.pdfUrl || undefined}
+                        href={book.pdfUrl}
                         className="bg-secondary text-secondary-foreground px-3 py-1 text-xs font-mono border border-border hover:bg-secondary/90 inline-block"
                         target="_blank"
                         rel="noopener noreferrer"
