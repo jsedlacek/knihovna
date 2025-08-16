@@ -317,18 +317,27 @@ export async function scrapeGoodreadsBatch(
   books: { title: string; author: string }[],
   concurrency: number = 20,
 ): Promise<GoodreadsData[]> {
-  const results: GoodreadsData[] = [];
-  const queue = [...books];
+  // The results array is pre-filled to be mutated in place, preserving order.
+  const results: GoodreadsData[] = new Array(books.length);
+  // The queue includes the original index of each book.
+  const queue = books.map((book, index) => ({ ...book, index }));
+  let processedCount = 0;
 
   const processBook = async () => {
     while (queue.length > 0) {
-      const book = queue.shift();
-      if (!book) continue;
+      const bookItem = queue.shift();
+      if (!bookItem) continue;
 
-      const progress = results.length + 1;
-      console.log(`[${progress}/${books.length}] Processing: ${book.title}`);
+      const { index, ...book } = bookItem;
+
+      // Use a thread-safe counter for progress logging
+      processedCount++;
+      console.log(
+        `[${processedCount}/${books.length}] Processing: ${book.title}`,
+      );
       const goodreadsData = await scrapeGoodreads(book);
-      results.push(goodreadsData);
+      // The result is placed at its original index, preventing race conditions.
+      results[index] = goodreadsData;
     }
   };
 
