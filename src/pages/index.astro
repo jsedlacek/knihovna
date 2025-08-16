@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import Layout from "#@/layouts/layout.astro";
 import HomePage from "#@/components/home-page.tsx";
+import { loadScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
 
 // Read the books data at build time
 const booksPath = path.join(process.cwd(), "data", "books.json");
@@ -18,8 +19,11 @@ try {
         error instanceof Error ? error.message : String(error),
     );
 }
+
+// Read the timestamp data at build time
+const lastUpdated = await loadScrapingTimestamp();
 ---
 
 <Layout title="Nejlepší e-knihy zdarma">
-    <HomePage books={books} client:load />
+    <HomePage books={books} lastUpdated={lastUpdated} client:load />
 </Layout>

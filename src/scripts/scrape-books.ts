@@ -19,6 +19,7 @@ import {
   saveBooks,
   mergeBooks,
 } from "#@/lib/server/utils/file-utils.ts";
+import { saveScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
 import { CONCURRENCY } from "#@/lib/shared/config/scraper-config.ts";
 
 /**
@@ -339,6 +340,9 @@ async function main() {
 
   // 7. Save the results to a JSON file
   await saveBooks(allCombinedBooks);
+
+  // 8. Save the timestamp of successful completion
+  await saveScrapingTimestamp();
 
   console.log("🎉 Scraping complete!");
 }

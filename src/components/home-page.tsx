@@ -6,11 +6,17 @@ import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import placeholderCover from "#@/images/book-placeholder.svg";
 
-interface HomePageProps {
-  books: Book[];
+interface TimestampData {
+  lastUpdated: string;
+  timestamp: number;
 }
 
-export default function HomePage({ books }: HomePageProps) {
+interface HomePageProps {
+  books: Book[];
+  lastUpdated?: TimestampData | null;
+}
+
+export default function HomePage({ books, lastUpdated }: HomePageProps) {
   // Filter books with a rating of 4.0 or higher and have EPUB download links
   const filteredBooks = books.filter(
     (book) => book.rating !== null && book.rating >= 4.0 && book.epubUrl,
@@ -22,19 +28,27 @@ export default function HomePage({ books }: HomePageProps) {
   // Enable score display for debugging (set to true to show scores)
   const showScores = false;
 
+  // Format the last updated timestamp
+  const formattedLastUpdated = lastUpdated
+    ? new Date(lastUpdated.lastUpdated).toLocaleDateString("cs-CZ", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : null;
+
   return (
     <div className="min-h-screen bg-background text-foreground font-mono">
       <header className="border-b border-border">
         <div className="max-w-4xl mx-auto p-6">
           <h1 className="text-lg font-bold mb-2">Nejlepší e-knihy zdarma</h1>
-          <div className="text-sm text-muted-foreground">
-            Aktualizováno:{" "}
-            {new Date().toLocaleDateString("cs-CZ", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </div>
+          {lastUpdated && (
+            <div className="text-sm text-muted-foreground">
+              Aktualizováno: {formattedLastUpdated}
+            </div>
+          )}
         </div>
       </header>
 
