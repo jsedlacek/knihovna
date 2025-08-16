@@ -242,21 +242,35 @@ async function main() {
           );
         },
         processItem: async (basicBook) => {
-          const details = await withRetry(
-            () => scrapeMlpBookDetails(basicBook.detailUrl),
-            {
-              retries: RETRY_COUNT,
-              delay: RETRY_DELAY,
-              factor: RETRY_FACTOR,
-              maxDelay: RETRY_MAX_DELAY,
-              onRetry: (error, attempt) => {
-                console.warn(
-                  `[RETRY ${attempt}/${RETRY_COUNT}] Failed fetching MLP details for "${basicBook.title}": ${error.message}`,
-                );
+          try {
+            const details = await withRetry(
+              () => scrapeMlpBookDetails(basicBook.detailUrl),
+              {
+                retries: RETRY_COUNT,
+                delay: RETRY_DELAY,
+                factor: RETRY_FACTOR,
+                maxDelay: RETRY_MAX_DELAY,
+                onRetry: (error, attempt) => {
+                  console.warn(
+                    `[RETRY ${attempt}/${RETRY_COUNT}] Failed fetching MLP details for "${basicBook.title}": ${error.message}`,
+                  );
+                },
               },
-            },
-          );
-          return { ...basicBook, ...details };
+            );
+            return { ...basicBook, ...details };
+          } catch (error) {
+            console.error(
+              `[ERROR] Failed to fetch MLP details for "${basicBook.title}" after all retries. Skipping.`,
+            );
+            return {
+              ...basicBook,
+              partTitle: null,
+              imageUrl: null,
+              description: null,
+              pdfUrl: null,
+              epubUrl: null,
+            };
+          }
         },
       });
     }

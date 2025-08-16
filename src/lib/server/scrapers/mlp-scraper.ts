@@ -137,38 +137,27 @@ export function parseMlpDownloadLinks(reservationHtml: string): {
 export async function scrapeMlpBookDetails(
   detailUrl: string,
 ): Promise<DownloadLinks> {
-  try {
-    const detailHtml = await fetchHtml(detailUrl);
-    const details = parseMlpBookDetails(detailHtml);
+  const detailHtml = await fetchHtml(detailUrl);
+  const details = parseMlpBookDetails(detailHtml);
 
-    // Get the best available image URL (high-res if it exists, otherwise original)
-    const bestImageUrl = await getBestImageUrl(details.imageUrl);
+  // Get the best available image URL (high-res if it exists, otherwise original)
+  const bestImageUrl = await getBestImageUrl(details.imageUrl);
 
-    const bookIdMatch = detailUrl.match(/\/(\d+)\/$/);
-    if (!bookIdMatch) {
-      return {
-        pdfUrl: null,
-        epubUrl: null,
-        ...details,
-        imageUrl: bestImageUrl,
-      };
-    }
-
-    const reservationUrl = `${MLP_BASE_URL}/cz/vypujcka/${bookIdMatch[1]}`;
-    const reservationHtml = await fetchHtml(reservationUrl);
-    const downloadLinks = parseMlpDownloadLinks(reservationHtml);
-
-    return { ...details, ...downloadLinks, imageUrl: bestImageUrl };
-  } catch (error) {
-    console.error(`Error scraping download links for ${detailUrl}:`, error);
+  const bookIdMatch = detailUrl.match(/\/(\d+)\/$/);
+  if (!bookIdMatch) {
     return {
       pdfUrl: null,
       epubUrl: null,
-      partTitle: null,
-      imageUrl: null,
-      description: null,
+      ...details,
+      imageUrl: bestImageUrl,
     };
   }
+
+  const reservationUrl = `${MLP_BASE_URL}/cz/vypujcka/${bookIdMatch[1]}`;
+  const reservationHtml = await fetchHtml(reservationUrl);
+  const downloadLinks = parseMlpDownloadLinks(reservationHtml);
+
+  return { ...details, ...downloadLinks, imageUrl: bestImageUrl };
 }
 
 /**
