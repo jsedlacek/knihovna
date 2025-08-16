@@ -57,9 +57,9 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
         <section className="space-y-4">
           <div className="text-sm leading-relaxed space-y-4">
             <p>
-              Tady najdete moderní romány, klasiku, poezii i divadlo – všechno,
-              co má od čtenářů aspoň čtyři hvězdičky. A hlavně zdarma ke stažení
-              z městské knihovny.
+              Tady najdete romány, klasiku, poezii i divadlo – všechno, co má od
+              čtenářů aspoň čtyři hvězdičky. A hlavně zdarma ke stažení z
+              městské knihovny.
             </p>
           </div>
         </section>
