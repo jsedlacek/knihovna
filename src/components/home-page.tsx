@@ -4,6 +4,7 @@ import {
 } from "#@/lib/shared/utils/book-scoring.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
+import placeholderCover from "#@/images/book-placeholder.svg";
 
 interface HomePageProps {
   books: Book[];
@@ -20,10 +21,6 @@ export default function HomePage({ books }: HomePageProps) {
 
   // Enable score display for debugging (set to true to show scores)
   const showScores = false;
-
-  // Placeholder cover for missing/broken images (inline SVG)
-  const placeholderCover =
-    'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="240" viewBox="0 0 160 240"><rect width="160" height="240" rx="10" fill="%23e5e7eb"/><rect x="8" y="8" width="144" height="224" rx="8" fill="%23f3f4f6" stroke="%23d1d5db" stroke-width="2"/><g transform="translate(40,68)"><rect x="0" y="0" width="80" height="104" rx="6" fill="%23fff" stroke="%23d1d5db" stroke-width="2"/><rect x="8" y="0" width="8" height="104" rx="4" fill="%23f3f4f6"/><rect x="22" y="18" width="48" height="10" rx="2" fill="%23e5e7eb"/><rect x="22" y="36" width="40" height="8" rx="2" fill="%23eef2f7"/><rect x="22" y="50" width="44" height="8" rx="2" fill="%23eef2f7"/><rect x="22" y="64" width="36" height="8" rx="2" fill="%23eef2f7"/><rect x="22" y="84" width="32" height="6" rx="2" fill="%23e5e7eb"/></g></svg>';
 
   return (
     <div className="min-h-screen bg-background text-foreground font-mono">
@@ -62,11 +59,11 @@ export default function HomePage({ books }: HomePageProps) {
                 className="bg-card p-4 border border-border flex gap-4"
               >
                 <img
-                  src={book.imageUrl || placeholderCover}
+                  src={book.imageUrl || placeholderCover.src}
                   onError={(e) => {
                     const img = e.currentTarget;
-                    if (img.src !== placeholderCover)
-                      img.src = placeholderCover;
+                    if (img.src !== placeholderCover.src)
+                      img.src = placeholderCover.src;
                   }}
                   alt={`${book.title} book cover`}
                   className="w-20 h-30 object-cover border border-border flex-shrink-0"
