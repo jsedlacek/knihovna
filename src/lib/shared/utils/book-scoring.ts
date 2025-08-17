@@ -11,8 +11,8 @@ import type { Book } from "#@/lib/shared/types/book-types.ts";
  * Examples:
  * - 4.28/5 (1,030,635 reviews) = ~4.58 score
  * - 3.93/5 (5,751,612 reviews) = ~4.23 score
- * - 4.5/5 (100 reviews) = ~4.75 score
- * - 4.5/5 (10 reviews) = ~4.5 score (slight confidence penalty)
+ * - 4.5/5 (100 reviews) = ~4.60 score
+ * - 4.5/5 (10 reviews) = ~2.28 score (heavy confidence penalty)
  *
  * @param book - The book to score
  * @returns A numeric score where higher values indicate better books
@@ -30,11 +30,13 @@ export function calculateBookScore(book: Book): number {
   const reviewBoost = reviewCount > 0 ? Math.log10(reviewCount + 1) * 0.05 : 0;
   const maxReviewBoost = Math.min(reviewBoost, 0.3); // Cap at 0.3 points
 
-  // Confidence factor - only significant penalty for very few reviews
-  // Books with 50+ reviews get full confidence (1.0)
-  // Books with fewer reviews get slightly reduced confidence (minimum 0.85)
+  // Confidence factor - penalizes books with very few reviews more heavily.
+  // A book needs at least 100 ratings for full confidence (1.0).
+  // Uses a logarithmic scale for a smoother, more impactful penalty.
   const confidenceFactor =
-    reviewCount >= 50 ? 1 : Math.max(0.85, 0.85 + (reviewCount / 50) * 0.15);
+    reviewCount > 0
+      ? Math.min(1, Math.log10(reviewCount) / Math.log10(100))
+      : 0;
 
   return (ratingScore + maxReviewBoost) * confidenceFactor;
 }
