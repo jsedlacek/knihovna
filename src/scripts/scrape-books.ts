@@ -34,17 +34,22 @@ async function main() {
   // 1. Parse command line arguments
   const argv = await yargs(hideBin(process.argv))
     .usage("Usage: $0 [options]")
-    .example("$0", "Normal scraping: MLP + Goodreads for new books only")
     .example(
-      "$0 --force-mlp",
-      "Re-scrape all MLP data, then Goodreads for missing data",
+      "$0",
+      "Normal scraping: MLP list + details + Goodreads for outdated books",
     )
     .example(
-      "$0 --force-goodreads",
-      "Normal MLP scraping, but re-scrape all Goodreads data",
+      "$0 --force",
+      "Force re-scrape all enabled stages regardless of existing data",
     )
-    .example("$0 --mlp-only", "Only scrape MLP data, skip Goodreads entirely")
-    .example("$0 --goodreads-only", "Only scrape Goodreads for existing books")
+    .example(
+      "$0 --no-goodreads",
+      "Scrape only MLP data, skip Goodreads entirely",
+    )
+    .example(
+      "$0 --no-mlp-list --no-mlp-detail",
+      "Only scrape Goodreads for existing books",
+    )
     .example(
       "$0 --book-name 'Kafka'",
       "Re-scrape only books with 'Kafka' in the title",
@@ -54,44 +59,34 @@ async function main() {
       "Re-scrape only books by author Karel Čapek",
     )
     .example(
-      "$0 --book-name 'Война' --force-goodreads",
-      "Force re-scrape Goodreads data for books with 'Война' in title",
+      "$0 --book-name 'Война' --force",
+      "Force re-scrape all data for books with 'Война' in title",
     )
     .example(
-      "$0 --author 'Tolkien' --mlp-only",
+      "$0 --author 'Tolkien' --no-goodreads",
       "Re-scrape MLP data only for books by authors matching 'Tolkien'",
     )
-    .example(
-      "$0 --book-name 'povídky' --verbose",
-      "Show which books match 'povídky' and process them",
-    )
-    .example(
-      "$0 --list-fixups",
-      "List all configured book data corrections and exit",
-    )
-    .option("force-mlp", {
+    .option("force", {
       alias: "f",
       type: "boolean",
       description:
-        "Force re-scraping all books from MLP (ignore existing data)",
+        "Force re-scraping for all enabled stages (ignore existing data)",
       default: false,
     })
-    .option("force-goodreads", {
-      alias: "g",
+    .option("mlp-list", {
       type: "boolean",
-      description:
-        "Force re-scraping Goodreads data for all books (ignore existing ratings)",
-      default: false,
+      description: "Scrape MLP book listings to discover new books",
+      default: true,
     })
-    .option("mlp-only", {
+    .option("mlp-detail", {
       type: "boolean",
-      description: "Only scrape MLP data, skip Goodreads entirely",
-      default: false,
+      description: "Scrape detailed information for MLP books",
+      default: true,
     })
-    .option("goodreads-only", {
+    .option("goodreads", {
       type: "boolean",
-      description: "Only scrape Goodreads data for existing books, skip MLP",
-      default: false,
+      description: "Scrape ratings and data from Goodreads",
+      default: true,
     })
     .option("book-name", {
       alias: "b",
@@ -105,31 +100,11 @@ async function main() {
       description:
         "Only process books by this author (case-insensitive partial match)",
     })
-    .option("verbose", {
-      alias: "v",
-      type: "boolean",
-      description: "Show detailed information about matching books",
-      default: false,
-    })
-    .option("list-fixups", {
-      type: "boolean",
-      description: "List all configured book fixups and exit",
-      default: false,
-    })
+
     .check((argv) => {
-      if (argv["mlp-only"] && argv["goodreads-only"]) {
+      if (!argv["mlp-list"] && !argv["mlp-detail"] && !argv["goodreads"]) {
         throw new Error(
-          "Cannot use both --mlp-only and --goodreads-only flags together",
-        );
-      }
-      if (argv["goodreads-only"] && argv["force-mlp"]) {
-        throw new Error(
-          "Cannot use --goodreads-only with --force-mlp (no MLP scraping will occur)",
-        );
-      }
-      if (argv["mlp-only"] && argv["force-goodreads"]) {
-        throw new Error(
-          "Cannot use --mlp-only with --force-goodreads (no Goodreads scraping will occur)",
+          "At least one scraping stage must be enabled (--mlp-list, --mlp-detail, or --goodreads)",
         );
       }
       return true;
@@ -137,47 +112,19 @@ async function main() {
     .help()
     .alias("help", "h").argv;
 
-  // Handle --list-fixups option
-  if (argv.listFixups) {
-    const fixups = getConfiguredFixups();
-    console.log(`📋 Configured book fixups (${fixups.length} total):\n`);
-
-    if (fixups.length === 0) {
-      console.log("  No fixups configured.");
-    } else {
-      for (const [index, fixup] of fixups.entries()) {
-        console.log(`${index + 1}. ${fixup.detailUrl}`);
-        if (fixup.title) console.log(`   Title: → "${fixup.title}"`);
-        if (fixup.author) console.log(`   Author: → "${fixup.author}"`);
-        if (fixup.subtitle !== undefined)
-          console.log(`   Subtitle: → "${fixup.subtitle}"`);
-        if (fixup.publisher !== undefined)
-          console.log(`   Publisher: → "${fixup.publisher}"`);
-        if (fixup.year !== undefined) console.log(`   Year: → ${fixup.year}`);
-
-        console.log(`   Reason: ${fixup.reason}\n`);
-      }
-    }
-    return;
-  }
-
   console.log("🚀 Starting the scraping process...");
 
-  if (argv.forceMlp) {
+  // Show enabled stages
+  const enabledStages = [];
+  if (argv.mlpList) enabledStages.push("MLP list");
+  if (argv.mlpDetail) enabledStages.push("MLP details");
+  if (argv.goodreads) enabledStages.push("Goodreads");
+  console.log(`📋 Enabled stages: ${enabledStages.join(", ")}`);
+
+  if (argv.force) {
     console.log(
-      "🔄 Force MLP mode: Will re-scrape all MLP books regardless of existing data.",
+      "🔄 Force mode: Will re-scrape all enabled stages regardless of existing data.",
     );
-  }
-  if (argv.forceGoodreads) {
-    console.log(
-      "🔄 Force Goodreads mode: Will re-scrape all Goodreads data regardless of existing ratings.",
-    );
-  }
-  if (argv.mlpOnly) {
-    console.log("📚 MLP only mode: Skipping Goodreads scraping.");
-  }
-  if (argv.goodreadsOnly) {
-    console.log("⭐ Goodreads only mode: Skipping MLP scraping.");
   }
   if (argv.bookName) {
     console.log(
@@ -188,9 +135,6 @@ async function main() {
     console.log(
       `👤 Selective mode: Only processing books by author "${argv.author}".`,
     );
-  }
-  if (argv.verbose) {
-    console.log("📝 Verbose mode: Will show detailed matching information.");
   }
 
   // 2. Initialization: Load existing books into a Map for efficient updates.
@@ -229,26 +173,15 @@ async function main() {
       `🎯 Selective criteria matches: ${matchingBooks.length}/${booksMap.size} books qualify for processing.`,
     );
 
-    if (argv.verbose && matchingBooks.length > 0) {
-      console.log("\n📚 Matching books:");
-      for (const book of matchingBooks.slice(0, 10)) {
-        console.log(`  • "${book.title}" by ${book.author}`);
-      }
-      if (matchingBooks.length > 10) {
-        console.log(`  ... and ${matchingBooks.length - 10} more books`);
-      }
-      console.log();
-    }
-
     if (matchingBooks.length === 0) {
       console.log("⚠️ No books match the selective criteria. Exiting.");
       return;
     }
   }
 
-  // 3. MLP Scraping Phase (skipped if in goodreads-only mode)
-  if (!argv.goodreadsOnly) {
-    console.log(" scraping MLP...");
+  // 3. MLP List Scraping Phase
+  if (argv.mlpList) {
+    console.log("📚 Scraping MLP listings...");
     const basicMlpBooks: MlpBookListing[] = await scrapeMlpListingPages();
 
     // Add new books to the map
@@ -277,6 +210,11 @@ async function main() {
     if (newBooksCount > 0) {
       console.log(`+ Discovered ${newBooksCount} new books from MLP.`);
     }
+  }
+
+  // 4. MLP Detail Scraping Phase
+  if (argv.mlpDetail) {
+    console.log("📝 Scraping MLP details...");
 
     // Identify books needing MLP detail scraping
     const booksNeedingMlpDetails = Array.from(booksMap.values()).filter(
@@ -284,7 +222,7 @@ async function main() {
         // First check if book matches selective criteria
         if (!matchesSelectiveCriteria(book)) return false;
 
-        if (argv.forceMlp) return true;
+        if (argv.force) return true;
         const isOutOfDate =
           !book.mlpScrapedAt || new Date(book.mlpScrapedAt) < oneMonthAgo;
         return isOutOfDate;
@@ -335,10 +273,10 @@ async function main() {
         },
       });
     }
-    console.log(`✅ MLP scraping complete. Total books: ${booksMap.size}.`);
+    console.log(`✅ MLP detail scraping complete.`);
   }
 
-  // 4. Apply fixups to correct known data issues (before Goodreads scraping)
+  // 5. Apply fixups to correct known data issues (before Goodreads scraping)
   console.log("🔧 Applying book fixups...");
   const booksBeforeFixups = Array.from(booksMap.values());
   const booksWithFixups = applyBookFixupsToArray(booksBeforeFixups);
@@ -349,14 +287,14 @@ async function main() {
     booksMap.set(book.detailUrl, book);
   }
 
-  // 5. Goodreads Scraping Phase (skipped if in mlp-only mode)
-  if (!argv.mlpOnly) {
-    console.log(" scraping Goodreads...");
+  // 6. Goodreads Scraping Phase
+  if (argv.goodreads) {
+    console.log("⭐ Scraping Goodreads...");
     const booksForGoodreads = Array.from(booksMap.values()).filter((book) => {
       // First check if book matches selective criteria
       if (!matchesSelectiveCriteria(book)) return false;
 
-      if (argv.forceGoodreads) return true;
+      if (argv.force) return true;
       const isOutOfDate =
         !book.goodreadsScrapedAt ||
         new Date(book.goodreadsScrapedAt) < oneMonthAgo;
@@ -407,7 +345,7 @@ async function main() {
     console.log("✅ Goodreads scraping complete.");
   }
 
-  // 6. Finalization
+  // 7. Finalization
   const allBooks = Array.from(booksMap.values());
   console.log(`📚 Total books to save: ${allBooks.length}`);
 
