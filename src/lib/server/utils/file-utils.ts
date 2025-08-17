@@ -52,33 +52,3 @@ export async function saveBooks(books: Book[]): Promise<void> {
 export function createBookMap(books: Book[]): Map<string, Book> {
   return new Map(books.map((book) => [book.detailUrl, book]));
 }
-
-/**
- * Merge new books with existing books, avoiding duplicates.
- */
-export function mergeBooks(
-  existingBooks: Book[],
-  newBooks: Book[],
-  options: { forceMlp?: boolean; goodreadsOnly?: boolean } = {},
-): Book[] {
-  let existingBooksMap: Map<string, Book>;
-
-  if (options.forceMlp || options.goodreadsOnly) {
-    // In force MLP mode or goodreads-only mode, start fresh or use existing as base
-    existingBooksMap = options.goodreadsOnly
-      ? new Map(existingBooks.map((book) => [book.detailUrl, book]))
-      : new Map();
-  } else {
-    // Normal mode: preserve existing books
-    existingBooksMap = new Map(
-      existingBooks.map((book) => [book.detailUrl, book]),
-    );
-  }
-
-  // Add new books to the map, overwriting any existing entries
-  for (const newBook of newBooks) {
-    existingBooksMap.set(newBook.detailUrl, newBook);
-  }
-
-  return Array.from(existingBooksMap.values());
-}

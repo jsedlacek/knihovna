@@ -1,64 +1,64 @@
 name: Deploy
 
 on:
-    workflow_run:
-        workflows: ["CI"]
-        types:
-            - completed
-        branches: [main]
-    schedule:
-        # Run nightly at 2 AM UTC
-        - cron: "0 2 * * *"
-    workflow_dispatch:
-        inputs:
-            force-fresh-scrape:
-                description: "Force fresh scraping of all data (ignore existing cache)"
-                type: boolean
-                default: false
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+    branches: [main]
+  schedule:
+    # Run nightly at 2 AM UTC
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      force-fresh-scrape:
+        description: "Force fresh scraping of all data (ignore existing cache)"
+        type: boolean
+        default: false
 
 concurrency:
-    group: ${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "24"
-                  cache: "npm"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
 
-            - name: Install dependencies
-              run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-            - name: Cache data directory
-              uses: actions/cache@v4
-              with:
-                  path: data/
-                  key: data-cache-${{ github.run_id }}
-                  restore-keys: |
-                      data-cache-
+      - name: Cache data directory
+        uses: actions/cache@v4
+        with:
+          path: data/
+          key: data-cache-${{ github.run_id }}
+          restore-keys: |
+            data-cache-
 
-            - name: Run scraper
-              run: |
-                  if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.force-fresh-scrape }}" = "true" ]; then
-                    npm run scrape -- --force-mlp --force-goodreads
-                  else
-                    npm run scrape
-                  fi
+      - name: Run scraper
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.force-fresh-scrape }}" = "true" ]; then
+            npm run scrape -- --force
+          else
+            npm run scrape
+          fi
 
-            - name: Build site
-              run: npm run build
+      - name: Build site
+        run: npm run build
 
-            - name: Deploy to Cloudflare Workers
-              run: npm run deploy
-              env:
-                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-                  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Deploy to Cloudflare Workers
+        run: npm run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

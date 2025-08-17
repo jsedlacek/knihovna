@@ -15,10 +15,7 @@ import {
 } from "#@/lib/server/utils/file-utils.ts";
 import { saveScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
 import { withRetry } from "#@/lib/server/utils/retry-utils.ts";
-import {
-  applyBookFixupsToArray,
-  getConfiguredFixups,
-} from "#@/lib/server/utils/book-fixup-utils.ts";
+import { applyBookFixupsToArray } from "#@/lib/server/utils/book-fixup-utils.ts";
 import {
   CONCURRENCY,
   RETRY_COUNT,
