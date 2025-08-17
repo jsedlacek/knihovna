@@ -8,6 +8,7 @@ import {
 } from "#@/lib/shared/utils/text-utils.ts";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
+import { deduplicateBooks } from "#@/lib/shared/utils/book-deduplication.ts";
 import placeholderCover from "#@/images/book-placeholder.svg";
 
 interface TimestampData {
@@ -24,8 +25,11 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
   // First filter out blocked books
   const unblockedBooks = filterBlockedBooks(books);
 
+  // Remove duplicate books, keeping only the newer version
+  const deduplicatedBooks = deduplicateBooks(unblockedBooks);
+
   // Then filter books with a rating of 4.0 or higher and have EPUB download links
-  const filteredBooks = unblockedBooks.filter(
+  const filteredBooks = deduplicatedBooks.filter(
     (book) => book.rating !== null && book.rating >= 4.0 && book.epubUrl,
   );
 
