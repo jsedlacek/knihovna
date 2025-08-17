@@ -116,7 +116,7 @@ export function cleanTextForSearch(text: string): string {
  * @param roman The Roman numeral string (e.g., "IX", "xix").
  * @returns The Arabic number, or 0 if the input is invalid.
  */
-function romanToArabic(roman: string): number {
+export function romanToArabic(roman: string): number {
   if (!roman || typeof roman !== "string") return 0;
 
   const upperRoman = roman.toUpperCase();

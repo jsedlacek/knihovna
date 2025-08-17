@@ -1,12 +1,38 @@
 import type { Book } from "#@/lib/shared/types/book-types.ts";
+import { romanToArabic } from "#@/lib/shared/utils/text-utils.ts";
 
 /**
- * Normalizes text for deduplication by removing punctuation, extra whitespace, and converting to lowercase.
+ * Normalizes Roman numerals to Arabic numerals for deduplication.
+ * Handles both parentheses format "(II)" and standalone format "II".
  */
-function normalizeForDeduplication(text: string): string {
-  return text
+function normalizeRomanNumeralsForDeduplication(text: string): string {
+  // Replace Roman numerals in parentheses: "(II)" -> " 2"
+  let result = text.replace(/\s*\(([IVXLCDM]+)\)/gi, (match, romanNumeral) => {
+    const arabic = romanToArabic(romanNumeral);
+    return arabic > 0 ? ` ${arabic}` : match;
+  });
+
+  // Replace standalone Roman numerals: "Part II" -> "Part 2"
+  result = result.replace(/\b([IVXLCDM]+)\b/gi, (match) => {
+    const arabic = romanToArabic(match);
+    return arabic > 0 ? arabic.toString() : match;
+  });
+
+  return result;
+}
+
+/**
+ * Normalizes text for deduplication by removing punctuation, extra whitespace, converting to lowercase,
+ * and normalizing Roman numerals to Arabic numerals.
+ */
+function normalizeForDeduplication(text: string | null): string {
+  if (!text) return "";
+
+  return normalizeRomanNumeralsForDeduplication(text)
     .toLowerCase()
     .replace(/[,;:.!?()[\]{}""''„"‚']/g, "") // Remove common punctuation
+    .replace(/\b([a-z])\s+([a-z])\s+([a-z])\b/g, "$1$2$3") // Normalize spaced initials like "j r r" to "jrr"
+    .replace(/\b([a-z])\s+([a-z])\b/g, "$1$2") // Normalize spaced initials like "j r" to "jr"
     .replace(/\s+/g, " ") // Normalize whitespace
     .trim();
 }

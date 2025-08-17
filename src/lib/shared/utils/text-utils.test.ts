@@ -6,7 +6,22 @@ import {
   getAuthorForSearch,
   formatAuthorName,
   calculateSimilarity,
+  romanToArabic,
 } from "./text-utils.ts";
+
+test("romanToArabic - converts Roman numerals to Arabic numbers", () => {
+  assert.strictEqual(romanToArabic("I"), 1, "Should convert I to 1");
+  assert.strictEqual(romanToArabic("IV"), 4, "Should convert IV to 4");
+  assert.strictEqual(romanToArabic("IX"), 9, "Should convert IX to 9");
+  assert.strictEqual(romanToArabic("XIV"), 14, "Should convert XIV to 14");
+  assert.strictEqual(romanToArabic("XX"), 20, "Should convert XX to 20");
+  assert.strictEqual(
+    romanToArabic("invalid"),
+    0,
+    "Should return 0 for invalid input",
+  );
+  assert.strictEqual(romanToArabic(""), 0, "Should return 0 for empty string");
+});
 
 test("cleanSearchTerm - removes special characters and normalizes whitespace", () => {
   assert.strictEqual(
@@ -187,11 +202,7 @@ test("formatAuthorName - converts from Last, First to First Last format", () => 
     "Should handle Czech names",
   );
 
-  assert.strictEqual(
-    formatAuthorName(""),
-    "",
-    "Should handle empty string",
-  );
+  assert.strictEqual(formatAuthorName(""), "", "Should handle empty string");
 
   assert.strictEqual(
     formatAuthorName("Smith,"),
