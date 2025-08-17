@@ -92,8 +92,15 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                 </a>
                 <div className="flex-1">
                   <h3 className="font-bold text-sm mb-2">
-                    {formatAuthorName(book.author)} – {book.title}
-                    {book.partTitle && ` (${book.partTitle})`}
+                    <a
+                      href={book.detailUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline"
+                    >
+                      {formatAuthorName(book.author)} – {book.title}
+                      {book.partTitle && ` (${book.partTitle})`}
+                    </a>
                   </h3>
                   <p className="text-sm text-card-foreground mb-2 line-clamp-2">
                     {book.description}
