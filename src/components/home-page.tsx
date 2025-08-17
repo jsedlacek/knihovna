@@ -157,7 +157,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                     {book.epubUrl && (
                       <a
                         href={book.epubUrl}
-                        className="bg-primary text-primary-foreground px-4 py-2 sm:px-3 sm:py-1 text-xs font-mono border border-border hover:bg-primary/90 min-h-[44px] sm:min-h-0 flex items-center justify-center"
+                        className="bg-gray-200 text-gray-900 px-4 py-2 sm:px-3 sm:py-1 text-xs font-mono border-1 border-gray-400 hover:bg-gray-300 hover:border-gray-500 transition-all duration-200 min-h-[44px] sm:min-h-0 shadow-[1px_1px_0px_0px_rgb(107,114,128)] uppercase tracking-wide flex self-center"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -167,7 +167,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                     {book.pdfUrl && (
                       <a
                         href={book.pdfUrl}
-                        className="bg-secondary text-secondary-foreground px-4 py-2 sm:px-3 sm:py-1 text-xs font-mono border border-border hover:bg-secondary/90 min-h-[44px] sm:min-h-0 flex items-center justify-center"
+                        className="bg-gray-100 text-gray-600 px-4 py-2 sm:px-3 sm:py-1 text-xs font-mono border-1 border-gray-300 hover:bg-gray-200 hover:border-gray-400 transition-all duration-200 min-h-[44px] sm:min-h-0 shadow-[1px_1px_0px_0px_rgb(156,163,175)] uppercase tracking-wide flex self-center"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
