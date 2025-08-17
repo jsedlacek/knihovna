@@ -52,11 +52,9 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
     <div className="min-h-screen bg-background text-foreground font-mono">
       <header className="border-b border-border">
         <div className="max-w-4xl mx-auto p-4 sm:p-6">
-          <h1 className="text-base sm:text-lg font-bold mb-2">
-            Nejlepší e-knihy zdarma
-          </h1>
+          <h1 className="text-lg font-bold mb-2">Nejlepší e-knihy zdarma</h1>
           {lastUpdated && (
-            <div className="text-xs sm:text-sm text-muted-foreground">
+            <div className="text-sm text-muted-foreground">
               Aktualizováno {formattedLastUpdated}
             </div>
           )}
@@ -66,7 +64,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
       {/* Main content */}
       <main className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6 sm:space-y-8">
         <section className="space-y-4">
-          <div className="text-xs sm:text-sm leading-relaxed space-y-4">
+          <div className="text-sm leading-relaxed space-y-4">
             <p>
               Tady najdete {formatNumberCzech(sortedBooks.length)} románů,
               klasiky, poezie i divadla – všechno, co má od čtenářů aspoň čtyři
@@ -101,7 +99,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                   />
                 </a>
                 <div className="flex-1 text-center sm:text-left">
-                  <h3 className="font-bold text-xs sm:text-sm mb-2">
+                  <h3 className="font-bold text-sm mb-2">
                     <a
                       href={book.detailUrl}
                       target="_blank"
@@ -113,7 +111,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                         ` (${book.partTitle || book.subtitle})`}
                     </a>
                   </h3>
-                  <p className="text-xs sm:text-sm text-card-foreground mb-2 line-clamp-3">
+                  <p className="text-sm text-card-foreground mb-2 line-clamp-3">
                     {book.description}
                   </p>
                   <div className="text-xs text-muted-foreground mb-3">
@@ -195,7 +193,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
       </main>
 
       <footer className="border-t border-border mt-12 p-4 sm:p-6">
-        <div className="max-w-4xl mx-auto text-center text-xs sm:text-sm text-muted-foreground">
+        <div className="max-w-4xl mx-auto text-center text-sm text-muted-foreground">
           <div>
             Zdroje:{" "}
             <a
