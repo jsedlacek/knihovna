@@ -126,6 +126,7 @@ async function main() {
       if (!booksMap.has(basicBook.detailUrl)) {
         booksMap.set(basicBook.detailUrl, {
           ...basicBook,
+          subtitle: null,
           partTitle: null,
           imageUrl: null,
           description: null,

@@ -69,15 +69,19 @@ export function parseMlpBookDetails(
   try {
     const $detail = cheerio.load(detailHtml);
 
+    let subtitle: string | null = null;
     let partTitle: string | null = null;
     $detail(".book-content.book-info-table table tbody tr").each(
       (_: number, element: AnyNode) => {
-        if (
-          $detail(element).find("td.itemlefttd").text().trim() === "Název části"
-        ) {
-          partTitle = cleanTitle(
-            $detail(element).find("td").eq(1).text().trim(),
-          );
+        const fieldName = $detail(element).find("td.itemlefttd").text().trim();
+        const fieldValue = cleanTitle(
+          $detail(element).find("td").eq(1).text().trim(),
+        );
+
+        if (fieldName === "Podnázev") {
+          subtitle = fieldValue;
+        } else if (fieldName === "Název části") {
+          partTitle = fieldValue;
         }
       },
     );
@@ -88,10 +92,11 @@ export function parseMlpBookDetails(
     const description =
       descriptionText && descriptionText.length > 0 ? descriptionText : null;
 
-    return { partTitle, imageUrl, description };
+    return { subtitle, partTitle, imageUrl, description };
   } catch (error) {
     console.error("Error parsing MLP book details:", error);
     return {
+      subtitle: null,
       partTitle: null,
       imageUrl: null,
       description: null,

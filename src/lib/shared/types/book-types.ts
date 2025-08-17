@@ -9,6 +9,7 @@ export interface MlpBookListing {
 
 // Data scraped from an MLP book detail page
 export interface MlpBookDetails {
+  subtitle: string | null;
   partTitle: string | null;
   imageUrl: string | null;
   description: string | null;
@@ -43,6 +44,7 @@ export interface PublisherInfo {
 export interface DownloadLinks {
   pdfUrl: string | null;
   epubUrl: string | null;
+  subtitle: string | null;
   partTitle: string | null;
   imageUrl: string | null;
   description: string | null;

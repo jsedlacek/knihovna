@@ -107,7 +107,8 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                       className="hover:underline"
                     >
                       {formatAuthorName(book.author)} – {book.title}
-                      {book.partTitle && ` (${book.partTitle})`}
+                      {(book.partTitle || book.subtitle) &&
+                        ` (${book.partTitle || book.subtitle})`}
                     </a>
                   </h3>
                   <p className="text-sm text-card-foreground mb-2 line-clamp-2">

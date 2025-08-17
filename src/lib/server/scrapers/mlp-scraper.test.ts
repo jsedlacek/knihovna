@@ -63,6 +63,7 @@ describe("MLP Scraper HTML Parsing", () => {
 
       // Test all fields are properly extracted
       assert.strictEqual(result.partTitle, "Test Part Title");
+      assert.strictEqual(result.subtitle, null);
       assert.strictEqual(result.imageUrl, "/images/test-book.jpg");
       assert.ok(result.description);
       assert.ok(result.description.includes("comprehensive book description"));
@@ -76,6 +77,7 @@ describe("MLP Scraper HTML Parsing", () => {
       const result = parseMlpBookDetails(htmlWithoutRelevantContent);
 
       assert.strictEqual(result.partTitle, null);
+      assert.strictEqual(result.subtitle, null);
       assert.strictEqual(result.imageUrl, null);
       assert.strictEqual(result.description, null);
     });
@@ -145,6 +147,7 @@ describe("MLP Scraper HTML Parsing", () => {
       const result = parseMlpBookDetails(htmlWithPartTitle);
 
       assert.strictEqual(result.partTitle, "Volume 1: The Beginning");
+      assert.strictEqual(result.subtitle, null);
     });
 
     test("should handle malformed HTML gracefully", () => {
@@ -155,6 +158,9 @@ describe("MLP Scraper HTML Parsing", () => {
       // Should not throw and should return reasonable defaults
       assert.ok(
         typeof result.partTitle === "string" || result.partTitle === null,
+      );
+      assert.ok(
+        typeof result.subtitle === "string" || result.subtitle === null,
       );
       assert.ok(
         typeof result.imageUrl === "string" || result.imageUrl === null,
@@ -315,11 +321,126 @@ describe("MLP Scraper HTML Parsing", () => {
       const hasData =
         result.description !== null ||
         result.partTitle !== null ||
+        result.subtitle !== null ||
         result.imageUrl !== null;
 
       assert.ok(
         hasData,
         "Should extract at least some data from real MLP fixture",
+      );
+    });
+
+    test("should extract part title from David Copperfield Part I fixture", () => {
+      const davidCopperfieldHtml = loadFixture("david-copperfield-part-i.html");
+
+      const result = parseMlpBookDetails(davidCopperfieldHtml);
+
+      console.log("David Copperfield extraction result:", result);
+
+      // Based on the HTML structure we examined, the part title should be "I"
+      // (stored in the "Podnázev" field, not "Název části")
+      assert.strictEqual(
+        result.subtitle,
+        "I",
+        "Should extract subtitle 'I' from David Copperfield Part I",
+      );
+      assert.strictEqual(
+        result.partTitle,
+        null,
+        "Part title should be null as it's stored in subtitle field",
+      );
+
+      // Test backwards compatibility - partTitle || subtitle should be "I"
+      assert.strictEqual(
+        result.partTitle || result.subtitle,
+        "I",
+        "partTitle || subtitle should return 'I' for backwards compatibility",
+      );
+    });
+
+    test("should extract both subtitle and part name when both are present", () => {
+      const htmlWithBothFields = `
+        <html>
+          <body>
+            <div class="book-content book-info-table">
+              <table>
+                <tbody>
+                  <tr>
+                    <td class="itemlefttd">Podnázev</td>
+                    <td>A Complete Novel</td>
+                  </tr>
+                  <tr>
+                    <td class="itemlefttd">Název části</td>
+                    <td>Chapter 1</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </body>
+        </html>
+      `;
+
+      const result = parseMlpBookDetails(htmlWithBothFields);
+
+      assert.strictEqual(
+        result.subtitle,
+        "A Complete Novel",
+        "Should extract subtitle from Podnázev field",
+      );
+      assert.strictEqual(
+        result.partTitle,
+        "Chapter 1",
+        "Should extract part title from Název části field",
+      );
+
+      // Test backwards compatibility - should prefer partTitle over subtitle
+      assert.strictEqual(
+        result.partTitle || result.subtitle,
+        "Chapter 1",
+        "partTitle || subtitle should prefer partTitle when both are available",
+      );
+    });
+
+    test("should extract only subtitle when part name is missing", () => {
+      const htmlWithOnlySubtitle = `
+        <html>
+          <body>
+            <div class="book-content book-info-table">
+              <table>
+                <tbody>
+                  <tr>
+                    <td class="itemlefttd">Podnázev</td>
+                    <td>The Complete Guide</td>
+                  </tr>
+                  <tr>
+                    <td class="itemlefttd">Other Field</td>
+                    <td>Other Value</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </body>
+        </html>
+      `;
+
+      const result = parseMlpBookDetails(htmlWithOnlySubtitle);
+
+      assert.strictEqual(
+        result.subtitle,
+        "The Complete Guide",
+        "Should extract subtitle",
+      );
+      assert.strictEqual(
+        result.partTitle,
+        null,
+        "Part title should be null when not present",
+      );
+
+      // Test backwards compatibility - should fall back to subtitle
+      assert.strictEqual(
+        result.partTitle || result.subtitle,
+        "The Complete Guide",
+        "partTitle || subtitle should fall back to subtitle when partTitle is null",
       );
     });
   });
