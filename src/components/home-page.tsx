@@ -230,7 +230,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Jakub Sedlacek
+              Jakub Sedláček
             </a>
           </div>
         </div>
