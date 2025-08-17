@@ -1,5 +1,5 @@
 ---
-import favicon from "#@/images/favicon.svg";
+import icon from "#@/images/icon.svg";
 
 export interface Props {
     title: string;
@@ -17,7 +17,7 @@ const { title } = Astro.props;
             content="Nejlepší české e-knihy zdarma z městské knihovny. Moderní romány, klasika, poezie i divadelní hry s hodnocením 4,0 a vyšším."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/svg+xml" href={favicon.src} />
+        <link rel="icon" type="image/svg+xml" href={icon.src} />
         <title>{title}</title>
     </head>
     <body>

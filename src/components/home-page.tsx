@@ -10,7 +10,7 @@ import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
 import { deduplicateBooks } from "#@/lib/shared/utils/book-deduplication.ts";
 import placeholderCover from "#@/images/book-placeholder.svg";
-import faviconIcon from "#@/images/favicon.svg";
+import icon from "#@/images/icon.svg";
 import { StarIcon } from "lucide-react";
 
 interface TimestampData {
@@ -57,7 +57,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
           <div className="flex items-center gap-3 mb-2">
             <h1 className="text-lg font-bold">Nejlepší e-knihy zdarma</h1>
             <img
-              src={faviconIcon.src}
+              src={icon.src}
               alt="Book icon"
               className="w-6 h-6 flex-shrink-0"
             />
