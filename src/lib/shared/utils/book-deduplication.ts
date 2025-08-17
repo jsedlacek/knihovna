@@ -25,38 +25,34 @@ export function deduplicateBooks(books: Book[]): Book[] {
     } else {
       // Multiple books with same author/title/subtitle/partTitle
       const booksWithYear = groupBooks.filter((book) => book.year);
-      const booksWithoutYear = groupBooks.filter((book) => !book.year);
 
       if (booksWithYear.length === 0) {
-        // No years available, keep all
+        // No years available for any book in the group, so we keep all.
+        // This might indicate a data issue, so a log is useful.
+        const firstBook = groupBooks[0]!;
+        console.log(
+          `Deduplication skipped for "${firstBook.author} - ${firstBook.title}": No year found.`,
+        );
         result.push(...groupBooks);
-      } else if (booksWithYear.length === 1) {
-        // Only one has a year, keep it and any without years
-        result.push(booksWithYear[0]!, ...booksWithoutYear);
       } else {
-        // Multiple books with years
+        // If at least one book has a year, we only consider those with a year
+        // and discard any that don't.
         const maxYear = Math.max(...booksWithYear.map((book) => book.year!));
         const newestBooks = booksWithYear.filter(
           (book) => book.year === maxYear,
         );
 
         if (newestBooks.length > 1) {
-          // Multiple books with same newest year - conflict
-          const firstBook = groupBooks[0]!;
-          const subtitlePart = firstBook.subtitle
-            ? ` (${firstBook.subtitle})`
-            : "";
-          const partTitlePart = firstBook.partTitle
-            ? ` [${firstBook.partTitle}]`
-            : "";
+          // This is a conflict: multiple books from the same (newest) year.
+          // We'll log it and keep all of them.
+          const firstBook = newestBooks[0]!;
           console.log(
-            `Duplicate books conflict: "${firstBook.author} - ${firstBook.title}${subtitlePart}${partTitlePart}" - multiple books from year ${maxYear}`,
+            `Conflict: Multiple books for "${firstBook.author} - ${firstBook.title}" from year ${maxYear}. Keeping all.`,
           );
-          result.push(...newestBooks, ...booksWithoutYear);
-        } else {
-          // Single newest book
-          result.push(newestBooks[0]!, ...booksWithoutYear);
         }
+
+        // Add the single newest book, or multiple in case of a conflict.
+        result.push(...newestBooks);
       }
     }
   }
