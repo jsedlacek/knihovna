@@ -199,6 +199,43 @@ export function formatNumberCzech(number: number): string {
 }
 
 /**
+ * Formats large numbers in a compact way for better readability.
+ * Uses Czech decimal comma and abbreviations.
+ * Shows decimal places only for single leading digits.
+ * Examples: 1700 -> "1,7 tis.", 17000 -> "17 tis.", 1700000 -> "1,7 mil."
+ */
+export function formatNumberCompact(number: number): string {
+  if (number < 1000) {
+    return formatNumberCzech(number);
+  }
+
+  if (number < 1000000) {
+    const thousands = number / 1000;
+    if (thousands < 10) {
+      return `${formatNumberCzech(Math.round(thousands * 10) / 10)} tis.`;
+    } else {
+      return `${formatNumberCzech(Math.round(thousands))} tis.`;
+    }
+  }
+
+  if (number < 1000000000) {
+    const millions = number / 1000000;
+    if (millions < 10) {
+      return `${formatNumberCzech(Math.round(millions * 10) / 10)} mil.`;
+    } else {
+      return `${formatNumberCzech(Math.round(millions))} mil.`;
+    }
+  }
+
+  const billions = number / 1000000000;
+  if (billions < 10) {
+    return `${formatNumberCzech(Math.round(billions * 10) / 10)} mld.`;
+  } else {
+    return `${formatNumberCzech(Math.round(billions))} mld.`;
+  }
+}
+
+/**
  * Formats author name from "Last, First" format to "First Last" format.
  * If the name doesn't contain a comma, returns it as-is.
  * @param author The author name to format.

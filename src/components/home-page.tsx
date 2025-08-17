@@ -5,6 +5,7 @@ import {
 import {
   formatNumberCzech,
   formatAuthorName,
+  formatNumberCompact,
 } from "#@/lib/shared/utils/text-utils.ts";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
@@ -140,11 +141,13 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
-                                {formatNumberCzech(book.ratingsCount)} hodnocení
+                                {formatNumberCompact(book.ratingsCount)}
+                                &nbsp;hodnocení
                               </a>
                             ) : (
                               <span>
-                                {formatNumberCzech(book.ratingsCount)} hodnocení
+                                {formatNumberCompact(book.ratingsCount)}
+                                &nbsp;hodnocení
                               </span>
                             )}
                             )
