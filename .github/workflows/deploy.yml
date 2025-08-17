@@ -33,7 +33,7 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Restore data cache
+            - name: Cache data directory
               uses: actions/cache@v4
               with:
                   path: data/
@@ -52,10 +52,3 @@ jobs:
               env:
                   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                   CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
-            - name: Save data cache
-              if: always()
-              uses: actions/cache/save@v4
-              with:
-                  path: data/
-                  key: data-cache-${{ github.run_id }}
