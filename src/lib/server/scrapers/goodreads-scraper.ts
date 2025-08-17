@@ -6,6 +6,7 @@ import {
   cleanSearchTerm,
   getAuthorForSearch,
   getTitleWithArabicNumerals,
+  calculateSimilarity,
 } from "#@/lib/shared/utils/text-utils.ts";
 import {
   GOODREADS_BASE_URL,
@@ -16,6 +17,18 @@ import {
   MAX_RATING,
 } from "#@/lib/shared/config/scraper-config.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
+
+/**
+ * Represents a book candidate found in Goodreads search results,
+ * including its relevance score.
+ */
+interface BookCandidate {
+  url: string;
+  title: string;
+  author: string;
+  ratingsCount: number;
+  score: number;
+}
 
 /**
  * Extract rating and ratings count from JSON-LD structured data.
@@ -187,15 +200,95 @@ export function validateRating(
 }
 
 /**
- * Find book link from Goodreads search results HTML.
+ * Find the best matching book link from Goodreads search results HTML using scoring.
  */
-export function findBookLinkFromSearch(searchHtml: string): string | null {
+export function findBookLinkFromSearch(
+  searchHtml: string,
+  book: { title: string; author: string },
+): string | null {
   try {
-    const $search = cheerio.load(searchHtml);
-    const bookLink = $search("a.bookTitle[href*='/book/show/']").first();
-    return bookLink.attr("href") || null;
+    const $ = cheerio.load(searchHtml);
+    const candidates: BookCandidate[] = [];
+    const authorSurname = getAuthorForSearch(book.author);
+
+    // Find all book links and evaluate each one
+    $("a.bookTitle[href*='/book/show/']").each((_, element) => {
+      const titleEl = $(element);
+      const candidateUrl = titleEl.attr("href") || "";
+      const candidateTitle = titleEl.text().trim();
+
+      if (!candidateUrl || !candidateTitle) return;
+
+      // Find the author for this book result
+      const bookRow = titleEl.closest("tr");
+      const authorEl = bookRow.find("a.authorName").first();
+      const candidateAuthor = authorEl.text().trim();
+
+      // Extract ratings count
+      const ratingsText = bookRow.find(".minirating").text();
+      const ratingsMatch = ratingsText.match(/([\d,]+)\s+ratings/);
+      const ratingsCount =
+        ratingsMatch && ratingsMatch[1]
+          ? parseInt(ratingsMatch[1].replace(/,/g, ""), 10)
+          : 0;
+
+      // Calculate relevance score
+      let score = 0;
+      const lowerAuthor = candidateAuthor.toLowerCase();
+      const lowerTitle = candidateTitle.toLowerCase();
+      const lowerSearchTitle = book.title.toLowerCase();
+
+      // Author Score (High Priority)
+      if (lowerAuthor.includes(authorSurname.toLowerCase())) {
+        score += 50;
+      }
+      if (lowerAuthor.includes("source wikipedia")) {
+        score -= 100;
+      }
+
+      // Title Score (Medium Priority)
+      const titleSimilarity = calculateSimilarity(lowerSearchTitle, lowerTitle);
+      score += titleSimilarity * 20;
+
+      // Exact title match bonus
+      if (lowerTitle === lowerSearchTitle) {
+        score += 25;
+      }
+
+      // Length penalty for overly long titles (compilation books)
+      const titleLengthDiff = Math.abs(
+        candidateTitle.length - book.title.length,
+      );
+      if (titleLengthDiff > 10) {
+        score -= titleLengthDiff * 0.3;
+      }
+
+      // Popularity tie-breaker (Low Priority)
+      if (ratingsCount > 0) {
+        score += Math.log10(ratingsCount) * 2;
+      }
+
+      candidates.push({
+        url: candidateUrl,
+        title: candidateTitle,
+        author: candidateAuthor,
+        ratingsCount,
+        score,
+      });
+    });
+
+    // Handle no candidates found - fallback to original logic
+    if (candidates.length === 0) {
+      const fallbackLink = $("a.bookTitle[href*='/book/show/']").first();
+      return fallbackLink.attr("href") || null;
+    }
+
+    // Sort by score (highest first) and select the best match
+    candidates.sort((a, b) => b.score - a.score);
+
+    return candidates[0]?.url || null;
   } catch (error) {
-    console.error("Error parsing search results:", error);
+    console.error("Error parsing search results with scoring:", error);
     return null;
   }
 }
@@ -252,7 +345,7 @@ export async function scrapeGoodreads(book: {
         `Searching Goodreads for: "${cleanedTitle}" by ${authorForSearch}`,
       );
       const searchHtml = await fetchHtml(searchUrl);
-      return findBookLinkFromSearch(searchHtml);
+      return findBookLinkFromSearch(searchHtml, { title, author: book.author });
     };
 
     // 1. Primary search attempt

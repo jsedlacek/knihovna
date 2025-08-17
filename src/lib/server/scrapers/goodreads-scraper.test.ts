@@ -32,7 +32,10 @@ describe("Goodreads Scraper HTML Parsing", () => {
         </html>
       `;
 
-      const result = findBookLinkFromSearch(searchHtml);
+      const result = findBookLinkFromSearch(searchHtml, {
+        title: "The Hobbit",
+        author: "J.R.R. Tolkien",
+      });
 
       assert.strictEqual(result, "/book/show/5907.The_Hobbit");
     });
@@ -46,7 +49,10 @@ describe("Goodreads Scraper HTML Parsing", () => {
         </html>
       `;
 
-      const result = findBookLinkFromSearch(searchHtml);
+      const result = findBookLinkFromSearch(searchHtml, {
+        title: "Test Book",
+        author: "Test Author",
+      });
 
       assert.strictEqual(result, null);
     });
@@ -61,7 +67,10 @@ describe("Goodreads Scraper HTML Parsing", () => {
         </html>
       `;
 
-      const result = findBookLinkFromSearch(searchHtml);
+      const result = findBookLinkFromSearch(searchHtml, {
+        title: "Test Book",
+        author: "Test Author",
+      });
 
       assert.strictEqual(result, "/book/show/123.First_Book");
     });
@@ -69,16 +78,92 @@ describe("Goodreads Scraper HTML Parsing", () => {
     test("should handle malformed HTML gracefully", () => {
       const malformedHtml = `<html><body><a class="bookTitle" href="/book/show/123">Unclosed`;
 
-      const result = findBookLinkFromSearch(malformedHtml);
+      const result = findBookLinkFromSearch(malformedHtml, {
+        title: "Test Book",
+        author: "Test Author",
+      });
 
       // Should not throw and should return reasonable result
       assert.ok(typeof result === "string" || result === null);
     });
 
     test("should handle empty HTML", () => {
-      const result = findBookLinkFromSearch("");
+      const result = findBookLinkFromSearch("", {
+        title: "Test Book",
+        author: "Test Author",
+      });
 
       assert.strictEqual(result, null);
+    });
+
+    test("should prioritize correct book for Karel Čapek Krakatit search", () => {
+      // This test demonstrates the current bug where the scraper picks
+      // the wrong book (Wikipedia compilation) instead of the standalone Krakatit
+      const searchHtml = loadFixture("goodreads-search-capek-krakatit.html");
+
+      const result = findBookLinkFromSearch(searchHtml, {
+        title: "Krakatit",
+        author: "Karel Čapek",
+      });
+
+      // With smart selection: should now pick the standalone Krakatit book
+      console.log("Smart selection result:", result);
+
+      // The improved implementation should pick the best matching book
+      assert.strictEqual(
+        result,
+        "/book/show/428287.Krakatit?from_search=true&from_srp=true&qid=Y4sHHLfIIx&rank=2",
+      );
+
+      // Verify it's the standalone "Krakatit" by Karel Čapek, not the Wikipedia compilation
+    });
+
+    test("should demonstrate the search results structure for Krakatit", () => {
+      // This test analyzes the search results to show what we're dealing with
+      const searchHtml = loadFixture("goodreads-search-capek-krakatit.html");
+      const $ = cheerio.load(searchHtml);
+
+      const bookLinks = $("a.bookTitle[href*='/book/show/']");
+      console.log(`Found ${bookLinks.length} book results in search`);
+
+      // First result (currently selected): Wikipedia compilation
+      const firstTitle = $(bookLinks[0]).text().trim();
+      const firstHref = $(bookLinks[0]).attr("href");
+      console.log(`1st result: "${firstTitle}" -> ${firstHref}`);
+
+      // Second result (should be selected): Standalone Krakatit
+      if (bookLinks.length > 1) {
+        const secondTitle = $(bookLinks[1]).text().trim();
+        const secondHref = $(bookLinks[1]).attr("href");
+        console.log(`2nd result: "${secondTitle}" -> ${secondHref}`);
+
+        assert.strictEqual(secondTitle, "Krakatit");
+        assert.ok(
+          secondHref && secondHref.includes("/book/show/428287.Krakatit"),
+        );
+      }
+
+      // This demonstrates that the correct book exists in the results but isn't selected
+      assert.ok(bookLinks.length >= 2, "Should have multiple search results");
+    });
+
+    test("should successfully prioritize standalone book over compilation", () => {
+      // This test verifies that the smart selection works correctly
+      const searchHtml = loadFixture("goodreads-search-capek-krakatit.html");
+
+      const result = findBookLinkFromSearch(searchHtml, {
+        title: "Krakatit",
+        author: "Karel Čapek",
+      });
+
+      // Should pick the standalone "Krakatit" book instead of Wikipedia compilation
+      assert.strictEqual(
+        result,
+        "/book/show/428287.Krakatit?from_search=true&from_srp=true&qid=Y4sHHLfIIx&rank=2",
+        "Should pick standalone 'Krakatit' by Karel Čapek, not Wikipedia compilation",
+      );
+
+      console.log("✅ Smart book selection working correctly");
     });
   });
 
@@ -466,7 +551,10 @@ describe("Goodreads Scraper HTML Parsing", () => {
       // Test if we have a search results fixture
       try {
         const searchHtml = loadFixture("goodreads-search-sample.html");
-        const result = findBookLinkFromSearch(searchHtml);
+        const result = findBookLinkFromSearch(searchHtml, {
+          title: "Test Book",
+          author: "Test Author",
+        });
 
         console.log("Search fixture result:", result);
 
@@ -488,7 +576,10 @@ describe("Goodreads Scraper HTML Parsing", () => {
           </html>
         `;
 
-        const result = findBookLinkFromSearch(syntheticSearchHtml);
+        const result = findBookLinkFromSearch(syntheticSearchHtml, {
+          title: "Test Book",
+          author: "Test Author",
+        });
         assert.strictEqual(result, "/book/show/12345.Test_Book");
       }
     });
