@@ -68,10 +68,9 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
         <section className="space-y-4">
           <div className="text-xs sm:text-sm leading-relaxed space-y-4">
             <p>
-              Na jednom místě zde najdete{" "}
-              {formatNumberCzech(sortedBooks.length)} vybraných moderních
-              románů, klasiky, poezie i divadelních her – všechny s hodnocením
-              od čtenářů 4,0 a vyšším. Ke stažení zdarma z městské knihovny.
+              Tady najdete {formatNumberCzech(sortedBooks.length)} románů,
+              klasiky, poezie i divadla – všechno, co má od čtenářů aspoň čtyři
+              hvězdičky. A hlavně zdarma ke stažení z městské knihovny.
             </p>
           </div>
         </section>
