@@ -51,10 +51,12 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
   return (
     <div className="min-h-screen bg-background text-foreground font-mono">
       <header className="border-b border-border">
-        <div className="max-w-4xl mx-auto p-6">
-          <h1 className="text-lg font-bold mb-2">Nejlepší e-knihy zdarma</h1>
+        <div className="max-w-4xl mx-auto p-4 sm:p-6">
+          <h1 className="text-base sm:text-lg font-bold mb-2">
+            Nejlepší e-knihy zdarma
+          </h1>
           {lastUpdated && (
-            <div className="text-sm text-muted-foreground">
+            <div className="text-xs sm:text-sm text-muted-foreground">
               Aktualizováno {formattedLastUpdated}
             </div>
           )}
@@ -62,13 +64,13 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
       </header>
 
       {/* Main content */}
-      <main className="max-w-4xl mx-auto p-6 space-y-8">
+      <main className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6 sm:space-y-8">
         <section className="space-y-4">
-          <div className="text-sm leading-relaxed space-y-4">
+          <div className="text-xs sm:text-sm leading-relaxed space-y-4">
             <p>
-              Tady najdete romány, klasiku, poezii i divadlo – všechno, co má od
-              čtenářů aspoň čtyři hvězdičky. A hlavně zdarma ke stažení z
-              městské knihovny.
+              Na jednom místě zde najdete moderní romány, klasiku, poezii i
+              divadelní hry – všechny s hodnocením od čtenářů 4,0 a vyšším. Ke
+              stažení zdarma z městské knihovny.
             </p>
           </div>
         </section>
@@ -79,7 +81,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
             {sortedBooks.map((book, index) => (
               <div
                 key={`${book.title}-${book.author}-${index}`}
-                className="bg-card p-4 border border-border flex gap-4"
+                className="bg-card p-3 sm:p-4 border border-border flex flex-col sm:flex-row gap-3 sm:gap-4"
               >
                 <a
                   href={book.detailUrl}
@@ -95,11 +97,11 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                         img.src = placeholderCover.src;
                     }}
                     alt={`${book.title} book cover`}
-                    className="w-20 h-30 object-cover border border-border hover:opacity-80 transition-opacity"
+                    className="w-16 h-24 sm:w-20 sm:h-30 object-cover border border-border hover:opacity-80 transition-opacity mx-auto sm:mx-0"
                   />
                 </a>
-                <div className="flex-1">
-                  <h3 className="font-bold text-sm mb-2">
+                <div className="flex-1 text-center sm:text-left">
+                  <h3 className="font-bold text-xs sm:text-sm mb-2">
                     <a
                       href={book.detailUrl}
                       target="_blank"
@@ -111,7 +113,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                         ` (${book.partTitle || book.subtitle})`}
                     </a>
                   </h3>
-                  <p className="text-sm text-card-foreground mb-2 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-card-foreground mb-2 line-clamp-2">
                     {book.description}
                   </p>
                   <div className="text-xs text-muted-foreground mb-3">
@@ -153,11 +155,11 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                       book.genres.length > 0 &&
                       ` | Žánr: ${book.genres.join(", ")}`}
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex justify-center sm:justify-start gap-2 flex-wrap">
                     {book.epubUrl && (
                       <a
                         href={book.epubUrl}
-                        className="bg-primary text-primary-foreground px-3 py-1 text-xs font-mono border border-border hover:bg-primary/90 inline-block"
+                        className="bg-primary text-primary-foreground px-4 py-2 sm:px-3 sm:py-1 text-xs font-mono border border-border hover:bg-primary/90 min-h-[44px] sm:min-h-0 flex items-center justify-center"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -167,7 +169,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                     {book.pdfUrl && (
                       <a
                         href={book.pdfUrl}
-                        className="bg-secondary text-secondary-foreground px-3 py-1 text-xs font-mono border border-border hover:bg-secondary/90 inline-block"
+                        className="bg-secondary text-secondary-foreground px-4 py-2 sm:px-3 sm:py-1 text-xs font-mono border border-border hover:bg-secondary/90 min-h-[44px] sm:min-h-0 flex items-center justify-center"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -192,8 +194,8 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
         )}
       </main>
 
-      <footer className="border-t border-border mt-12 p-6">
-        <div className="max-w-4xl mx-auto text-center text-sm text-muted-foreground">
+      <footer className="border-t border-border mt-12 p-4 sm:p-6">
+        <div className="max-w-4xl mx-auto text-center text-xs sm:text-sm text-muted-foreground">
           <div>
             Zdroje:{" "}
             <a
