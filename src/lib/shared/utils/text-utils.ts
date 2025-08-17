@@ -138,6 +138,30 @@ export function formatNumberCzech(number: number): string {
 }
 
 /**
+ * Formats author name from "Last, First" format to "First Last" format.
+ * If the name doesn't contain a comma, returns it as-is.
+ * @param author The author name to format.
+ * @returns The formatted author name.
+ */
+export function formatAuthorName(author: string): string {
+  if (!author?.trim()) return author;
+
+  const trimmed = author.trim();
+
+  // Check if the name contains a comma (indicating "Last, First" format)
+  if (trimmed.includes(",")) {
+    const parts = trimmed.split(",").map((part) => part.trim());
+    if (parts.length === 2 && parts[0] && parts[1]) {
+      // Return "First Last" format
+      return `${parts[1]} ${parts[0]}`;
+    }
+  }
+
+  // Return as-is if no comma or invalid format
+  return trimmed;
+}
+
+/**
  * Calculates the Jaro-Winkler similarity between two strings.
  * Returns a value between 0 (no similarity) and 1 (exact match).
  * @param s1 The first string.

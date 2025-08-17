@@ -2,7 +2,10 @@ import {
   sortBooksByScore,
   formatBookScore,
 } from "#@/lib/shared/utils/book-scoring.ts";
-import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
+import {
+  formatNumberCzech,
+  formatAuthorName,
+} from "#@/lib/shared/utils/text-utils.ts";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import placeholderCover from "#@/images/book-placeholder.svg";
 
@@ -89,7 +92,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                 </a>
                 <div className="flex-1">
                   <h3 className="font-bold text-sm mb-2">
-                    {book.author} – {book.title}
+                    {formatAuthorName(book.author)} – {book.title}
                     {book.partTitle && ` (${book.partTitle})`}
                   </h3>
                   <p className="text-sm text-card-foreground mb-2 line-clamp-2">
