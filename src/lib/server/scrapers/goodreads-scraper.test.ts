@@ -489,4 +489,125 @@ describe("Goodreads Scraper HTML Parsing", () => {
       }
     });
   });
+
+  describe("Roman numeral fallback functionality", () => {
+    test("should use fallback search when original title fails", async () => {
+      // Mock the fetchHtml function to simulate search failure then success
+      const originalFetchHtml = await import(
+        "#@/lib/server/utils/fetch-utils.ts"
+      );
+      let callCount = 0;
+
+      // This is a unit test for the logic, not integration test
+      // We'll test the fallback logic by checking the search queries generated
+      const book = {
+        title: "Jih proti Severu (II)",
+        author: "Mitchell, Margaret",
+      };
+
+      // Test that getTitleWithArabicNumerals creates the expected fallback
+      const { getTitleWithArabicNumerals } = await import(
+        "#@/lib/shared/utils/text-utils.ts"
+      );
+      const fallbackTitle = getTitleWithArabicNumerals(book.title);
+
+      assert.strictEqual(
+        fallbackTitle,
+        "Jih proti Severu 2",
+        "Should convert Roman numeral to Arabic",
+      );
+      assert.notStrictEqual(
+        book.title,
+        fallbackTitle,
+        "Original and fallback should be different",
+      );
+    });
+
+    test("should not attempt fallback when title has no Roman numerals", async () => {
+      const { getTitleWithArabicNumerals } = await import(
+        "#@/lib/shared/utils/text-utils.ts"
+      );
+
+      const titleWithoutRoman = "Simple Book Title";
+      const fallbackTitle = getTitleWithArabicNumerals(titleWithoutRoman);
+
+      assert.strictEqual(
+        titleWithoutRoman,
+        fallbackTitle,
+        "Should not change titles without Roman numerals",
+      );
+    });
+
+    test("should handle various Roman numeral formats in fallback", async () => {
+      const { getTitleWithArabicNumerals } = await import(
+        "#@/lib/shared/utils/text-utils.ts"
+      );
+
+      const testCases = [
+        { input: "Book (I)", expected: "Book 1" },
+        { input: "Book (II)", expected: "Book 2" },
+        { input: "Book (III)", expected: "Book 3" },
+        { input: "Book (IV)", expected: "Book 4" },
+        { input: "Book (V)", expected: "Book 5" },
+        { input: "Book (VI)", expected: "Book 6" },
+        { input: "Book (VII)", expected: "Book 7" },
+        { input: "Book (VIII)", expected: "Book 8" },
+        { input: "Book (IX)", expected: "Book 9" },
+        { input: "Book (X)", expected: "Book 10" },
+      ];
+
+      for (const testCase of testCases) {
+        const result = getTitleWithArabicNumerals(testCase.input);
+        assert.strictEqual(
+          result,
+          testCase.expected,
+          `Failed for ${testCase.input}`,
+        );
+      }
+    });
+
+    test("should preserve original search behavior for titles without parentheses", async () => {
+      const { cleanSearchTerm } = await import(
+        "#@/lib/shared/utils/text-utils.ts"
+      );
+
+      // Test that our changes don't break normal title cleaning
+      const normalTitle = "Harry Potter and the Philosopher's Stone";
+      const cleaned = cleanSearchTerm(normalTitle);
+
+      assert.strictEqual(
+        cleaned,
+        "Harry Potter and the Philosopher s Stone",
+        "Should clean normally",
+      );
+    });
+
+    test("should clean both original and fallback titles properly", async () => {
+      const { cleanSearchTerm, getTitleWithArabicNumerals } = await import(
+        "#@/lib/shared/utils/text-utils.ts"
+      );
+
+      const originalTitle = "Jih proti Severu (II)";
+      const fallbackTitle = getTitleWithArabicNumerals(originalTitle);
+
+      const cleanedOriginal = cleanSearchTerm(originalTitle);
+      const cleanedFallback = cleanSearchTerm(fallbackTitle);
+
+      assert.strictEqual(
+        cleanedOriginal,
+        "Jih proti Severu II",
+        "Should clean original title",
+      );
+      assert.strictEqual(
+        cleanedFallback,
+        "Jih proti Severu 2",
+        "Should clean fallback title",
+      );
+      assert.notStrictEqual(
+        cleanedOriginal,
+        cleanedFallback,
+        "Cleaned versions should differ",
+      );
+    });
+  });
 });

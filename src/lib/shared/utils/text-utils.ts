@@ -119,6 +119,15 @@ export function cleanTextForSearch(text: string): string {
 function romanToArabic(roman: string): number {
   if (!roman || typeof roman !== "string") return 0;
 
+  const upperRoman = roman.toUpperCase();
+
+  // Validate against a strict pattern for valid Roman numerals
+  const validRomanPattern =
+    /^(M{0,4})(CM|CD|D?C{0,3})(XL|XC|L?X{0,3})(IV|IX|V?I{0,3})$/;
+  if (!validRomanPattern.test(upperRoman)) {
+    return 0; // Invalid Roman numeral pattern
+  }
+
   const romanMap: { [key: string]: number } = {
     I: 1,
     V: 5,
@@ -129,7 +138,6 @@ function romanToArabic(roman: string): number {
     M: 1000,
   };
 
-  const upperRoman = roman.toUpperCase();
   let result = 0;
   let prevValue = 0;
 
@@ -177,9 +185,9 @@ export function getTitleWithArabicNumerals(title: string): string {
  * Extracts author surname for better search matching.
  */
 export function getAuthorForSearch(author: string): string {
-  const cleanedAuthor = cleanSearchTerm(author);
   // Use surname (first part before comma) for better matching if available
-  return cleanedAuthor.split(",")[0] || cleanedAuthor;
+  const surname = author.split(",")[0] || author;
+  return cleanSearchTerm(surname);
 }
 
 /**
