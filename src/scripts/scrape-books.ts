@@ -41,6 +41,26 @@ async function main() {
     )
     .example("$0 --mlp-only", "Only scrape MLP data, skip Goodreads entirely")
     .example("$0 --goodreads-only", "Only scrape Goodreads for existing books")
+    .example(
+      "$0 --book-name 'Kafka'",
+      "Re-scrape only books with 'Kafka' in the title",
+    )
+    .example(
+      "$0 --author 'Karel Čapek'",
+      "Re-scrape only books by author Karel Čapek",
+    )
+    .example(
+      "$0 --book-name 'Война' --force-goodreads",
+      "Force re-scrape Goodreads data for books with 'Война' in title",
+    )
+    .example(
+      "$0 --author 'Tolkien' --mlp-only",
+      "Re-scrape MLP data only for books by authors matching 'Tolkien'",
+    )
+    .example(
+      "$0 --book-name 'povídky' --verbose",
+      "Show which books match 'povídky' and process them",
+    )
     .option("force-mlp", {
       alias: "f",
       type: "boolean",
@@ -63,6 +83,24 @@ async function main() {
     .option("goodreads-only", {
       type: "boolean",
       description: "Only scrape Goodreads data for existing books, skip MLP",
+      default: false,
+    })
+    .option("book-name", {
+      alias: "b",
+      type: "string",
+      description:
+        "Only process books with this text in the title (case-insensitive partial match)",
+    })
+    .option("author", {
+      alias: "a",
+      type: "string",
+      description:
+        "Only process books by this author (case-insensitive partial match)",
+    })
+    .option("verbose", {
+      alias: "v",
+      type: "boolean",
+      description: "Show detailed information about matching books",
       default: false,
     })
     .check((argv) => {
@@ -104,6 +142,19 @@ async function main() {
   if (argv.goodreadsOnly) {
     console.log("⭐ Goodreads only mode: Skipping MLP scraping.");
   }
+  if (argv.bookName) {
+    console.log(
+      `🔍 Selective mode: Only processing books with "${argv.bookName}" in title.`,
+    );
+  }
+  if (argv.author) {
+    console.log(
+      `👤 Selective mode: Only processing books by author "${argv.author}".`,
+    );
+  }
+  if (argv.verbose) {
+    console.log("📝 Verbose mode: Will show detailed matching information.");
+  }
 
   // 2. Initialization: Load existing books into a Map for efficient updates.
   const existingBooks = await loadExistingBooks();
@@ -114,6 +165,49 @@ async function main() {
 
   const oneMonthAgo = new Date();
   oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
+
+  // Helper function to check if a book matches selective criteria
+  const matchesSelectiveCriteria = (book: Book): boolean => {
+    if (argv.bookName) {
+      const titleMatch = book.title
+        .toLowerCase()
+        .includes(argv.bookName.toLowerCase());
+      if (!titleMatch) return false;
+    }
+    if (argv.author) {
+      const authorMatch = book.author
+        .toLowerCase()
+        .includes(argv.author.toLowerCase());
+      if (!authorMatch) return false;
+    }
+    return true;
+  };
+
+  // Log selective criteria summary
+  if (argv.bookName || argv.author) {
+    const matchingBooks = Array.from(booksMap.values()).filter(
+      matchesSelectiveCriteria,
+    );
+    console.log(
+      `🎯 Selective criteria matches: ${matchingBooks.length}/${booksMap.size} books qualify for processing.`,
+    );
+
+    if (argv.verbose && matchingBooks.length > 0) {
+      console.log("\n📚 Matching books:");
+      for (const book of matchingBooks.slice(0, 10)) {
+        console.log(`  • "${book.title}" by ${book.author}`);
+      }
+      if (matchingBooks.length > 10) {
+        console.log(`  ... and ${matchingBooks.length - 10} more books`);
+      }
+      console.log();
+    }
+
+    if (matchingBooks.length === 0) {
+      console.log("⚠️ No books match the selective criteria. Exiting.");
+      return;
+    }
+  }
 
   // 3. MLP Scraping Phase (skipped if in goodreads-only mode)
   if (!argv.goodreadsOnly) {
@@ -150,6 +244,9 @@ async function main() {
     // Identify books needing MLP detail scraping
     const booksNeedingMlpDetails = Array.from(booksMap.values()).filter(
       (book) => {
+        // First check if book matches selective criteria
+        if (!matchesSelectiveCriteria(book)) return false;
+
         if (argv.forceMlp) return true;
         const isOutOfDate =
           !book.mlpScrapedAt || new Date(book.mlpScrapedAt) < oneMonthAgo;
@@ -208,6 +305,9 @@ async function main() {
   if (!argv.mlpOnly) {
     console.log(" scraping Goodreads...");
     const booksForGoodreads = Array.from(booksMap.values()).filter((book) => {
+      // First check if book matches selective criteria
+      if (!matchesSelectiveCriteria(book)) return false;
+
       if (argv.forceGoodreads) return true;
       const isOutOfDate =
         !book.goodreadsScrapedAt ||
