@@ -117,7 +117,9 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                   <div className="text-xs text-muted-foreground mb-3">
                     {book.rating ? (
                       <>
-                        {book.rating}/5
+                        <span className="font-semibold text-sm">
+                          {formatNumberCzech(book.rating)}/5
+                        </span>
                         {book.ratingsCount && (
                           <>
                             {" "}
