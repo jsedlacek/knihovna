@@ -200,6 +200,112 @@ export function validateRating(
 }
 
 /**
+ * Extract book candidates from Goodreads search results HTML.
+ */
+export function extractBookCandidates($: cheerio.CheerioAPI): BookCandidate[] {
+  const candidates: BookCandidate[] = [];
+
+  $("a.bookTitle[href*='/book/show/']").each((_, element) => {
+    const titleEl = $(element);
+    const candidateUrl = titleEl.attr("href") || "";
+    const candidateTitle = titleEl.text().trim();
+
+    if (!candidateUrl || !candidateTitle) return;
+
+    // Find the author for this book result
+    const bookRow = titleEl.closest("tr");
+    const authorEl = bookRow.find("a.authorName").first();
+    const candidateAuthor = authorEl.text().trim();
+
+    // Extract ratings count
+    const ratingsText = bookRow.find(".minirating").text();
+    const ratingsMatch = ratingsText.match(/([\d,]+)\s+ratings/);
+    const ratingsCount =
+      ratingsMatch && ratingsMatch[1]
+        ? parseInt(ratingsMatch[1].replace(/,/g, ""), 10)
+        : 0;
+
+    candidates.push({
+      url: candidateUrl,
+      title: candidateTitle,
+      author: candidateAuthor,
+      ratingsCount,
+      score: 0, // Will be calculated separately
+    });
+  });
+
+  return candidates;
+}
+
+/**
+ * Calculate relevance score for a book candidate.
+ */
+export function scoreBookCandidate(
+  candidate: BookCandidate,
+  searchBook: { title: string; author: string },
+): number {
+  const authorSurname = getAuthorForSearch(searchBook.author);
+  let score = 0;
+
+  const lowerAuthor = candidate.author.toLowerCase();
+  const lowerTitle = candidate.title.toLowerCase();
+  const lowerSearchTitle = searchBook.title.toLowerCase();
+
+  // Author Score (High Priority)
+  if (lowerAuthor.includes(authorSurname.toLowerCase())) {
+    score += 50;
+  }
+  if (lowerAuthor.includes("source wikipedia")) {
+    score -= 100;
+  }
+
+  // Title Score (Medium Priority)
+  const titleSimilarity = calculateSimilarity(lowerSearchTitle, lowerTitle);
+  score += titleSimilarity * 20;
+
+  // Exact title match bonus
+  if (lowerTitle === lowerSearchTitle) {
+    score += 25;
+  }
+
+  // Length penalty for overly long titles (compilation books)
+  const titleLengthDiff = Math.abs(
+    candidate.title.length - searchBook.title.length,
+  );
+  if (titleLengthDiff > 10) {
+    score -= titleLengthDiff * 0.3;
+  }
+
+  // Popularity tie-breaker (Low Priority)
+  if (candidate.ratingsCount > 0) {
+    score += Math.log10(candidate.ratingsCount) * 2;
+  }
+
+  return score;
+}
+
+/**
+ * Select the best book candidate from a list based on scores.
+ */
+export function selectBestBookCandidate(
+  candidates: BookCandidate[],
+  searchBook: { title: string; author: string },
+): string | null {
+  if (candidates.length === 0) return null;
+
+  // Score each candidate
+  const scoredCandidates = candidates.map((candidate) => ({
+    ...candidate,
+    score: scoreBookCandidate(candidate, searchBook),
+  }));
+
+  // Sort by score (highest first) and select the best match
+  scoredCandidates.sort((a, b) => b.score - a.score);
+
+  return scoredCandidates[0]?.url || null;
+}
+
+/**
  * Find the best matching book link from Goodreads search results HTML using scoring.
  */
 export function findBookLinkFromSearch(
@@ -208,85 +314,9 @@ export function findBookLinkFromSearch(
 ): string | null {
   try {
     const $ = cheerio.load(searchHtml);
-    const candidates: BookCandidate[] = [];
-    const authorSurname = getAuthorForSearch(book.author);
+    const candidates = extractBookCandidates($);
 
-    // Find all book links and evaluate each one
-    $("a.bookTitle[href*='/book/show/']").each((_, element) => {
-      const titleEl = $(element);
-      const candidateUrl = titleEl.attr("href") || "";
-      const candidateTitle = titleEl.text().trim();
-
-      if (!candidateUrl || !candidateTitle) return;
-
-      // Find the author for this book result
-      const bookRow = titleEl.closest("tr");
-      const authorEl = bookRow.find("a.authorName").first();
-      const candidateAuthor = authorEl.text().trim();
-
-      // Extract ratings count
-      const ratingsText = bookRow.find(".minirating").text();
-      const ratingsMatch = ratingsText.match(/([\d,]+)\s+ratings/);
-      const ratingsCount =
-        ratingsMatch && ratingsMatch[1]
-          ? parseInt(ratingsMatch[1].replace(/,/g, ""), 10)
-          : 0;
-
-      // Calculate relevance score
-      let score = 0;
-      const lowerAuthor = candidateAuthor.toLowerCase();
-      const lowerTitle = candidateTitle.toLowerCase();
-      const lowerSearchTitle = book.title.toLowerCase();
-
-      // Author Score (High Priority)
-      if (lowerAuthor.includes(authorSurname.toLowerCase())) {
-        score += 50;
-      }
-      if (lowerAuthor.includes("source wikipedia")) {
-        score -= 100;
-      }
-
-      // Title Score (Medium Priority)
-      const titleSimilarity = calculateSimilarity(lowerSearchTitle, lowerTitle);
-      score += titleSimilarity * 20;
-
-      // Exact title match bonus
-      if (lowerTitle === lowerSearchTitle) {
-        score += 25;
-      }
-
-      // Length penalty for overly long titles (compilation books)
-      const titleLengthDiff = Math.abs(
-        candidateTitle.length - book.title.length,
-      );
-      if (titleLengthDiff > 10) {
-        score -= titleLengthDiff * 0.3;
-      }
-
-      // Popularity tie-breaker (Low Priority)
-      if (ratingsCount > 0) {
-        score += Math.log10(ratingsCount) * 2;
-      }
-
-      candidates.push({
-        url: candidateUrl,
-        title: candidateTitle,
-        author: candidateAuthor,
-        ratingsCount,
-        score,
-      });
-    });
-
-    // Handle no candidates found - fallback to original logic
-    if (candidates.length === 0) {
-      const fallbackLink = $("a.bookTitle[href*='/book/show/']").first();
-      return fallbackLink.attr("href") || null;
-    }
-
-    // Sort by score (highest first) and select the best match
-    candidates.sort((a, b) => b.score - a.score);
-
-    return candidates[0]?.url || null;
+    return selectBestBookCandidate(candidates, book);
   } catch (error) {
     console.error("Error parsing search results with scoring:", error);
     return null;

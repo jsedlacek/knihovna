@@ -5,6 +5,9 @@ import {
   parseGoodreadsBookData,
   extractGenres,
   validateRating,
+  extractBookCandidates,
+  scoreBookCandidate,
+  selectBestBookCandidate,
 } from "./goodreads-scraper.ts";
 import { loadFixture } from "#@/test/utils/test-utils.ts";
 import {
@@ -164,6 +167,190 @@ describe("Goodreads Scraper HTML Parsing", () => {
       );
 
       console.log("✅ Smart book selection working correctly");
+    });
+  });
+
+  describe("extractBookCandidates", () => {
+    test("should extract multiple book candidates from search HTML", () => {
+      const searchHtml = `
+        <html>
+          <body>
+            <table>
+              <tr>
+                <td>
+                  <a class="bookTitle" href="/book/show/123.First_Book">First Book</a>
+                  <a class="authorName" href="/author/456">John Doe</a>
+                  <span class="minirating">4.5 stars — 1,234 ratings</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a class="bookTitle" href="/book/show/789.Second_Book">Second Book</a>
+                  <a class="authorName" href="/author/101">Jane Smith</a>
+                  <span class="minirating">3.8 stars — 567 ratings</span>
+                </td>
+              </tr>
+            </table>
+          </body>
+        </html>
+      `;
+
+      const $ = cheerio.load(searchHtml);
+      const candidates = extractBookCandidates($);
+
+      assert.strictEqual(candidates.length, 2);
+
+      assert.strictEqual(candidates[0]?.title, "First Book");
+      assert.strictEqual(candidates[0]?.url, "/book/show/123.First_Book");
+      assert.strictEqual(candidates[0]?.author, "John Doe");
+      assert.strictEqual(candidates[0]?.ratingsCount, 1234);
+
+      assert.strictEqual(candidates[1]?.title, "Second Book");
+      assert.strictEqual(candidates[1]?.url, "/book/show/789.Second_Book");
+      assert.strictEqual(candidates[1]?.author, "Jane Smith");
+      assert.strictEqual(candidates[1]?.ratingsCount, 567);
+    });
+
+    test("should handle empty search results", () => {
+      const $ = cheerio.load("<html><body>No results</body></html>");
+      const candidates = extractBookCandidates($);
+
+      assert.strictEqual(candidates.length, 0);
+    });
+  });
+
+  describe("findBookLinkFromSearch - no fallback behavior", () => {
+    test("should return null when no book candidates are found", () => {
+      const searchHtml = `
+        <html>
+          <body>
+            <div>No search results found</div>
+          </body>
+        </html>
+      `;
+
+      const result = findBookLinkFromSearch(searchHtml, {
+        title: "Nonexistent Book",
+        author: "Unknown Author",
+      });
+
+      assert.strictEqual(
+        result,
+        null,
+        "Should return null when no candidates found, not fallback to unreliable results",
+      );
+    });
+  });
+
+  describe("scoreBookCandidate", () => {
+    test("should score exact author and title match highly", () => {
+      const candidate = {
+        url: "/book/show/123.Test",
+        title: "Krakatit",
+        author: "Karel Čapek",
+        ratingsCount: 2000,
+        score: 0,
+      };
+
+      const score = scoreBookCandidate(candidate, {
+        title: "Krakatit",
+        author: "Karel Čapek",
+      });
+
+      // Should get: author match (50) + exact title (25) + similarity (20) + popularity bonus (~6.6)
+      assert.ok(score > 100, `Score should be > 100, got ${score}`);
+    });
+
+    test("should penalize Wikipedia sources heavily", () => {
+      const candidate = {
+        url: "/book/show/123.Test",
+        title: "Some Wikipedia Compilation",
+        author: "Source Wikipedia",
+        ratingsCount: 1,
+        score: 0,
+      };
+
+      const score = scoreBookCandidate(candidate, {
+        title: "Test Book",
+        author: "Real Author",
+      });
+
+      // Should get heavy penalty for Wikipedia source
+      assert.ok(
+        score < 0,
+        `Score should be negative for Wikipedia, got ${score}`,
+      );
+    });
+
+    test("should apply length penalty for overly long titles", () => {
+      const shortCandidate = {
+        url: "/book/show/123.Test",
+        title: "Short",
+        author: "Test Author",
+        ratingsCount: 100,
+        score: 0,
+      };
+
+      const longCandidate = {
+        url: "/book/show/456.Test",
+        title:
+          "This is a very long compilation title with many words and extra information",
+        author: "Test Author",
+        ratingsCount: 100,
+        score: 0,
+      };
+
+      const shortScore = scoreBookCandidate(shortCandidate, {
+        title: "Short",
+        author: "Test Author",
+      });
+
+      const longScore = scoreBookCandidate(longCandidate, {
+        title: "Short",
+        author: "Test Author",
+      });
+
+      assert.ok(
+        shortScore > longScore,
+        "Short title should score higher than long title",
+      );
+    });
+  });
+
+  describe("selectBestBookCandidate", () => {
+    test("should select highest scoring candidate", () => {
+      const candidates = [
+        {
+          url: "/book/show/123.Low_Score",
+          title: "Unrelated Book",
+          author: "Different Author",
+          ratingsCount: 10,
+          score: 0,
+        },
+        {
+          url: "/book/show/456.High_Score",
+          title: "Krakatit",
+          author: "Karel Čapek",
+          ratingsCount: 2000,
+          score: 0,
+        },
+      ];
+
+      const result = selectBestBookCandidate(candidates, {
+        title: "Krakatit",
+        author: "Karel Čapek",
+      });
+
+      assert.strictEqual(result, "/book/show/456.High_Score");
+    });
+
+    test("should return null for empty candidate list", () => {
+      const result = selectBestBookCandidate([], {
+        title: "Test",
+        author: "Test Author",
+      });
+
+      assert.strictEqual(result, null);
     });
   });
 
