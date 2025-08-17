@@ -113,7 +113,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                         ` (${book.partTitle || book.subtitle})`}
                     </a>
                   </h3>
-                  <p className="text-xs sm:text-sm text-card-foreground mb-2 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-card-foreground mb-2 line-clamp-3">
                     {book.description}
                   </p>
                   <div className="text-xs text-muted-foreground mb-3">
