@@ -34,8 +34,6 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
         year: "numeric",
         month: "long",
         day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
       })
     : null;
 
@@ -46,7 +44,7 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
           <h1 className="text-lg font-bold mb-2">Nejlepší e-knihy zdarma</h1>
           {lastUpdated && (
             <div className="text-sm text-muted-foreground">
-              Aktualizováno: {formattedLastUpdated}
+              Aktualizováno {formattedLastUpdated}
             </div>
           )}
         </div>
