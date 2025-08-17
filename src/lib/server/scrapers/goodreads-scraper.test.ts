@@ -492,12 +492,6 @@ describe("Goodreads Scraper HTML Parsing", () => {
 
   describe("Roman numeral fallback functionality", () => {
     test("should use fallback search when original title fails", async () => {
-      // Mock the fetchHtml function to simulate search failure then success
-      const originalFetchHtml = await import(
-        "#@/lib/server/utils/fetch-utils.ts"
-      );
-      let callCount = 0;
-
       // This is a unit test for the logic, not integration test
       // We'll test the fallback logic by checking the search queries generated
       const book = {
