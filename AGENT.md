@@ -112,6 +112,29 @@ When tests fail due to website structure changes:
 4.  Update selectors if needed.
 5.  Re-download fixtures if major structure changes occurred: `curl -s "TARGET_URL" > src/test/fixtures/sample-name.html`.
 
+### Debugging Best Practices
+
+**Always Debug Before Implementing**: When investigating issues with scrapers or data processing:
+
+1. **Create debug scripts** to isolate and reproduce the problem before making changes
+2. **Test with real data** using the actual functions and inputs that are failing
+3. **Verify assumptions** with concrete examples rather than theoretical fixes
+4. **Use console logging** to trace the exact flow and transformations happening
+
+**Example approach**:
+
+```typescript
+// Create temporary debug script in src/scripts/
+import { problematicFunction } from "../lib/module.ts";
+
+const testData = {
+  /* real failing data */
+};
+const result = problematicFunction(testData);
+console.log("Input:", testData);
+console.log("Output:", result);
+```
+
 ## Architecture & Design Patterns
 
 ### Core Technology Stack
@@ -140,6 +163,55 @@ The site is statically generated at build time. The build process reads a local 
 ### Data Types
 
 Core data structures, such as the `Book` interface, are defined within the `src/lib/` directory. Refer to the TypeScript files in this location for authoritative type definitions.
+
+## Scraper Development Guidelines
+
+### Fallback Strategies
+
+**Prefer Fallback Over Default Changes**: When fixing scraper issues, implement fallback logic rather than changing core behavior:
+
+- **Bad**: Modify core text cleaning functions to handle edge cases by default
+- **Good**: Keep original behavior, add fallback search with alternative formatting when primary search fails
+
+**Example pattern**:
+
+```typescript
+// Primary attempt
+let result = await primarySearch(originalQuery);
+
+// Fallback attempt if primary fails
+if (!result) {
+  const fallbackQuery = transformQuery(originalQuery);
+  if (fallbackQuery !== originalQuery) {
+    result = await primarySearch(fallbackQuery);
+  }
+}
+```
+
+### Search Query Handling
+
+**Title Formatting Nuances**: Different search engines expect different formats:
+
+- **Goodreads**: May prefer certain numeral formats, punctuation styles, or character encodings
+- **MLP**: May use different punctuation or formatting conventions
+- **General**: Special characters, parentheses, and encoding differences can cause search failures
+
+**Text Transformation Best Practices**: When dealing with search queries:
+
+1. Use strict validation patterns to avoid false transformations
+2. Only apply transformations in specific, well-defined contexts
+3. Implement transformations as fallback, not primary behavior
+4. Test with edge cases and complex patterns
+5. Preserve original behavior for existing successful cases
+
+### Error Recovery Patterns
+
+**Graceful Degradation**: Scrapers should handle missing data without failing completely:
+
+- Return partial data when some fields are missing
+- Log warnings for missing data but continue processing
+- Use fallback selectors when primary CSS selectors fail
+- Implement retry logic with exponential backoff for network requests
 
 ## Security Considerations
 
