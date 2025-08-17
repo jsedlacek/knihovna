@@ -10,6 +10,7 @@ import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
 import { deduplicateBooks } from "#@/lib/shared/utils/book-deduplication.ts";
 import placeholderCover from "#@/images/book-placeholder.svg";
+import faviconIcon from "#@/images/favicon.svg";
 import { StarIcon } from "lucide-react";
 
 interface TimestampData {
@@ -53,7 +54,14 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
     <div className="min-h-screen bg-background text-foreground font-mono">
       <header className="border-b border-border">
         <div className="max-w-4xl mx-auto p-4 sm:p-6">
-          <h1 className="text-lg font-bold mb-2">Nejlepší e-knihy zdarma</h1>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-lg font-bold">Nejlepší e-knihy zdarma</h1>
+            <img
+              src={faviconIcon.src}
+              alt="Book icon"
+              className="w-6 h-6 flex-shrink-0"
+            />
+          </div>
           {lastUpdated && (
             <div className="text-sm text-muted-foreground">
               Aktualizováno {formattedLastUpdated}
