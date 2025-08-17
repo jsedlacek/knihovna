@@ -16,6 +16,10 @@ import {
 import { saveScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
 import { withRetry } from "#@/lib/server/utils/retry-utils.ts";
 import {
+  applyBookFixupsToArray,
+  getConfiguredFixups,
+} from "#@/lib/server/utils/book-fixup-utils.ts";
+import {
   CONCURRENCY,
   RETRY_COUNT,
   RETRY_DELAY,
@@ -61,6 +65,10 @@ async function main() {
       "$0 --book-name 'povídky' --verbose",
       "Show which books match 'povídky' and process them",
     )
+    .example(
+      "$0 --list-fixups",
+      "List all configured book data corrections and exit",
+    )
     .option("force-mlp", {
       alias: "f",
       type: "boolean",
@@ -103,6 +111,11 @@ async function main() {
       description: "Show detailed information about matching books",
       default: false,
     })
+    .option("list-fixups", {
+      type: "boolean",
+      description: "List all configured book fixups and exit",
+      default: false,
+    })
     .check((argv) => {
       if (argv["mlp-only"] && argv["goodreads-only"]) {
         throw new Error(
@@ -123,6 +136,30 @@ async function main() {
     })
     .help()
     .alias("help", "h").argv;
+
+  // Handle --list-fixups option
+  if (argv.listFixups) {
+    const fixups = getConfiguredFixups();
+    console.log(`📋 Configured book fixups (${fixups.length} total):\n`);
+
+    if (fixups.length === 0) {
+      console.log("  No fixups configured.");
+    } else {
+      for (const [index, fixup] of fixups.entries()) {
+        console.log(`${index + 1}. ${fixup.detailUrl}`);
+        if (fixup.title) console.log(`   Title: → "${fixup.title}"`);
+        if (fixup.author) console.log(`   Author: → "${fixup.author}"`);
+        if (fixup.subtitle !== undefined)
+          console.log(`   Subtitle: → "${fixup.subtitle}"`);
+        if (fixup.publisher !== undefined)
+          console.log(`   Publisher: → "${fixup.publisher}"`);
+        if (fixup.year !== undefined) console.log(`   Year: → ${fixup.year}`);
+
+        console.log(`   Reason: ${fixup.reason}\n`);
+      }
+    }
+    return;
+  }
 
   console.log("🚀 Starting the scraping process...");
 
@@ -301,7 +338,18 @@ async function main() {
     console.log(`✅ MLP scraping complete. Total books: ${booksMap.size}.`);
   }
 
-  // 4. Goodreads Scraping Phase (skipped if in mlp-only mode)
+  // 4. Apply fixups to correct known data issues (before Goodreads scraping)
+  console.log("🔧 Applying book fixups...");
+  const booksBeforeFixups = Array.from(booksMap.values());
+  const booksWithFixups = applyBookFixupsToArray(booksBeforeFixups);
+
+  // Update the booksMap with fixed data
+  booksMap.clear();
+  for (const book of booksWithFixups) {
+    booksMap.set(book.detailUrl, book);
+  }
+
+  // 5. Goodreads Scraping Phase (skipped if in mlp-only mode)
   if (!argv.mlpOnly) {
     console.log(" scraping Goodreads...");
     const booksForGoodreads = Array.from(booksMap.values()).filter((book) => {
@@ -359,7 +407,7 @@ async function main() {
     console.log("✅ Goodreads scraping complete.");
   }
 
-  // 5. Finalization
+  // 6. Finalization
   const allBooks = Array.from(booksMap.values());
   console.log(`📚 Total books to save: ${allBooks.length}`);
 
