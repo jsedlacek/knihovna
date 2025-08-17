@@ -10,6 +10,7 @@ import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
 import { deduplicateBooks } from "#@/lib/shared/utils/book-deduplication.ts";
 import placeholderCover from "#@/images/book-placeholder.svg";
+import { StarIcon } from "lucide-react";
 
 interface TimestampData {
   lastUpdated: string;
@@ -116,13 +117,13 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                   </p>
                   <div className="text-xs text-muted-foreground mb-3">
                     {book.rating ? (
-                      <>
-                        <span className="font-semibold text-sm">
-                          {formatNumberCzech(book.rating)}/5
+                      <div className="flex items-center justify-center sm:justify-start">
+                        <span className="font-semibold">
+                          {formatNumberCzech(Math.round(book.rating * 10) / 10)}
                         </span>
+                        <StarIcon className="ml-1 size-3 fill-current mr-2" />
                         {book.ratingsCount && (
                           <>
-                            {" "}
                             (
                             {book.url ? (
                               <a
@@ -141,19 +142,16 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                             )
                           </>
                         )}
-                      </>
+                      </div>
                     ) : (
                       "Bez hodnocení"
                     )}
                     {showScores && book.rating && (
                       <span className="text-orange-600 font-bold">
-                        {" | "}Skóre: {formatBookScore(book)}
+                        <span className="mx-2">|</span>Skóre:{" "}
+                        {formatBookScore(book)}
                       </span>
                     )}
-                    {book.year && `${" | "}Rok: ${book.year}`}
-                    {book.genres &&
-                      book.genres.length > 0 &&
-                      ` | Žánr: ${book.genres.join(", ")}`}
                   </div>
                   <div className="flex justify-center sm:justify-start gap-2 flex-wrap">
                     {book.epubUrl && (
