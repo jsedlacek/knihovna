@@ -1,15 +1,31 @@
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 
 /**
+ * Normalizes text for deduplication by removing punctuation, extra whitespace, and converting to lowercase.
+ */
+function normalizeForDeduplication(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[,;:.!?()[\]{}""''„"‚']/g, "") // Remove common punctuation
+    .replace(/\s+/g, " ") // Normalize whitespace
+    .trim();
+}
+
+/**
  * Removes duplicate books, keeping only the newer version.
  * When books have the same year, logs a conflict message and keeps all.
  */
 export function deduplicateBooks(books: Book[]): Book[] {
   const bookGroups = new Map<string, Book[]>();
 
-  // Group books by author + title + subtitle + partTitle
+  // Group books by normalized author + title + subtitle + partTitle
   for (const book of books) {
-    const key = `${book.author}-${book.title}-${book.subtitle || ""}-${book.partTitle || ""}`;
+    const normalizedAuthor = normalizeForDeduplication(book.author);
+    const normalizedTitle = normalizeForDeduplication(book.title);
+    const normalizedSubtitle = normalizeForDeduplication(book.subtitle || "");
+    const normalizedPartTitle = normalizeForDeduplication(book.partTitle || "");
+
+    const key = `${normalizedAuthor}-${normalizedTitle}-${normalizedSubtitle}-${normalizedPartTitle}`;
     if (!bookGroups.has(key)) {
       bookGroups.set(key, []);
     }
