@@ -15,6 +15,17 @@
 - **Prefer targeted searches**: Use `grep` to search within files instead of reading entire contents.
 - **Use line ranges**: When reading files, use `start_line` and `end_line` to read specific sections.
 
+### Post-Change Review
+
+After completing any significant changes to the project, agents should:
+
+1. **Review AGENT.md**: Check if any new patterns, learnings, or best practices emerged during the work that should be documented
+2. **Identify Outdated Information**: Look for any instructions or guidelines in AGENT.md that no longer apply
+3. **Suggest AGENT.md Updates**: Propose specific updates to AGENT.md to reflect new knowledge or correct outdated information
+4. **Maintain Accuracy**: Ensure AGENT.md continues to serve as an accurate guide for future development work
+
+This practice keeps AGENT.md current and valuable. Remember: agents should not create other documentation files.
+
 ## Build & Commands
 
 Use the following `npm` scripts for common development tasks:
