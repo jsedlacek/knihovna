@@ -79,6 +79,7 @@ Use the following `npm` scripts for common development tasks:
 
 - **TypeScript Strict Mode**: The project uses strict mode with no `any` types.
 - **ESM Modules**: Use modern `.ts` imports for direct execution in Node.js scripts.
+- **Static Imports**: Prefer top-level static imports over dynamic `await import()` statements. Use dynamic imports only when truly necessary for code splitting or conditional loading.
 - **Component Composition**: Favor composition over inheritance in React components.
 - **Separation of Concerns**: Maintain a clean separation between layout, components, and styles.
 
@@ -111,6 +112,7 @@ This approach ensures that tests live close to their implementation, while share
 - **Real Data Testing**: Tests use actual HTML fixtures from target websites.
 - **Error Resilience**: Scrapers are tested to handle missing or malformed data gracefully.
 - **No External Dependencies**: Tests rely only on Node.js built-ins and existing project dependencies (like Cheerio).
+- **Static Imports**: Use top-level static imports instead of dynamic `await import()` statements for better performance and synchronous execution.
 - **Comprehensive Logging**: Tests provide extensive debug output for troubleshooting failures.
 
 ### Debugging Failures
