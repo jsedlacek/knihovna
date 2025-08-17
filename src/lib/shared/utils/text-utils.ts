@@ -111,6 +111,46 @@ export function cleanTextForSearch(text: string): string {
 }
 
 /**
+ * Converts a Roman numeral string to an Arabic number.
+ * Handles numbers from 1 to 3999.
+ * @param roman The Roman numeral string (e.g., "IX", "xix").
+ * @returns The Arabic number, or 0 if the input is invalid.
+ */
+function romanToArabic(roman: string): number {
+  if (!roman || typeof roman !== "string") return 0;
+
+  const romanMap: { [key: string]: number } = {
+    I: 1,
+    V: 5,
+    X: 10,
+    L: 50,
+    C: 100,
+    D: 500,
+    M: 1000,
+  };
+
+  const upperRoman = roman.toUpperCase();
+  let result = 0;
+  let prevValue = 0;
+
+  for (let i = upperRoman.length - 1; i >= 0; i--) {
+    const char = upperRoman[i];
+    if (char === undefined) continue;
+    const currentValue = romanMap[char];
+    if (currentValue === undefined) return 0; // Invalid character
+
+    if (currentValue < prevValue) {
+      result -= currentValue;
+    } else {
+      result += currentValue;
+    }
+    prevValue = currentValue;
+  }
+
+  return result;
+}
+
+/**
  * Cleans search terms for Goodreads queries.
  */
 export function cleanSearchTerm(term: string): string {
@@ -118,6 +158,19 @@ export function cleanSearchTerm(term: string): string {
     .replace(/[^\p{L}\p{N}\s]/gu, " ") // Keep letters, numbers, and spaces
     .replace(/\s+/g, " ") // Collapse whitespace
     .trim();
+}
+
+/**
+ * Converts Roman numerals in a title string to Arabic numerals.
+ * Specifically targets Roman numerals in parentheses, e.g., "(II)" -> " 2".
+ * @param title The original book title.
+ * @returns A new title string with Roman numerals converted.
+ */
+export function getTitleWithArabicNumerals(title: string): string {
+  return title.replace(/\s+\(([IVXLCDM]+)\)/gi, (match, romanNumeral) => {
+    const arabicNumber = romanToArabic(romanNumeral);
+    return arabicNumber > 0 ? ` ${arabicNumber}` : match;
+  });
 }
 
 /**

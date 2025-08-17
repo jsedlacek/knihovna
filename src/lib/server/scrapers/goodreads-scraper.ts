@@ -5,6 +5,7 @@ import { fetchHtml, createUrl } from "#@/lib/server/utils/fetch-utils.ts";
 import {
   cleanSearchTerm,
   getAuthorForSearch,
+  getTitleWithArabicNumerals,
 } from "#@/lib/shared/utils/text-utils.ts";
 import {
   GOODREADS_BASE_URL,
@@ -237,21 +238,40 @@ export async function scrapeGoodreads(book: {
   title: string;
   author: string;
 }): Promise<GoodreadsData> {
-  const cleanedTitle = cleanSearchTerm(book.title);
   const authorForSearch = getAuthorForSearch(book.author);
-  const searchQuery = encodeURIComponent(`${cleanedTitle} ${authorForSearch}`);
-  const searchUrl = `${GOODREADS_BASE_URL}/search?q=${searchQuery}&search_type=books`;
-
-  console.log(
-    `Searching Goodreads for: "${cleanedTitle}" by ${authorForSearch}`,
-  );
 
   try {
-    const searchHtml = await fetchHtml(searchUrl);
-    const bookUrlPath = findBookLinkFromSearch(searchHtml);
+    // --- Helper function to perform a search query ---
+    const performSearch = async (title: string): Promise<string | null> => {
+      const cleanedTitle = cleanSearchTerm(title);
+      const searchQuery = encodeURIComponent(
+        `${cleanedTitle} ${authorForSearch}`,
+      );
+      const searchUrl = `${GOODREADS_BASE_URL}/search?q=${searchQuery}&search_type=books`;
+      console.log(
+        `Searching Goodreads for: "${cleanedTitle}" by ${authorForSearch}`,
+      );
+      const searchHtml = await fetchHtml(searchUrl);
+      return findBookLinkFromSearch(searchHtml);
+    };
+
+    // 1. Primary search attempt
+    let bookUrlPath = await performSearch(book.title);
+
+    // 2. Fallback search attempt if the primary one fails
+    if (!bookUrlPath) {
+      const fallbackTitle = getTitleWithArabicNumerals(book.title);
+      // Only attempt fallback if the title was actually changed
+      if (fallbackTitle !== book.title) {
+        console.log(`-> Primary search failed. Trying fallback title...`);
+        bookUrlPath = await performSearch(fallbackTitle);
+      }
+    }
 
     if (!bookUrlPath) {
-      console.warn(`! No book link found for: ${book.title}`);
+      console.warn(
+        `! No book link found for: ${book.title} (after all attempts)`,
+      );
       return {
         rating: null,
         ratingsCount: null,
