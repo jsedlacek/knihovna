@@ -7,6 +7,7 @@ import {
   formatAuthorName,
 } from "#@/lib/shared/utils/text-utils.ts";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
+import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
 import placeholderCover from "#@/images/book-placeholder.svg";
 
 interface TimestampData {
@@ -20,8 +21,11 @@ interface HomePageProps {
 }
 
 export default function HomePage({ books, lastUpdated }: HomePageProps) {
-  // Filter books with a rating of 4.0 or higher and have EPUB download links
-  const filteredBooks = books.filter(
+  // First filter out blocked books
+  const unblockedBooks = filterBlockedBooks(books);
+
+  // Then filter books with a rating of 4.0 or higher and have EPUB download links
+  const filteredBooks = unblockedBooks.filter(
     (book) => book.rating !== null && book.rating >= 4.0 && book.epubUrl,
   );
 
