@@ -9,7 +9,12 @@ on:
     schedule:
         # Run nightly at 2 AM UTC
         - cron: "0 2 * * *"
-    workflow_dispatch: # Allow manual triggering
+    workflow_dispatch:
+        inputs:
+            use-cache:
+                description: "Use cache for the data directory"
+                type: boolean
+                default: true
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
@@ -34,6 +39,7 @@ jobs:
               run: npm ci
 
             - name: Cache data directory
+              if: github.event_name != 'workflow_dispatch' || inputs.use-cache
               uses: actions/cache@v4
               with:
                   path: data/
