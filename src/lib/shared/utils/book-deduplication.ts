@@ -23,13 +23,15 @@ function normalizeRomanNumeralsForDeduplication(text: string): string {
 
 /**
  * Normalizes text for deduplication by removing punctuation, extra whitespace, converting to lowercase,
- * and normalizing Roman numerals to Arabic numerals.
+ * normalizing Roman numerals to Arabic numerals, and removing diacritics.
  */
 function normalizeForDeduplication(text: string | null): string {
   if (!text) return "";
 
   return normalizeRomanNumeralsForDeduplication(text)
     .toLowerCase()
+    .normalize("NFD") // Decompose diacritics
+    .replace(/[\u0300-\u036f]/g, "") // Remove diacritical marks
     .replace(/[,;:.!?()[\]{}""''„"‚']/g, "") // Remove common punctuation
     .replace(/\b([a-z])\s+([a-z])\s+([a-z])\b/g, "$1$2$3") // Normalize spaced initials like "j r r" to "jrr"
     .replace(/\b([a-z])\s+([a-z])\b/g, "$1$2") // Normalize spaced initials like "j r" to "jr"

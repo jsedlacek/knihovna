@@ -381,6 +381,101 @@ describe("Book Deduplication", () => {
     });
   });
 
+  describe("Diacritic normalization", () => {
+    test("should deduplicate books with diacritic differences", () => {
+      const books = [
+        createTestBook({
+          title: "O věcech obecných čili Zóon polítikon",
+          partTitle: null,
+          author: "Čapek, Karel",
+          publisher: "Městská knihovna v Praze",
+          year: null,
+          imageUrl: null,
+          detailUrl:
+            "https://search.mlp.cz/cz/titul/o-vecech-obecnych-cili-zoon-politikon/3347551/",
+          pdfUrl:
+            "https://web2.mlp.cz/koweb/00/03/34/75/51/o_vecech_obecnych_cili_zoon_politikon.pdf",
+          epubUrl:
+            "https://web2.mlp.cz/koweb/00/03/34/75/51/o_vecech_obecnych_cili_zoon_politikon.epub",
+          description:
+            "Čapkovské úvahy o politice, společnosti, civilizaci, kultuře jsou svižným i úsměvným zamyšlením nad věcmi a jevy kolem nás.",
+          rating: 4.22,
+          ratingsCount: 50,
+          url: "https://www.goodreads.com/book/show/17832817-o-v-cech-obecn-ch-ili-z-on-politikon?from_search=true&from_srp=true&qid=FvR95mRHnh&rank=1",
+          genres: ["Nonfiction", "Czech Literature", "Classics", "Essays"],
+          mlpScrapedAt: "2025-08-17T22:20:45.569Z",
+          goodreadsScrapedAt: "2025-08-17T22:21:18.768Z",
+          subtitle: null,
+        }),
+        createTestBook({
+          title: "O věcech obecných, čili, Zoon politikon",
+          partTitle: null,
+          author: "Čapek, Karel",
+          publisher: "Městská knihovna v Praze",
+          year: 2018,
+          imageUrl: "https://web2.mlp.cz/koweb/00/04/37/75/30.jpg",
+          detailUrl:
+            "https://search.mlp.cz/cz/titul/o-vecech-obecnych-cili-zoon-politikon/4377530/",
+          pdfUrl:
+            "https://web2.mlp.cz/koweb/00/04/37/75/30/o_vecech_obecnych_cili_zoon_politikon.pdf",
+          epubUrl:
+            "https://web2.mlp.cz/koweb/00/04/37/75/30/o_vecech_obecnych_cili_zoon_politikon.epub",
+          description:
+            "Čapkovské úvahy o politice, společnosti, civilizaci, kultuře jsou svižným i úsměvným zamyšlením nad věcmi a jevy kolem nás.",
+          rating: 4.22,
+          ratingsCount: 50,
+          url: "https://www.goodreads.com/book/show/17832817-o-v-cech-obecn-ch-ili-z-on-politikon?from_search=true&from_srp=true&qid=Uo0U1NjaF7&rank=1",
+          genres: ["Nonfiction", "Czech Literature", "Classics", "Essays"],
+          mlpScrapedAt: "2025-08-17T22:20:15.751Z",
+          goodreadsScrapedAt: "2025-08-17T22:21:15.359Z",
+          subtitle: null,
+        }),
+      ];
+
+      const result = deduplicateBooks(books);
+
+      assert.strictEqual(
+        result.length,
+        1,
+        "Should deduplicate books with diacritic differences",
+      );
+      assert.strictEqual(
+        result[0]!.year,
+        2018,
+        "Should keep the version with year (2018)",
+      );
+      assert.strictEqual(
+        result[0]!.title,
+        "O věcech obecných, čili, Zoon politikon",
+        "Should keep the newer version",
+      );
+    });
+
+    test("should handle various diacritic differences", () => {
+      const books = [
+        createTestBook({
+          title: "Příběh s háčky a čárkami",
+          author: "Tëst Authör",
+          year: 2020,
+        }),
+        createTestBook({
+          title: "Pribeh s hacky a carkami",
+          author: "Test Author",
+          year: 2019,
+        }),
+      ];
+
+      const result = deduplicateBooks(books);
+
+      assert.strictEqual(
+        result.length,
+        1,
+        "Should deduplicate books with various diacritic differences",
+      );
+      assert.strictEqual(result[0]!.year, 2020);
+    });
+  });
+
   describe("Real-world example", () => {
     test("should handle the Čapek O umění a kultuře example correctly", () => {
       const books = [
