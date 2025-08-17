@@ -7,6 +7,10 @@ import {
   validateRating,
 } from "./goodreads-scraper.ts";
 import { loadFixture } from "#@/test/utils/test-utils.ts";
+import {
+  getTitleWithArabicNumerals,
+  cleanSearchTerm,
+} from "#@/lib/shared/utils/text-utils.ts";
 import * as cheerio from "cheerio";
 
 describe("Goodreads Scraper HTML Parsing", () => {
@@ -491,7 +495,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
   });
 
   describe("Roman numeral fallback functionality", () => {
-    test("should use fallback search when original title fails", async () => {
+    test("should use fallback search when original title fails", () => {
       // This is a unit test for the logic, not integration test
       // We'll test the fallback logic by checking the search queries generated
       const book = {
@@ -500,9 +504,6 @@ describe("Goodreads Scraper HTML Parsing", () => {
       };
 
       // Test that getTitleWithArabicNumerals creates the expected fallback
-      const { getTitleWithArabicNumerals } = await import(
-        "#@/lib/shared/utils/text-utils.ts"
-      );
       const fallbackTitle = getTitleWithArabicNumerals(book.title);
 
       assert.strictEqual(
@@ -517,11 +518,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
       );
     });
 
-    test("should not attempt fallback when title has no Roman numerals", async () => {
-      const { getTitleWithArabicNumerals } = await import(
-        "#@/lib/shared/utils/text-utils.ts"
-      );
-
+    test("should not attempt fallback when title has no Roman numerals", () => {
       const titleWithoutRoman = "Simple Book Title";
       const fallbackTitle = getTitleWithArabicNumerals(titleWithoutRoman);
 
@@ -532,11 +529,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
       );
     });
 
-    test("should handle various Roman numeral formats in fallback", async () => {
-      const { getTitleWithArabicNumerals } = await import(
-        "#@/lib/shared/utils/text-utils.ts"
-      );
-
+    test("should handle various Roman numeral formats in fallback", () => {
       const testCases = [
         { input: "Book (I)", expected: "Book 1" },
         { input: "Book (II)", expected: "Book 2" },
@@ -560,11 +553,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
       }
     });
 
-    test("should preserve original search behavior for titles without parentheses", async () => {
-      const { cleanSearchTerm } = await import(
-        "#@/lib/shared/utils/text-utils.ts"
-      );
-
+    test("should preserve original search behavior for titles without parentheses", () => {
       // Test that our changes don't break normal title cleaning
       const normalTitle = "Harry Potter and the Philosopher's Stone";
       const cleaned = cleanSearchTerm(normalTitle);
@@ -576,11 +565,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
       );
     });
 
-    test("should clean both original and fallback titles properly", async () => {
-      const { cleanSearchTerm, getTitleWithArabicNumerals } = await import(
-        "#@/lib/shared/utils/text-utils.ts"
-      );
-
+    test("should clean both original and fallback titles properly", () => {
       const originalTitle = "Jih proti Severu (II)";
       const fallbackTitle = getTitleWithArabicNumerals(originalTitle);
 
