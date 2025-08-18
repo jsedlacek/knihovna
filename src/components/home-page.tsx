@@ -127,32 +127,39 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
                   <div className="text-xs text-muted-foreground mb-3">
                     {book.rating ? (
                       <div className="flex items-center justify-center sm:justify-start">
-                        <span className="font-semibold">
-                          {formatNumberCzech(Math.round(book.rating * 10) / 10)}
-                        </span>
-                        <StarIcon className="ml-1 size-3 fill-current mr-2" />
-                        {book.ratingsCount && (
-                          <>
-                            (
-                            {book.url ? (
-                              <a
-                                href={book.url}
-                                className="text-blue-600 hover:underline"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {formatNumberCompact(book.ratingsCount)}
-                                &nbsp;hodnocení
-                              </a>
-                            ) : (
-                              <span>
-                                {formatNumberCompact(book.ratingsCount)}
-                                &nbsp;hodnocení
-                              </span>
+                        <span className="inline-flex items-center">
+                          <span className="font-semibold">
+                            {formatNumberCzech(
+                              Math.round(book.rating * 10) / 10,
                             )}
-                            )
-                          </>
-                        )}
+                          </span>
+                          <StarIcon className="ml-1 size-2.5 fill-current mr-2" />
+                        </span>
+
+                        <span>
+                          (
+                          {book.ratingsCount && (
+                            <>
+                              {book.url ? (
+                                <a
+                                  href={book.url}
+                                  className="text-blue-600 hover:underline"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {formatNumberCompact(book.ratingsCount)}
+                                  &nbsp;hodnocení
+                                </a>
+                              ) : (
+                                <span>
+                                  {formatNumberCompact(book.ratingsCount)}
+                                  &nbsp;hodnocení
+                                </span>
+                              )}
+                            </>
+                          )}
+                          )
+                        </span>
                       </div>
                     ) : (
                       "Bez hodnocení"
