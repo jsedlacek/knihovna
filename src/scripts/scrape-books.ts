@@ -193,10 +193,11 @@ async function main() {
           description: null,
           pdfUrl: null,
           epubUrl: null,
+          genreId: null,
+          genre: null,
           rating: null,
           ratingsCount: null,
           url: null,
-          genres: [],
           mlpScrapedAt: null,
           goodreadsScrapedAt: null,
         });

@@ -71,6 +71,9 @@ export function parseMlpBookDetails(
 
     let subtitle: string | null = null;
     let partTitle: string | null = null;
+    let genreId: string | null = null;
+    let genre: string | null = null;
+
     $detail(".book-content.book-info-table table tbody tr").each(
       (_: number, element: AnyNode) => {
         const fieldName = $detail(element).find("td.itemlefttd").text().trim();
@@ -82,6 +85,10 @@ export function parseMlpBookDetails(
           subtitle = fieldValue;
         } else if (fieldName === "Název části") {
           partTitle = fieldValue;
+        } else if (fieldName === 'Obsahová char. "OCH"') {
+          genreId = fieldValue;
+        } else if (fieldName === "Obsah OCHu") {
+          genre = fieldValue;
         }
       },
     );
@@ -92,7 +99,14 @@ export function parseMlpBookDetails(
     const description =
       descriptionText && descriptionText.length > 0 ? descriptionText : null;
 
-    return { subtitle, partTitle, imageUrl, description };
+    return {
+      subtitle,
+      partTitle,
+      imageUrl,
+      description,
+      genreId,
+      genre,
+    };
   } catch (error) {
     console.error("Error parsing MLP book details:", error);
     return {
@@ -100,6 +114,8 @@ export function parseMlpBookDetails(
       partTitle: null,
       imageUrl: null,
       description: null,
+      genreId: null,
+      genre: null,
     };
   }
 }
@@ -162,7 +178,11 @@ export async function scrapeMlpBookDetails(
   const reservationHtml = await fetchHtml(reservationUrl);
   const downloadLinks = parseMlpDownloadLinks(reservationHtml);
 
-  return { ...details, ...downloadLinks, imageUrl: bestImageUrl };
+  return {
+    ...details,
+    ...downloadLinks,
+    imageUrl: bestImageUrl,
+  };
 }
 
 /**

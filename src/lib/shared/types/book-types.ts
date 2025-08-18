@@ -15,6 +15,8 @@ export interface MlpBookDetails {
   description: string | null;
   pdfUrl: string | null;
   epubUrl: string | null;
+  genreId: string | null;
+  genre: string | null;
 }
 
 // Data scraped from Goodreads
@@ -22,7 +24,6 @@ export interface GoodreadsData {
   rating: number | null;
   ratingsCount: number | null;
   url: string | null;
-  genres: string[];
 }
 
 // The canonical Book object, combining all data sources.

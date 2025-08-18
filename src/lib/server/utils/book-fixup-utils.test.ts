@@ -22,10 +22,11 @@ describe("Book Fixup Utils", () => {
     description: "Original description",
     pdfUrl: "https://example.com/book.pdf",
     epubUrl: "https://example.com/book.epub",
+    genreId: "F1a2b",
+    genre: "Fiction for adults",
     rating: 4.5,
     ratingsCount: 100,
     url: "https://goodreads.com/book/123",
-    genres: ["Fiction"],
     mlpScrapedAt: new Date().toISOString(),
     goodreadsScrapedAt: new Date().toISOString(),
     ...overrides,
@@ -60,7 +61,6 @@ describe("Book Fixup Utils", () => {
       title: "České okamžiky",
       rating: 4.2,
       ratingsCount: 150,
-      genres: ["Poetry", "Czech Literature"],
     });
 
     const result = applyBookFixups(book);
@@ -76,7 +76,7 @@ describe("Book Fixup Utils", () => {
     assert.strictEqual(result.description, book.description);
     assert.strictEqual(result.rating, book.rating);
     assert.strictEqual(result.ratingsCount, book.ratingsCount);
-    assert.deepStrictEqual(result.genres, book.genres);
+
     assert.strictEqual(result.mlpScrapedAt, book.mlpScrapedAt);
     assert.strictEqual(result.goodreadsScrapedAt, book.goodreadsScrapedAt);
   });

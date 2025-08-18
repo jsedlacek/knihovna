@@ -105,20 +105,27 @@ export function groupAndSortBooksByGenre(
 ): Record<string, Book[]> {
   const booksByGenre = books.reduce(
     (acc, book) => {
-      if (!book.genres || book.genres.length === 0) {
-        // If no genres, put in 'Ostatní' category
+      if (!book.genre) {
+        // If no genre description, put in 'Ostatní' category
         if (!acc["Ostatní"]) {
           acc["Ostatní"] = [];
         }
         acc["Ostatní"].push(book);
       } else {
-        // Use the first genre as primary category
-        const primaryGenre = book.genres[0];
+        // Extract primary genre from description (text before first delimiter)
+        const primaryGenre = book.genre.split(/[;:,]/)[0]?.trim();
+
         if (primaryGenre) {
           if (!acc[primaryGenre]) {
             acc[primaryGenre] = [];
           }
           acc[primaryGenre].push(book);
+        } else {
+          // Fallback to 'Ostatní' if parsing fails
+          if (!acc["Ostatní"]) {
+            acc["Ostatní"] = [];
+          }
+          acc["Ostatní"].push(book);
         }
       }
       return acc;

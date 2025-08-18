@@ -3,7 +3,6 @@ import assert from "node:assert";
 import {
   findBookLinkFromSearch,
   parseGoodreadsBookData,
-  extractGenres,
   validateRating,
   extractBookCandidates,
   scoreBookCandidate,
@@ -355,7 +354,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
   });
 
   describe("parseGoodreadsBookData", () => {
-    test("should extract rating and genres from real Goodreads fixture", () => {
+    test("should extract rating from real Goodreads fixture", () => {
       const goodreadsHtml = loadFixture("goodreads-sample.html");
 
       const result = parseGoodreadsBookData(goodreadsHtml);
@@ -365,8 +364,6 @@ describe("Goodreads Scraper HTML Parsing", () => {
         result.ratingsCount !== null,
         "Ratings count should be extracted",
       );
-      assert.ok(Array.isArray(result.genres), "Genres should be an array");
-      assert.ok(result.genres.length > 0, "Should extract some genres");
 
       console.log("Extracted Goodreads data:", result);
     });
@@ -377,11 +374,6 @@ describe("Goodreads Scraper HTML Parsing", () => {
           <body>
             <div class="RatingStatistics__rating">4.25</div>
             <div class="RatingStatistics__meta">5,000 ratings</div>
-            <div class="BookPageMetadataSection__genres">
-              <span class="Button--tag">Fantasy</span>
-              <span class="Button--tag">Fiction</span>
-              <span class="Button--tag">Adventure</span>
-            </div>
           </body>
         </html>
       `;
@@ -390,11 +382,6 @@ describe("Goodreads Scraper HTML Parsing", () => {
 
       assert.strictEqual(result.rating, 4.25);
       assert.strictEqual(result.ratingsCount, 5000);
-      assert.deepStrictEqual(result.genres, [
-        "Fantasy",
-        "Fiction",
-        "Adventure",
-      ]);
     });
 
     test("should extract data from JSON-LD structured data", () => {
@@ -411,10 +398,6 @@ describe("Goodreads Scraper HTML Parsing", () => {
             </script>
           </head>
           <body>
-            <div class="BookPageMetadataSection__genres">
-              <span class="Button--tag">Fantasy</span>
-              <span class="Button--tag">Classics</span>
-            </div>
           </body>
         </html>
       `;
@@ -423,7 +406,6 @@ describe("Goodreads Scraper HTML Parsing", () => {
 
       assert.strictEqual(result.rating, 4.29);
       assert.strictEqual(result.ratingsCount, 4358089);
-      assert.deepStrictEqual(result.genres, ["Fantasy", "Classics"]);
     });
 
     test("should handle missing rating data gracefully", () => {
@@ -439,7 +421,6 @@ describe("Goodreads Scraper HTML Parsing", () => {
 
       assert.strictEqual(result.rating, null);
       assert.strictEqual(result.ratingsCount, null);
-      assert.deepStrictEqual(result.genres, []);
     });
 
     test("should handle malformed JSON-LD gracefully", () => {
@@ -489,149 +470,6 @@ describe("Goodreads Scraper HTML Parsing", () => {
       // Should use JSON-LD values, not HTML values
       assert.strictEqual(result.rating, 4.5);
       assert.strictEqual(result.ratingsCount, 10000);
-    });
-  });
-
-  describe("extractGenres", () => {
-    test("should extract genres from Button--tag elements", () => {
-      const html = `
-        <div class="BookPageMetadataSection__genres">
-          <span class="Button--tag">Fantasy</span>
-          <span class="Button--tag">Fiction</span>
-          <span class="Button--tag">Adventure</span>
-        </div>
-      `;
-      const $ = cheerio.load(html);
-
-      const result = extractGenres($);
-
-      assert.deepStrictEqual(result, ["Fantasy", "Fiction", "Adventure"]);
-    });
-
-    test("should extract genres from alternative selectors", () => {
-      const html = `
-        <div class="genres">
-          <a class="actionLinkLite bookPageGenreLink">Science Fiction</a>
-          <a class="actionLinkLite bookPageGenreLink">Dystopian</a>
-        </div>
-      `;
-      const $ = cheerio.load(html);
-
-      const result = extractGenres($);
-
-      assert.deepStrictEqual(result, ["Science Fiction", "Dystopian"]);
-    });
-
-    test("should limit genres to maximum count", () => {
-      const html = `
-        <div class="BookPageMetadataSection__genres">
-          <span class="Button--tag">Fantasy</span>
-          <span class="Button--tag">Fiction</span>
-          <span class="Button--tag">Adventure</span>
-          <span class="Button--tag">Young Adult</span>
-          <span class="Button--tag">High Fantasy</span>
-          <span class="Button--tag">Classics</span>
-          <span class="Button--tag">Literature</span>
-          <span class="Button--tag">Magic</span>
-          <span class="Button--tag">Dragons</span>
-          <span class="Button--tag">Epic Fantasy</span>
-          <span class="Button--tag">Medieval</span>
-          <span class="Button--tag">Quest</span>
-        </div>
-      `;
-      const $ = cheerio.load(html);
-
-      const result = extractGenres($);
-
-      assert.ok(result.length <= 10, "Should limit genres to maximum count");
-      assert.ok(result.includes("Fantasy"), "Should include primary genre");
-    });
-
-    test("should filter out non-genre terms", () => {
-      const html = `
-        <div class="BookPageMetadataSection__genres">
-          <span class="Button--tag">Fantasy</span>
-          <span class="Button--tag">Fiction</span>
-          <span class="Button--tag">...more</span>
-          <span class="Button--tag">Audiobook</span>
-          <span class="Button--tag">Kindle</span>
-          <span class="Button--tag">Adventure</span>
-        </div>
-      `;
-      const $ = cheerio.load(html);
-
-      const result = extractGenres($);
-
-      // Should not include technical terms
-      assert.ok(!result.includes("...more"), "Should filter out '...more'");
-      assert.ok(!result.includes("Audiobook"), "Should filter out 'Audiobook'");
-      assert.ok(!result.includes("Kindle"), "Should filter out 'Kindle'");
-
-      // Should include actual genres
-      assert.ok(result.includes("Fantasy"), "Should include Fantasy");
-      assert.ok(result.includes("Fiction"), "Should include Fiction");
-      assert.ok(result.includes("Adventure"), "Should include Adventure");
-    });
-
-    test("should extract from CollapsableList text format", () => {
-      const html = `
-        <div class="BookPageMetadataSection__genres">
-          GenresFantasyFictionYoung AdultMagicChildrens...more...
-        </div>
-      `;
-      const $ = cheerio.load(html);
-
-      const result = extractGenres($);
-
-      // Should find known genres in the text
-      assert.ok(result.includes("Fantasy"), "Should find Fantasy");
-      assert.ok(result.includes("Fiction"), "Should find Fiction");
-      assert.ok(result.includes("Young Adult"), "Should find Young Adult");
-      assert.ok(result.includes("Magic"), "Should find Magic");
-    });
-
-    test("should fallback to shelf tags when no genre buttons found", () => {
-      const html = `
-        <div class="shelfStat">
-          <div class="shelfName">fantasy</div>
-        </div>
-        <div class="shelfStat">
-          <div class="shelfName">science-fiction</div>
-        </div>
-      `;
-      const $ = cheerio.load(html);
-
-      const result = extractGenres($);
-
-      assert.ok(result.includes("fantasy"), "Should include shelf genre");
-      assert.ok(
-        result.includes("science-fiction"),
-        "Should include shelf genre",
-      );
-    });
-
-    test("should handle no genres found", () => {
-      const html = `<div>No genre information</div>`;
-      const $ = cheerio.load(html);
-
-      const result = extractGenres($);
-
-      assert.deepStrictEqual(result, []);
-    });
-
-    test("should remove duplicate genres", () => {
-      const html = `
-        <div class="BookPageMetadataSection__genres">
-          <span class="Button--tag">Fantasy</span>
-          <span class="Button--tag">Fantasy</span>
-          <span class="Button--tag">Fiction</span>
-        </div>
-      `;
-      const $ = cheerio.load(html);
-
-      const result = extractGenres($);
-
-      assert.deepStrictEqual(result, ["Fantasy", "Fiction"]);
     });
   });
 
@@ -704,10 +542,9 @@ describe("Goodreads Scraper HTML Parsing", () => {
       // Basic checks - at least some meaningful data should be extracted
       const hasRatingData =
         result.rating !== null || result.ratingsCount !== null;
-      const hasGenres = result.genres.length > 0;
 
       assert.ok(
-        hasRatingData || hasGenres,
+        hasRatingData,
         "Should extract at least some meaningful data from real Goodreads fixture",
       );
 
@@ -727,10 +564,14 @@ describe("Goodreads Scraper HTML Parsing", () => {
         );
       }
 
-      // Genres should be strings
+      // All fields should have correct types
       assert.ok(
-        result.genres.every((genre) => typeof genre === "string"),
-        "All genres should be strings",
+        typeof result.rating === "number" || result.rating === null,
+        "Rating should be number or null",
+      );
+      assert.ok(
+        typeof result.ratingsCount === "number" || result.ratingsCount === null,
+        "Ratings count should be number or null",
       );
     });
 

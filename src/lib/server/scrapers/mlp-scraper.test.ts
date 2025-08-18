@@ -19,6 +19,27 @@ describe("MLP Scraper HTML Parsing", () => {
       console.log("Extracted description:", result.description);
     });
 
+    test("should extract genre information from real MLP fixture", () => {
+      const mlpHtml = loadFixture("mlp-sample.html");
+
+      const result = parseMlpBookDetails(mlpHtml);
+
+      assert.strictEqual(
+        result.genreId,
+        "V7b4e",
+        "Should extract genre ID from OCH field",
+      );
+      assert.ok(result.genre, "Should extract genre from Obsah OCHu field");
+      assert.ok(
+        result.genre.includes("Sextety") || result.genre.includes("skladby"),
+        "Genre should contain expected content from fixture",
+      );
+      console.log("Extracted genre data:", {
+        genreId: result.genreId,
+        genre: result.genre,
+      });
+    });
+
     test("should handle missing description gracefully", () => {
       const htmlWithoutDescription = `
         <html>
@@ -67,6 +88,8 @@ describe("MLP Scraper HTML Parsing", () => {
       assert.strictEqual(result.imageUrl, "/images/test-book.jpg");
       assert.ok(result.description);
       assert.ok(result.description.includes("comprehensive book description"));
+      assert.strictEqual(result.genreId, null);
+      assert.strictEqual(result.genre, null);
 
       console.log("All extracted fields:", result);
     });
@@ -80,6 +103,8 @@ describe("MLP Scraper HTML Parsing", () => {
       assert.strictEqual(result.subtitle, null);
       assert.strictEqual(result.imageUrl, null);
       assert.strictEqual(result.description, null);
+      assert.strictEqual(result.genreId, null);
+      assert.strictEqual(result.genre, null);
     });
 
     test("should handle empty description element", () => {
@@ -150,6 +175,93 @@ describe("MLP Scraper HTML Parsing", () => {
       assert.strictEqual(result.subtitle, null);
     });
 
+    test("should extract genre information from book info table", () => {
+      const htmlWithGenres = `
+        <html>
+          <body>
+            <div class="book-content book-info-table">
+              <table>
+                <tbody>
+                  <tr>
+                    <td class="itemlefttd">Obsahová char. "OCH"</td>
+                    <td>F1a2b</td>
+                  </tr>
+                  <tr>
+                    <td class="itemlefttd">Obsah OCHu</td>
+                    <td>Romány: moderní próza pro dospělé.</td>
+                  </tr>
+                  <tr>
+                    <td class="itemlefttd">Other field</td>
+                    <td>Other value</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </body>
+        </html>
+      `;
+
+      const result = parseMlpBookDetails(htmlWithGenres);
+
+      assert.strictEqual(result.genreId, "F1a2b");
+      assert.strictEqual(result.genre, "Romány: moderní próza pro dospělé.");
+    });
+
+    test("should handle genre description with multiple parts", () => {
+      const htmlWithComplexGenre = `
+        <html>
+          <body>
+            <div class="book-content book-info-table">
+              <table>
+                <tbody>
+                  <tr>
+                    <td class="itemlefttd">Obsahová char. "OCH"</td>
+                    <td>V7b4e</td>
+                  </tr>
+                  <tr>
+                    <td class="itemlefttd">Obsah OCHu</td>
+                    <td>Sextety: skladby pro 6 různých nástrojů bez klavíru; komorní hudba; klasická hudba.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </body>
+        </html>
+      `;
+
+      const result = parseMlpBookDetails(htmlWithComplexGenre);
+
+      assert.strictEqual(result.genreId, "V7b4e");
+      assert.strictEqual(
+        result.genre,
+        "Sextety: skladby pro 6 různých nástrojů bez klavíru; komorní hudba; klasická hudba.",
+      );
+    });
+
+    test("should handle missing genre information", () => {
+      const htmlWithoutGenres = `
+        <html>
+          <body>
+            <div class="book-content book-info-table">
+              <table>
+                <tbody>
+                  <tr>
+                    <td class="itemlefttd">Other field</td>
+                    <td>Other value</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </body>
+        </html>
+      `;
+
+      const result = parseMlpBookDetails(htmlWithoutGenres);
+
+      assert.strictEqual(result.genreId, null);
+      assert.strictEqual(result.genre, null);
+    });
+
     test("should handle malformed HTML gracefully", () => {
       const malformedHtml = `<html><body><div class="book-content"><table><tbody><tr><td class="itemlefttd">Název části</td></tr></tbody></table></div></body></html>`;
 
@@ -168,6 +280,8 @@ describe("MLP Scraper HTML Parsing", () => {
       assert.ok(
         typeof result.description === "string" || result.description === null,
       );
+      assert.ok(typeof result.genreId === "string" || result.genreId === null);
+      assert.ok(typeof result.genre === "string" || result.genre === null);
     });
   });
 
@@ -328,6 +442,14 @@ describe("MLP Scraper HTML Parsing", () => {
         hasData,
         "Should extract at least some data from real MLP fixture",
       );
+
+      // Check genre data specifically
+      if (result.genreId || result.genre) {
+        console.log("Genre data from real fixture:", {
+          genreId: result.genreId,
+          genre: result.genre,
+        });
+      }
     });
 
     test("should extract part title from David Copperfield Part I fixture", () => {

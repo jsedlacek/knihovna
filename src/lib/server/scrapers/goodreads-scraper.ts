@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import type { AnyNode } from "domhandler";
+
 import type { GoodreadsData } from "#@/lib/shared/types/book-types.ts";
 import { fetchHtml, createUrl } from "#@/lib/server/utils/fetch-utils.ts";
 import {
@@ -10,9 +10,6 @@ import {
 } from "#@/lib/shared/utils/text-utils.ts";
 import {
   GOODREADS_BASE_URL,
-  MAX_GENRES,
-  NON_GENRE_TERMS,
-  KNOWN_GENRES,
   MIN_RATING,
   MAX_RATING,
 } from "#@/lib/shared/config/scraper-config.ts";
@@ -91,75 +88,6 @@ function extractFromHtml($: cheerio.CheerioAPI): {
 /**
  * Extract genres from various Goodreads page structures.
  */
-export function extractGenres($: cheerio.CheerioAPI): string[] {
-  let genres: string[] = [];
-
-  try {
-    // Try multiple selectors for genres/shelves
-    const genreSelectors = [
-      ".BookPageMetadataSection__genres .Button--tag",
-      ".BookPageMetadataSection__genres .Button--tag-inline",
-      ".genres .actionLinkLite.bookPageGenreLink",
-      ".elementList .actionLinkLite.bookPageGenreLink",
-      '[data-testid="genresList"] .Button--tag-inline',
-      ".BookPageMetadataSection .Button--tag-inline",
-    ];
-
-    for (const selector of genreSelectors) {
-      const genreElements = $(selector);
-      if (genreElements.length > 0) {
-        genreElements.each((_: number, element: AnyNode) => {
-          const genreText = $(element).text().trim();
-          if (genreText && !genres.includes(genreText)) {
-            genres.push(genreText);
-          }
-        });
-        break; // Found genres with this selector, stop trying others
-      }
-    }
-
-    // New Goodreads structure: extract from CollapsableList text
-    if (genres.length === 0) {
-      const genreContainer = $(".BookPageMetadataSection__genres");
-      if (genreContainer.length > 0) {
-        const fullText = genreContainer.text().trim();
-        // Text format: "GenresFantasyFictionYoung AdultMagicChildrens...more..."
-        if (fullText.startsWith("Genres")) {
-          const genreText = fullText
-            .substring(6)
-            .replace("...more...", "")
-            .trim();
-
-          // Find genres that appear in the text
-          for (const genre of KNOWN_GENRES) {
-            if (genreText.includes(genre) && !genres.includes(genre)) {
-              genres.push(genre);
-            }
-          }
-        }
-      }
-    }
-
-    // If no genres found with buttons, try shelf tags
-    if (genres.length === 0) {
-      $(".shelfStat .shelfName").each((_: number, element: AnyNode) => {
-        const shelfName = $(element).text().trim();
-        if (shelfName && !genres.includes(shelfName)) {
-          genres.push(shelfName);
-        }
-      });
-    }
-
-    // Limit to first 10 genres and filter out common non-genre terms
-    genres = genres
-      .filter((genre) => !NON_GENRE_TERMS.includes(genre.toLowerCase()))
-      .slice(0, MAX_GENRES);
-  } catch (genreError) {
-    console.warn(`Could not extract genres:`, genreError);
-  }
-
-  return genres;
-}
 
 /**
  * Validate rating data.
@@ -329,7 +257,6 @@ export function findBookLinkFromSearch(
 export function parseGoodreadsBookData(bookHtml: string): {
   rating: number | null;
   ratingsCount: number | null;
-  genres: string[];
 } {
   try {
     const $book = cheerio.load(bookHtml);
@@ -344,13 +271,10 @@ export function parseGoodreadsBookData(bookHtml: string): {
       ratingsCount = ratingsCount ?? htmlData.ratingsCount;
     }
 
-    // Extract genres
-    const genres = extractGenres($book);
-
-    return { rating, ratingsCount, genres };
+    return { rating, ratingsCount };
   } catch (error) {
     console.error("Error parsing book data:", error);
-    return { rating: null, ratingsCount: null, genres: [] };
+    return { rating: null, ratingsCount: null };
   }
 }
 
@@ -399,13 +323,12 @@ export async function scrapeGoodreads(book: {
         rating: null,
         ratingsCount: null,
         url: null,
-        genres: [],
       };
     }
 
     const bookUrl = createUrl(GOODREADS_BASE_URL, bookUrlPath);
     const bookHtml = await fetchHtml(bookUrl);
-    const { rating, ratingsCount, genres } = parseGoodreadsBookData(bookHtml);
+    const { rating, ratingsCount } = parseGoodreadsBookData(bookHtml);
 
     // Validate the rating data
     const { isValid, validatedRating, validatedCount } = validateRating(
@@ -414,30 +337,22 @@ export async function scrapeGoodreads(book: {
     );
 
     if (isValid) {
-      const genresInfo =
-        genres.length > 0 ? ` | Genres: ${genres.join(", ")}` : "";
       console.log(
-        `⭐ Found rating: ${validatedRating} (${validatedCount ? formatNumberCzech(validatedCount) : "0"} ratings)${genresInfo}`,
+        `⭐ Found rating: ${validatedRating} (${validatedCount ? formatNumberCzech(validatedCount) : "0"} ratings)`,
       );
       return {
         rating: validatedRating,
         ratingsCount: validatedCount,
         url: bookUrl,
-        genres,
       };
     }
 
     // Found a book page but no valid ratings
-    const genresInfo =
-      genres.length > 0 ? ` | Genres: ${genres.join(", ")}` : "";
-    console.warn(
-      `! Could not parse valid rating for: ${book.title}${genresInfo}`,
-    );
+    console.warn(`! Could not parse valid rating for: ${book.title}`);
     return {
       rating: null,
       ratingsCount: validatedCount,
       url: bookUrl,
-      genres,
     };
   } catch (error) {
     console.error(
@@ -448,7 +363,6 @@ export async function scrapeGoodreads(book: {
       rating: null,
       ratingsCount: null,
       url: null,
-      genres: [],
     };
   }
 }

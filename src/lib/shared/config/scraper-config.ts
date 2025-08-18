@@ -24,55 +24,6 @@ export const USER_AGENT =
 export const ACCEPT_LANGUAGE = "en-US,en;q=0.5";
 
 // --- Goodreads Configuration ---
-export const MAX_GENRES = 10;
-export const NON_GENRE_TERMS = [
-  "to-read",
-  "currently-reading",
-  "read",
-  "favorites",
-  "owned",
-  "library",
-  "kindle",
-  "ebook",
-  "audiobook",
-  "...more",
-];
-
-export const KNOWN_GENRES = [
-  "Fantasy",
-  "Fiction",
-  "Young Adult",
-  "Romance",
-  "Mystery",
-  "Thriller",
-  "Science Fiction",
-  "Historical Fiction",
-  "Contemporary",
-  "Horror",
-  "Adventure",
-  "Magic",
-  "Dystopian",
-  "Paranormal",
-  "Urban Fantasy",
-  "Crime",
-  "Biography",
-  "Memoir",
-  "Self Help",
-  "Business",
-  "History",
-  "Philosophy",
-  "Psychology",
-  "Religion",
-  "Science",
-  "Politics",
-  "Travel",
-  "Health",
-  "Cooking",
-  "Art",
-  "Music",
-  "Poetry",
-  "Drama",
-];
 
 // --- Validation Configuration ---
 export const MIN_YEAR = 1900;

@@ -18,10 +18,11 @@ function createTestBook(overrides: Partial<Book> = {}): Book {
     pdfUrl: null,
     epubUrl: null,
     description: "Test description",
+    genreId: null,
+    genre: null,
     rating: 4.0,
     ratingsCount: 100,
     url: "https://example.com/book",
-    genres: [],
     mlpScrapedAt: "2025-01-01T00:00:00.000Z",
     goodreadsScrapedAt: "2025-01-01T00:00:00.000Z",
     subtitle: null,
@@ -402,7 +403,7 @@ describe("Book Deduplication", () => {
           rating: 4.22,
           ratingsCount: 50,
           url: "https://www.goodreads.com/book/show/17832817-o-v-cech-obecn-ch-ili-z-on-politikon?from_search=true&from_srp=true&qid=FvR95mRHnh&rank=1",
-          genres: ["Nonfiction", "Czech Literature", "Classics", "Essays"],
+
           mlpScrapedAt: "2025-08-17T22:20:45.569Z",
           goodreadsScrapedAt: "2025-08-17T22:21:18.768Z",
           subtitle: null,
@@ -425,7 +426,7 @@ describe("Book Deduplication", () => {
           rating: 4.22,
           ratingsCount: 50,
           url: "https://www.goodreads.com/book/show/17832817-o-v-cech-obecn-ch-ili-z-on-politikon?from_search=true&from_srp=true&qid=Uo0U1NjaF7&rank=1",
-          genres: ["Nonfiction", "Czech Literature", "Classics", "Essays"],
+
           mlpScrapedAt: "2025-08-17T22:20:15.751Z",
           goodreadsScrapedAt: "2025-08-17T22:21:15.359Z",
           subtitle: null,
@@ -497,7 +498,7 @@ describe("Book Deduplication", () => {
           rating: 5,
           ratingsCount: 3,
           url: "https://www.goodreads.com/book/show/18142119-o-um-n-a-kultu-e-i?from_search=true&from_srp=true&qid=Ebclpttn2s&rank=1",
-          genres: [],
+
           mlpScrapedAt: "2025-08-17T22:20:07.515Z",
           goodreadsScrapedAt: "2025-08-17T22:21:14.569Z",
           subtitle: null,
@@ -520,7 +521,7 @@ describe("Book Deduplication", () => {
           rating: 5,
           ratingsCount: 3,
           url: "https://www.goodreads.com/book/show/18142119-o-um-n-a-kultu-e-i?from_search=true&from_srp=true&qid=JEeuqOQw53&rank=1",
-          genres: [],
+
           mlpScrapedAt: "2025-08-17T22:20:57.811Z",
           goodreadsScrapedAt: "2025-08-17T22:21:20.250Z",
           subtitle: null,
@@ -567,7 +568,7 @@ describe("Book Deduplication", () => {
         year: 2020,
         rating: 4.5,
         ratingsCount: 1500,
-        genres: ["Fiction", "Drama"],
+
         description: "A complex description",
       });
 
