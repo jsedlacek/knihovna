@@ -82,35 +82,35 @@ export default function HomePage({ books, lastUpdated }: HomePageProps) {
             books={getBooksForGenreGroup(sortedBooks, "beletrie")}
             genreKey="beletrie"
             showScores={showScores}
-            maxBooks={10}
+            maxBooks={100}
           />
 
           <GenreSection
             books={getBooksForGenreGroup(sortedBooks, "poezie")}
             genreKey="poezie"
             showScores={showScores}
-            maxBooks={10}
+            maxBooks={100}
           />
 
           <GenreSection
             books={getBooksForGenreGroup(sortedBooks, "divadlo")}
             genreKey="divadlo"
             showScores={showScores}
-            maxBooks={10}
+            maxBooks={100}
           />
 
           <GenreSection
             books={getBooksForGenreGroup(sortedBooks, "deti")}
             genreKey="deti"
             showScores={showScores}
-            maxBooks={10}
+            maxBooks={100}
           />
 
           <GenreSection
             books={getBooksForGenreGroup(sortedBooks, "ostatni")}
             genreKey="ostatni"
             showScores={showScores}
-            maxBooks={10}
+            maxBooks={100}
           />
         </div>
 
