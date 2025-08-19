@@ -15,7 +15,6 @@ interface GenreSectionProps {
 export default function GenreSection({
   books,
   genreKey,
-  showScores = false,
   maxBooks = 5,
 }: GenreSectionProps) {
   const genreConfig = GENRE_GROUPS[genreKey];
