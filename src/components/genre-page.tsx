@@ -48,7 +48,7 @@ export default function GenrePage({
         <section className="space-y-4">
           <div>
             <h2 className="text-lg font-bold">{genreConfig.name}</h2>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               {genreConfig.description} ({formatNumberCzech(sortedBooks.length)}{" "}
               {sortedBooks.length === 1
                 ? "kniha"
