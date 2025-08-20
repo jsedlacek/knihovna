@@ -68,10 +68,10 @@ export default function GenreSection({
                     img.src = placeholderCover.src;
                 }}
                 alt={`${book.title} cover`}
-                className="w-12 h-18 object-cover border border-border mb-1 hover:opacity-80 transition-opacity"
+                className="h-25 object-cover border border-border mb-1 hover:opacity-80 transition-opacity"
               />
             </a>
-            <div className="text-xs text-muted-foreground w-12 flex items-center justify-center">
+            <div className="text-xs text-muted-foreground flex items-center justify-center">
               {book.rating ? (
                 <span className="inline-flex items-center">
                   <span>
