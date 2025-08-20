@@ -92,7 +92,7 @@ export default function GenreSection({
           href={`/${genreKey}`}
           className="bg-gray-200 text-gray-900 px-4 py-2 text-xs font-mono border-1 border-gray-400 hover:bg-gray-300 hover:border-gray-500 transition-all duration-200 shadow-[1px_1px_0px_0px_rgb(107,114,128)] uppercase tracking-wide inline-flex items-center justify-center"
         >
-          Zobrazit všechny knihy
+          Zobrazit všechny knihy →
         </a>
       </div>
     </div>
