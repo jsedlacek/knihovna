@@ -48,11 +48,11 @@ export default function GenreSection({
         </div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto">
+      <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory">
         {featuredBooks.map((book, index) => (
           <div
             key={`${genreKey}-${book.title}-${book.author}-${index}`}
-            className="flex-shrink-0 text-center"
+            className="flex-shrink-0 text-center snap-start"
           >
             <a
               href={book.detailUrl}
