@@ -14,11 +14,7 @@ interface BookCardProps {
   showScores?: boolean;
 }
 
-export default function BookCard({
-  book,
-  index,
-  showScores = false,
-}: BookCardProps) {
+export function BookCard({ book, index, showScores = false }: BookCardProps) {
   return (
     <div
       key={`${book.title}-${book.author}-${index}`}

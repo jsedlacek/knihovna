@@ -3,7 +3,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import Layout from "#@/layouts/layout.astro";
-import HomePage from "#@/components/home-page.tsx";
+import { HomePage } from "#@/components/home-page.tsx";
 import { loadScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
 
 // Read the books data at build time

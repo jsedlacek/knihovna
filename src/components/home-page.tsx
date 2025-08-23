@@ -1,4 +1,4 @@
-import GenreSection from "#@/components/genre-section.tsx";
+import { GenreSection } from "#@/components/genre-section.tsx";
 import icon from "#@/images/icon.svg";
 import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
@@ -17,7 +17,7 @@ interface HomePageProps {
   lastUpdated?: TimestampData | null;
 }
 
-export default function HomePage({ books, lastUpdated }: HomePageProps) {
+export function HomePage({ books, lastUpdated }: HomePageProps) {
   // First filter out blocked books
   const unblockedBooks = filterBlockedBooks(books);
 

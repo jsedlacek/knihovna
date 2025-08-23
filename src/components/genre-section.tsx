@@ -12,7 +12,7 @@ interface GenreSectionProps {
   maxBooks?: number;
 }
 
-export default function GenreSection({
+export function GenreSection({
   books,
   genreKey,
   maxBooks = 5,

@@ -1,4 +1,4 @@
-import BookCard from "#@/components/book-card.tsx";
+import { BookCard } from "#@/components/book-card.tsx";
 import icon from "#@/images/icon.svg";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { sortBooksByScore } from "#@/lib/shared/utils/book-scoring.ts";
@@ -11,7 +11,7 @@ interface GenrePageProps {
   showScores?: boolean;
 }
 
-export default function GenrePage({
+export function GenrePage({
   books,
   genreKey,
   showScores = false,

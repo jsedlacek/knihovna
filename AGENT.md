@@ -81,6 +81,7 @@ Use the following `npm` scripts for common development tasks:
 
 - **TypeScript Strict Mode**: The project uses strict mode with no `any` types.
 - **ESM Modules**: Use modern `.ts` imports for direct execution in Node.js scripts.
+- **Named Exports**: Always use named exports instead of default exports for components, utilities, and modules. This improves code discoverability, enables better IDE support, and makes refactoring safer.
 - **Static Imports**: Prefer top-level static imports over dynamic `await import()` statements. Use dynamic imports only when truly necessary for code splitting or conditional loading.
 - **Component Composition**: Favor composition over inheritance in React components.
 - **Separation of Concerns**: Maintain a clean separation between layout, components, and styles.

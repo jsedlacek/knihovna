@@ -3,7 +3,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import Layout from "#@/layouts/layout.astro";
-import GenrePage from "#@/components/genre-page.tsx";
+import { GenrePage } from "#@/components/genre-page.tsx";
 import { getBooksForGenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
 import { deduplicateBooks } from "#@/lib/shared/utils/book-deduplication.ts";
