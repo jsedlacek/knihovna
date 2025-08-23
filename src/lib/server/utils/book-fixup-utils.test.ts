@@ -152,7 +152,7 @@ describe("Book Fixup Utils", () => {
     const book = createSampleBook({
       detailUrl: "https://search.mlp.cz/cz/titul/ceske-okamziky/4359869/",
       subtitle: null,
-      partTitle: undefined as any,
+      partTitle: null,
     });
 
     const result = applyBookFixups(book);

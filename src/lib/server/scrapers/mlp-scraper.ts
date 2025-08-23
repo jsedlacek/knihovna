@@ -25,7 +25,10 @@ function parseMlpBookData(
   layoutType: "grid" | "row",
 ): MlpBookListing | null {
   try {
-    let titleElement, authorElement, publisherElement, coverLinkElement;
+    let titleElement: cheerio.Cheerio<AnyNode>;
+    let authorElement: cheerio.Cheerio<AnyNode>;
+    let publisherElement: cheerio.Cheerio<AnyNode>;
+    let coverLinkElement: cheerio.Cheerio<AnyNode>;
 
     if (layoutType === "grid") {
       titleElement = item.find(".title-info-title a");

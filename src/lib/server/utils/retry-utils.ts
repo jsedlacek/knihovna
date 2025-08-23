@@ -61,7 +61,7 @@ export async function withRetry<T>(
     onRetry,
   } = options;
 
-  let lastError: Error;
+  let lastError: Error = new Error("Retry failed");
   let currentDelay = delay;
 
   for (let attempt = 0; attempt <= retries; attempt++) {
@@ -87,7 +87,7 @@ export async function withRetry<T>(
   }
 
   // This should never be reached, but TypeScript requires it
-  throw lastError!;
+  throw lastError;
 }
 
 /**

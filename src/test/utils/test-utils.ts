@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import type { Book, GoodreadsData } from "#@/lib/shared/types/book-types.ts";
 
 /**
  * Load HTML fixture file for testing
@@ -12,13 +13,26 @@ export function loadFixture(filename: string): string {
 /**
  * Create a mock book object for testing
  */
-export function createMockBook(overrides: Partial<any> = {}): any {
+export function createMockBook(overrides: Partial<Book> = {}): Book {
   return {
     title: "Test Book Title",
     author: "Test Author",
     publisher: "Test Publisher",
     year: 2023,
     detailUrl: "https://example.com/book/123",
+    subtitle: null,
+    partTitle: null,
+    imageUrl: null,
+    description: null,
+    pdfUrl: null,
+    epubUrl: null,
+    genreId: null,
+    genre: null,
+    rating: null,
+    ratingsCount: null,
+    url: null,
+    mlpScrapedAt: null,
+    goodreadsScrapedAt: null,
     ...overrides,
   };
 }
@@ -26,12 +40,13 @@ export function createMockBook(overrides: Partial<any> = {}): any {
 /**
  * Create a mock Goodreads data object for testing
  */
-export function createMockGoodreadsData(overrides: Partial<any> = {}): any {
+export function createMockGoodreadsData(
+  overrides: Partial<GoodreadsData> = {},
+): GoodreadsData {
   return {
     rating: 4.5,
     ratingsCount: 1000,
     url: "https://goodreads.com/book/show/123",
-    genres: ["Fantasy", "Fiction"],
     ...overrides,
   };
 }

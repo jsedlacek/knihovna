@@ -257,7 +257,11 @@ async function main() {
               },
             );
 
-            const existingBook = booksMap.get(book.detailUrl)!;
+            const existingBook = booksMap.get(book.detailUrl);
+            if (!existingBook) {
+              console.error(`Book not found in map: ${book.detailUrl}`);
+              return;
+            }
             booksMap.set(book.detailUrl, {
               ...existingBook,
               ...details,
@@ -326,7 +330,11 @@ async function main() {
               },
             });
 
-            const existingBook = booksMap.get(book.detailUrl)!;
+            const existingBook = booksMap.get(book.detailUrl);
+            if (!existingBook) {
+              console.error(`Book not found in map: ${book.detailUrl}`);
+              return;
+            }
             booksMap.set(book.detailUrl, {
               ...existingBook,
               ...goodreadsData,

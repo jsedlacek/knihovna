@@ -65,7 +65,10 @@ export function deduplicateBooks(books: Book[]): Book[] {
   // Process each group
   for (const [, groupBooks] of bookGroups) {
     if (groupBooks.length === 1) {
-      result.push(groupBooks[0]!);
+      const book = groupBooks[0];
+      if (book) {
+        result.push(book);
+      }
     } else {
       // Multiple books with same author/title/subtitle/partTitle
       const booksWithYear = groupBooks.filter((book) => book.year);
@@ -73,7 +76,8 @@ export function deduplicateBooks(books: Book[]): Book[] {
       if (booksWithYear.length === 0) {
         // No years available for any book in the group, so we keep all.
         // This might indicate a data issue, so a log is useful.
-        const firstBook = groupBooks[0]!;
+        const firstBook = groupBooks[0];
+        if (!firstBook) continue;
         console.log(
           `Deduplication skipped for "${firstBook.author} - ${firstBook.title}": No year found.`,
         );
@@ -81,7 +85,9 @@ export function deduplicateBooks(books: Book[]): Book[] {
       } else {
         // If at least one book has a year, we only consider those with a year
         // and discard any that don't.
-        const maxYear = Math.max(...booksWithYear.map((book) => book.year!));
+        const maxYear = Math.max(
+          ...booksWithYear.map((book) => book.year as number),
+        );
         const newestBooks = booksWithYear.filter(
           (book) => book.year === maxYear,
         );
@@ -89,7 +95,8 @@ export function deduplicateBooks(books: Book[]): Book[] {
         if (newestBooks.length > 1) {
           // This is a conflict: multiple books from the same (newest) year.
           // We'll log it and keep all of them.
-          const firstBook = newestBooks[0]!;
+          const firstBook = newestBooks[0];
+          if (!firstBook) continue;
           console.log(
             `Conflict: Multiple books for "${firstBook.author} - ${firstBook.title}" from year ${maxYear}. Keeping all.`,
           );
