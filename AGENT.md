@@ -34,9 +34,10 @@ Use the following `npm` scripts for common development tasks:
 - `npm run build`: Build for production.
 - `npm run preview`: Preview production build.
 - `npm run scrape`: Run book scraping CLI tool.
-- `npm run check`: Run TypeScript type checking.
+- `npm run type-check`: Run TypeScript type checking.
+- `npm run check`: Run type-check, lint, and test together.
 - `npm run lint`: Run Biome linter and formatter checks.
-- `npm run lint:write`: Run Biome linter and apply auto-fixes.
+- `npm run lint:fix`: Run Biome linter and apply auto-fixes.
 - `npm test`: Run all tests.
 - `npm run test:watch`: Run tests in watch mode.
 

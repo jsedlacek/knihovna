@@ -27,7 +27,7 @@ jobs:
         run: npx astro sync
 
       - name: Run TypeScript check
-        run: npm run check
+        run: npm run type-check
 
       - name: Run linting
         run: npm run lint

@@ -12,13 +12,14 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "tsc --noEmit",
+    "type-check": "tsc --noEmit",
+    "check": "npm run type-check && npm run lint && npm test",
     "scrape": "node src/scripts/scrape-books.ts",
     "deploy": "wrangler deploy --assets ./dist",
     "test": "node --test src/**/*.test.ts",
     "test:watch": "node --test --watch src/**/*.test.ts",
     "lint": "biome check",
-    "lint:write": "biome check --write"
+    "lint:fix": "biome check --write"
   },
   "keywords": [],
   "author": "",
