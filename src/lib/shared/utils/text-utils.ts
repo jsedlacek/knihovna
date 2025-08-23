@@ -143,8 +143,7 @@ export function romanToArabic(roman: string): number {
   let result = 0;
   let prevValue = 0;
 
-  for (let i = upperRoman.length - 1; i >= 0; i--) {
-    const char = upperRoman[i];
+  for (const char of [...upperRoman].reverse()) {
     if (char === undefined) continue;
     const currentValue = romanMap[char];
     if (currentValue === undefined) return 0; // Invalid character
