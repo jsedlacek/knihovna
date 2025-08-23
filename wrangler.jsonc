@@ -1,7 +1,7 @@
 {
-    "name": "knihovna",
-    "compatibility_date": "2025-08-16",
-    "assets": {
-        "directory": "./dist"
-    }
+  "name": "knihovna",
+  "compatibility_date": "2025-08-16",
+  "assets": {
+    "directory": "./dist"
+  }
 }
