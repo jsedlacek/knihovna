@@ -2,6 +2,8 @@
  * Retry utility with exponential backoff for handling network failures and server overloads.
  */
 
+import { range } from "#@/lib/shared/utils/range-utils.ts";
+
 export interface RetryOptions {
   /**
    * Number of retry attempts (default: 3)
@@ -49,6 +51,7 @@ export interface RetryOptions {
  * );
  * ```
  */
+
 export async function withRetry<T>(
   fn: () => Promise<T>,
   options: RetryOptions = {},
@@ -64,7 +67,7 @@ export async function withRetry<T>(
   let lastError: Error = new Error("Retry failed");
   let currentDelay = delay;
 
-  for (let attempt = 0; attempt <= retries; attempt++) {
+  for (const attempt of range(retries + 1)) {
     try {
       return await fn();
     } catch (error) {

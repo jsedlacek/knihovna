@@ -1,5 +1,6 @@
 import { MAX_YEAR, MIN_YEAR } from "#@/lib/shared/config/scraper-config.ts";
 import type { PublisherInfo } from "#@/lib/shared/types/book-types.ts";
+import { range } from "#@/lib/shared/utils/range-utils.ts";
 
 /**
  * Cleans title text by removing extra whitespace, newlines, and tabs.
@@ -312,7 +313,7 @@ export function calculateSimilarity(s1: string, s2: string): number {
 
   // Winkler bonus for common prefix
   let prefix = 0;
-  for (let i = 0; i < Math.min(len1, len2, 4); i++) {
+  for (const i of range(Math.min(len1, len2, 4))) {
     if (s1[i] === s2[i]) {
       prefix++;
     } else {
