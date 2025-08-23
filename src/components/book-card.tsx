@@ -1,14 +1,12 @@
+import { StarIcon } from "lucide-react";
+import placeholderCover from "#@/images/book-placeholder.svg";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
+import { formatBookScore } from "#@/lib/shared/utils/book-scoring.ts";
 import {
-  formatBookScore,
-} from "#@/lib/shared/utils/book-scoring.ts";
-import {
-  formatNumberCzech,
   formatAuthorName,
   formatNumberCompact,
+  formatNumberCzech,
 } from "#@/lib/shared/utils/text-utils.ts";
-import type { Book } from "#@/lib/shared/types/book-types.ts";
-import placeholderCover from "#@/images/book-placeholder.svg";
-import { StarIcon } from "lucide-react";
 
 interface BookCardProps {
   book: Book;
@@ -16,7 +14,11 @@ interface BookCardProps {
   showScores?: boolean;
 }
 
-export default function BookCard({ book, index, showScores = false }: BookCardProps) {
+export default function BookCard({
+  book,
+  index,
+  showScores = false,
+}: BookCardProps) {
   return (
     <div
       key={`${book.title}-${book.author}-${index}`}
@@ -60,35 +62,30 @@ export default function BookCard({ book, index, showScores = false }: BookCardPr
             <div className="flex items-center justify-center sm:justify-start">
               <span className="inline-flex items-center">
                 <span className="font-semibold">
-                  {formatNumberCzech(
-                    Math.round(book.rating * 10) / 10,
-                  )}
+                  {formatNumberCzech(Math.round(book.rating * 10) / 10)}
                 </span>
                 <StarIcon className="ml-1 size-2.5 fill-current mr-2" />
               </span>
 
               <span>
                 (
-                {book.ratingsCount && (
-                  <>
-                    {book.url ? (
-                      <a
-                        href={book.url}
-                        className="text-blue-600 hover:underline"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {formatNumberCompact(book.ratingsCount)}
-                        &nbsp;hodnocení
-                      </a>
-                    ) : (
-                      <span>
-                        {formatNumberCompact(book.ratingsCount)}
-                        &nbsp;hodnocení
-                      </span>
-                    )}
-                  </>
-                )}
+                {book.ratingsCount &&
+                  (book.url ? (
+                    <a
+                      href={book.url}
+                      className="text-blue-600 hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {formatNumberCompact(book.ratingsCount)}
+                      &nbsp;hodnocení
+                    </a>
+                  ) : (
+                    <span>
+                      {formatNumberCompact(book.ratingsCount)}
+                      &nbsp;hodnocení
+                    </span>
+                  ))}
                 )
               </span>
             </div>
@@ -97,8 +94,7 @@ export default function BookCard({ book, index, showScores = false }: BookCardPr
           )}
           {showScores && book.rating && (
             <span className="text-orange-600 font-bold">
-              <span className="mx-2">|</span>Skóre:{" "}
-              {formatBookScore(book)}
+              <span className="mx-2">|</span>Skóre: {formatBookScore(book)}
             </span>
           )}
         </div>

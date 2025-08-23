@@ -1,11 +1,11 @@
-import { test } from "node:test";
 import assert from "node:assert";
+import { test } from "node:test";
 import {
-  cleanSearchTerm,
-  getTitleWithArabicNumerals,
-  getAuthorForSearch,
-  formatAuthorName,
   calculateSimilarity,
+  cleanSearchTerm,
+  formatAuthorName,
+  getAuthorForSearch,
+  getTitleWithArabicNumerals,
   romanToArabic,
 } from "./text-utils.ts";
 

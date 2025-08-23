@@ -1,9 +1,9 @@
-import { sortBooksByScore } from "#@/lib/shared/utils/book-scoring.ts";
-import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
-import type { Book } from "#@/lib/shared/types/book-types.ts";
-import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
-import placeholderCover from "#@/images/book-placeholder.svg";
 import { StarIcon } from "lucide-react";
+import placeholderCover from "#@/images/book-placeholder.svg";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
+import { sortBooksByScore } from "#@/lib/shared/utils/book-scoring.ts";
+import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
+import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 
 interface GenreSectionProps {
   books: Book[];

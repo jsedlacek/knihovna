@@ -1,7 +1,7 @@
 import type {
   Book,
-  MlpBookListing,
   MlpBookDetails,
+  MlpBookListing,
 } from "#@/lib/shared/types/book-types.ts";
 
 /**

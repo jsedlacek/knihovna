@@ -1,19 +1,18 @@
 import * as cheerio from "cheerio";
-
-import type { GoodreadsData } from "#@/lib/shared/types/book-types.ts";
-import { fetchHtml, createUrl } from "#@/lib/server/utils/fetch-utils.ts";
-import {
-  cleanSearchTerm,
-  getAuthorForSearch,
-  getTitleWithArabicNumerals,
-  calculateSimilarity,
-} from "#@/lib/shared/utils/text-utils.ts";
+import { createUrl, fetchHtml } from "#@/lib/server/utils/fetch-utils.ts";
 import {
   GOODREADS_BASE_URL,
-  MIN_RATING,
   MAX_RATING,
+  MIN_RATING,
 } from "#@/lib/shared/config/scraper-config.ts";
-import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
+import type { GoodreadsData } from "#@/lib/shared/types/book-types.ts";
+import {
+  calculateSimilarity,
+  cleanSearchTerm,
+  formatNumberCzech,
+  getAuthorForSearch,
+  getTitleWithArabicNumerals,
+} from "#@/lib/shared/utils/text-utils.ts";
 
 /**
  * Represents a book candidate found in Goodreads search results,
@@ -48,6 +47,7 @@ function extractFromJsonLd($: cheerio.CheerioAPI): {
     if (data.aggregateRating?.ratingCount) {
       ratingsCount = parseInt(
         data.aggregateRating.ratingCount.toString().replace(/,/g, ""),
+        10,
       );
     }
 
@@ -78,8 +78,8 @@ function extractFromHtml($: cheerio.CheerioAPI): {
   const countMatch = ratingsCountText.match(
     /(\d{1,3}(?:,\d{3})*|\d+)\sratings/,
   );
-  if (countMatch && countMatch[1]) {
-    ratingsCount = parseInt(countMatch[1].replace(/,/g, ""));
+  if (countMatch?.[1]) {
+    ratingsCount = parseInt(countMatch[1].replace(/,/g, ""), 10);
   }
 
   return { rating, ratingsCount };
@@ -148,10 +148,9 @@ export function extractBookCandidates($: cheerio.CheerioAPI): BookCandidate[] {
     // Extract ratings count
     const ratingsText = bookRow.find(".minirating").text();
     const ratingsMatch = ratingsText.match(/([\d,]+)\s+ratings/);
-    const ratingsCount =
-      ratingsMatch && ratingsMatch[1]
-        ? parseInt(ratingsMatch[1].replace(/,/g, ""), 10)
-        : 0;
+    const ratingsCount = ratingsMatch?.[1]
+      ? parseInt(ratingsMatch[1].replace(/,/g, ""), 10)
+      : 0;
 
     candidates.push({
       url: candidateUrl,

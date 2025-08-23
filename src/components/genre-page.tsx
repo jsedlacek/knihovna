@@ -1,9 +1,9 @@
-import { sortBooksByScore } from "#@/lib/shared/utils/book-scoring.ts";
-import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
-import type { Book } from "#@/lib/shared/types/book-types.ts";
-import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
 import BookCard from "#@/components/book-card.tsx";
 import icon from "#@/images/icon.svg";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
+import { sortBooksByScore } from "#@/lib/shared/utils/book-scoring.ts";
+import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
+import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 
 interface GenrePageProps {
   books: Book[];

@@ -1,11 +1,11 @@
-import { sortBooksByScore } from "#@/lib/shared/utils/book-scoring.ts";
-import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
-import type { Book } from "#@/lib/shared/types/book-types.ts";
-import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
-import { deduplicateBooks } from "#@/lib/shared/utils/book-deduplication.ts";
-import { getBooksForGenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 import GenreSection from "#@/components/genre-section.tsx";
 import icon from "#@/images/icon.svg";
+import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
+import { deduplicateBooks } from "#@/lib/shared/utils/book-deduplication.ts";
+import { sortBooksByScore } from "#@/lib/shared/utils/book-scoring.ts";
+import { getBooksForGenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
+import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 
 interface TimestampData {
   lastUpdated: string;

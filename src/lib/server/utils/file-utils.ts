@@ -1,8 +1,8 @@
 import { existsSync } from "node:fs";
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
-import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { OUTPUT_FILE } from "#@/lib/server/config.ts";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
 
 /**
  * Load existing books from the output file if it exists.

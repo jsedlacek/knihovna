@@ -16,7 +16,9 @@
     "scrape": "node src/scripts/scrape-books.ts",
     "deploy": "wrangler deploy --assets ./dist",
     "test": "node --test test/**/*.test.ts src/**/*.test.ts",
-    "test:watch": "node --test --watch test/**/*.test.ts src/**/*.test.ts"
+    "test:watch": "node --test --watch test/**/*.test.ts src/**/*.test.ts",
+    "lint": "biome check",
+    "lint:write": "biome check --write"
   },
   "keywords": [],
   "author": "",

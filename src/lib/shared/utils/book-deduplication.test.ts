@@ -1,7 +1,7 @@
 import { strict as assert } from "node:assert";
-import { test, describe } from "node:test";
-import { deduplicateBooks } from "./book-deduplication.ts";
+import { describe, test } from "node:test";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
+import { deduplicateBooks } from "./book-deduplication.ts";
 
 /**
  * Helper function to create a test book with minimal required fields
@@ -70,11 +70,11 @@ describe("Book Deduplication", () => {
 
       assert.strictEqual(result.length, 1);
       assert.strictEqual(
-        result[0]!.year,
+        result[0]?.year,
         2018,
         "Should keep the book with year",
       );
-      assert.strictEqual(result[0]!.title, "O umění a kultuře (I)");
+      assert.strictEqual(result[0]?.title, "O umění a kultuře (I)");
     });
 
     test("should handle various Roman numeral formats", () => {
@@ -161,7 +161,7 @@ describe("Book Deduplication", () => {
       const result = deduplicateBooks(books);
 
       assert.strictEqual(result.length, 1);
-      assert.strictEqual(result[0]!.year, 2022, "Should keep the newest book");
+      assert.strictEqual(result[0]?.year, 2022, "Should keep the newest book");
     });
 
     test("should prefer book with year over book without year", () => {
@@ -173,7 +173,7 @@ describe("Book Deduplication", () => {
       const result = deduplicateBooks(books);
 
       assert.strictEqual(result.length, 1);
-      assert.strictEqual(result[0]!.year, 2020, "Should keep book with year");
+      assert.strictEqual(result[0]?.year, 2020, "Should keep book with year");
     });
 
     test("should keep all books when no years are available", () => {
@@ -256,7 +256,7 @@ describe("Book Deduplication", () => {
       const result = deduplicateBooks(books);
 
       assert.strictEqual(result.length, 1);
-      assert.strictEqual(result[0]!.year, 2020);
+      assert.strictEqual(result[0]?.year, 2020);
     });
 
     test("should handle null vs empty string in subtitle/partTitle", () => {
@@ -282,7 +282,7 @@ describe("Book Deduplication", () => {
         1,
         "null and empty string should be treated as equivalent",
       );
-      assert.strictEqual(result[0]!.year, 2020, "Should keep the newer book");
+      assert.strictEqual(result[0]?.year, 2020, "Should keep the newer book");
     });
   });
 
@@ -308,7 +308,7 @@ describe("Book Deduplication", () => {
         1,
         "Case differences in author should not prevent deduplication",
       );
-      assert.strictEqual(result[0]!.year, 2020);
+      assert.strictEqual(result[0]?.year, 2020);
     });
 
     test("should handle punctuation differences in author names", () => {
@@ -441,12 +441,12 @@ describe("Book Deduplication", () => {
         "Should deduplicate books with diacritic differences",
       );
       assert.strictEqual(
-        result[0]!.year,
+        result[0]?.year,
         2018,
         "Should keep the version with year (2018)",
       );
       assert.strictEqual(
-        result[0]!.title,
+        result[0]?.title,
         "O věcech obecných, čili, Zoon politikon",
         "Should keep the newer version",
       );
@@ -473,7 +473,7 @@ describe("Book Deduplication", () => {
         1,
         "Should deduplicate books with various diacritic differences",
       );
-      assert.strictEqual(result[0]!.year, 2020);
+      assert.strictEqual(result[0]?.year, 2020);
     });
   });
 
@@ -536,17 +536,17 @@ describe("Book Deduplication", () => {
         "Should deduplicate the Roman vs Arabic numeral versions",
       );
       assert.strictEqual(
-        result[0]!.year,
+        result[0]?.year,
         2018,
         "Should keep the version with year (2018)",
       );
       assert.strictEqual(
-        result[0]!.title,
+        result[0]?.title,
         "O umění a kultuře (I)",
         "Should keep the Roman numeral version",
       );
       assert.ok(
-        result[0]!.imageUrl,
+        result[0]?.imageUrl,
         "Should keep the version with more complete data",
       );
     });

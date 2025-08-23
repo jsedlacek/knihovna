@@ -57,7 +57,7 @@ export function deduplicateBooks(books: Book[]): Book[] {
     if (!bookGroups.has(key)) {
       bookGroups.set(key, []);
     }
-    bookGroups.get(key)!.push(book);
+    bookGroups.get(key)?.push(book);
   }
 
   const result: Book[] = [];

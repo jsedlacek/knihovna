@@ -1,12 +1,12 @@
-import { test, describe } from "node:test";
 import { strict as assert } from "node:assert";
+import { describe, test } from "node:test";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
 import {
   applyBookFixups,
   applyBookFixupsToArray,
   getConfiguredFixups,
   hasFixup,
 } from "./book-fixup-utils.ts";
-import type { Book } from "#@/lib/shared/types/book-types.ts";
 
 describe("Book Fixup Utils", () => {
   // Create a sample book for testing

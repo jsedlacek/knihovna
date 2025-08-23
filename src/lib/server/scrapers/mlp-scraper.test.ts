@@ -1,7 +1,7 @@
-import { test, describe } from "node:test";
 import assert from "node:assert";
-import { parseMlpBookDetails, parseMlpDownloadLinks } from "./mlp-scraper.ts";
+import { describe, test } from "node:test";
 import { loadFixture } from "#@/test/utils/test-utils.ts";
+import { parseMlpBookDetails, parseMlpDownloadLinks } from "./mlp-scraper.ts";
 
 describe("MLP Scraper HTML Parsing", () => {
   describe("parseMlpBookDetails", () => {

@@ -1,22 +1,21 @@
 import * as cheerio from "cheerio";
 import type { AnyNode } from "domhandler";
-import type {
-  MlpBookListing,
-  MlpBookDetails,
-} from "#@/lib/shared/types/book-types.ts";
-import { fetchHtml, createUrl } from "#@/lib/server/utils/fetch-utils.ts";
-
+import { createUrl, fetchHtml } from "#@/lib/server/utils/fetch-utils.ts";
 import {
-  cleanTitle,
-  cleanAuthorName,
-  parsePublisherInfo,
-  getBestImageUrl,
-} from "#@/lib/shared/utils/text-utils.ts";
-import {
-  MLP_START_URL,
-  MLP_BASE_URL,
   MAX_PAGES,
+  MLP_BASE_URL,
+  MLP_START_URL,
 } from "#@/lib/shared/config/scraper-config.ts";
+import type {
+  MlpBookDetails,
+  MlpBookListing,
+} from "#@/lib/shared/types/book-types.ts";
+import {
+  cleanAuthorName,
+  cleanTitle,
+  getBestImageUrl,
+  parsePublisherInfo,
+} from "#@/lib/shared/utils/text-utils.ts";
 
 /**
  * Parse book data from MLP listing page items.

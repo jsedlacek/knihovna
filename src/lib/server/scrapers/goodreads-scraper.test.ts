@@ -1,19 +1,19 @@
-import { test, describe } from "node:test";
 import assert from "node:assert";
+import { describe, test } from "node:test";
+import * as cheerio from "cheerio";
 import {
-  findBookLinkFromSearch,
-  parseGoodreadsBookData,
-  validateRating,
-  extractBookCandidates,
-  scoreBookCandidate,
-  selectBestBookCandidate,
-} from "./goodreads-scraper.ts";
+  cleanSearchTerm,
+  getTitleWithArabicNumerals,
+} from "#@/lib/shared/utils/text-utils.ts";
 import { loadFixture } from "#@/test/utils/test-utils.ts";
 import {
-  getTitleWithArabicNumerals,
-  cleanSearchTerm,
-} from "#@/lib/shared/utils/text-utils.ts";
-import * as cheerio from "cheerio";
+  extractBookCandidates,
+  findBookLinkFromSearch,
+  parseGoodreadsBookData,
+  scoreBookCandidate,
+  selectBestBookCandidate,
+  validateRating,
+} from "./goodreads-scraper.ts";
 
 describe("Goodreads Scraper HTML Parsing", () => {
   describe("findBookLinkFromSearch", () => {
@@ -140,9 +140,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
         console.log(`2nd result: "${secondTitle}" -> ${secondHref}`);
 
         assert.strictEqual(secondTitle, "Krakatit");
-        assert.ok(
-          secondHref && secondHref.includes("/book/show/428287.Krakatit"),
-        );
+        assert.ok(secondHref?.includes("/book/show/428287.Krakatit"));
       }
 
       // This demonstrates that the correct book exists in the results but isn't selected
@@ -592,7 +590,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
             "Should extract valid book link pattern",
           );
         }
-      } catch (error) {
+      } catch (_error) {
         // If fixture doesn't exist, test with synthetic data
         console.log("No search fixture found, using synthetic test data");
 

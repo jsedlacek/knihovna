@@ -1,6 +1,6 @@
 import {
-  USER_AGENT,
   ACCEPT_LANGUAGE,
+  USER_AGENT,
 } from "#@/lib/shared/config/scraper-config.ts";
 
 /**

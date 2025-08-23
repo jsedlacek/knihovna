@@ -2,20 +2,19 @@
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import type { Book, MlpBookListing } from "#@/lib/shared/types/book-types.ts";
-import {
-  scrapeMlpListingPages,
-  scrapeMlpBookDetails,
-} from "#@/lib/server/scrapers/mlp-scraper.ts";
 import { scrapeGoodreads } from "#@/lib/server/scrapers/goodreads-scraper.ts";
+import {
+  scrapeMlpBookDetails,
+  scrapeMlpListingPages,
+} from "#@/lib/server/scrapers/mlp-scraper.ts";
+import { applyBookFixupsToArray } from "#@/lib/server/utils/book-fixup-utils.ts";
 import { processBatch } from "#@/lib/server/utils/concurrency-utils.ts";
 import {
   loadExistingBooks,
   saveBooks,
 } from "#@/lib/server/utils/file-utils.ts";
-import { saveScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
 import { withRetry } from "#@/lib/server/utils/retry-utils.ts";
-import { applyBookFixupsToArray } from "#@/lib/server/utils/book-fixup-utils.ts";
+import { saveScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
 import {
   CONCURRENCY,
   RETRY_COUNT,
@@ -23,6 +22,7 @@ import {
   RETRY_FACTOR,
   RETRY_MAX_DELAY,
 } from "#@/lib/shared/config/scraper-config.ts";
+import type { Book, MlpBookListing } from "#@/lib/shared/types/book-types.ts";
 
 /**
  * Main scraping function.
@@ -99,7 +99,7 @@ async function main() {
     })
 
     .check((argv) => {
-      if (!argv["mlp-list"] && !argv["mlp-detail"] && !argv["goodreads"]) {
+      if (!argv["mlp-list"] && !argv["mlp-detail"] && !argv.goodreads) {
         throw new Error(
           "At least one scraping stage must be enabled (--mlp-list, --mlp-detail, or --goodreads)",
         );
@@ -263,7 +263,7 @@ async function main() {
               ...details,
               mlpScrapedAt: new Date().toISOString(),
             });
-          } catch (error) {
+          } catch (_error) {
             console.error(
               `[ERROR] Failed MLP details for "${book.title}" after all retries. Skipping.`,
             );
@@ -332,7 +332,7 @@ async function main() {
               ...goodreadsData,
               goodreadsScrapedAt: new Date().toISOString(),
             });
-          } catch (error) {
+          } catch (_error) {
             console.error(
               `[ERROR] Failed to fetch Goodreads data for "${book.title}" after all retries. Skipping.`,
             );

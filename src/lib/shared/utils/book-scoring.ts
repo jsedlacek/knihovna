@@ -107,10 +107,10 @@ export function groupAndSortBooksByGenre(
     (acc, book) => {
       if (!book.genre) {
         // If no genre description, put in 'Ostatní' category
-        if (!acc["Ostatní"]) {
-          acc["Ostatní"] = [];
+        if (!acc.Ostatní) {
+          acc.Ostatní = [];
         }
-        acc["Ostatní"].push(book);
+        acc.Ostatní.push(book);
       } else {
         // Extract primary genre from description (text before first delimiter)
         const primaryGenre = book.genre.split(/[;:,]/)[0]?.trim();
@@ -122,10 +122,10 @@ export function groupAndSortBooksByGenre(
           acc[primaryGenre].push(book);
         } else {
           // Fallback to 'Ostatní' if parsing fails
-          if (!acc["Ostatní"]) {
-            acc["Ostatní"] = [];
+          if (!acc.Ostatní) {
+            acc.Ostatní = [];
           }
-          acc["Ostatní"].push(book);
+          acc.Ostatní.push(book);
         }
       }
       return acc;
