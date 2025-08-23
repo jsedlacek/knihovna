@@ -161,6 +161,6 @@ describe("Book Fixup Utils", () => {
     assert.strictEqual(result.title, "České snění");
     // Null/undefined values should be preserved
     assert.strictEqual(result.subtitle, null);
-    assert.strictEqual(result.partTitle, undefined);
+    assert.strictEqual(result.partTitle, null);
   });
 });

@@ -36,7 +36,7 @@ export function parsePublisherInfo(
   const trimmedInfo = publisherInfo.trim();
   const yearMatch = trimmedInfo.match(/^(.+?)\s+(\d{4})$/);
   if (yearMatch) {
-    const publisher = yearMatch[1]?.trim();
+    const publisher = yearMatch[1]?.trim() || null;
     const yearStr = yearMatch[2];
     if (!yearStr) return { publisher: trimmedInfo, year: null };
     const year = parseInt(yearStr, 10);
