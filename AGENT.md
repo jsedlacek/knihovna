@@ -104,6 +104,16 @@ The project uses a hybrid testing approach that balances discoverability with se
 
 This approach ensures that tests live close to their implementation, while shared test resources remain centralized.
 
+### Continuous Integration
+
+The project uses GitHub Actions for automated quality assurance on every push and pull request:
+
+- **TypeScript Check**: `npm run check` ensures strict type compliance
+- **Linting**: `npm run lint` enforces code style and quality rules via Biome
+- **Testing**: `npm test` runs the full test suite with real fixture validation
+
+The CI pipeline must pass before code can be merged, ensuring consistent code quality across all contributions. The deployment workflow depends on successful CI completion.
+
 ### Running Tests
 
 - Run all tests with `npm test`.
