@@ -5,12 +5,4 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react(), vike(), tailwindcss()],
-  resolve: {
-    alias: {
-      "#@": "/src",
-    },
-  },
-  build: {
-    assetsDir: "assets",
-  },
 });
