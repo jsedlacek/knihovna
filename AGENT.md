@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**Knihovna** is a Czech e-books static site that showcases the best free e-books from Prague Municipal Library. The site displays books with ratings of 4.0+ from Goodreads, organized by genres, with direct download links for EPUB and PDF formats.
+**Knihovna** is a Czech e-books static site that showcases the best free e-books from Prague Municipal Library. The site displays books with ratings of 4.0+ from Goodreads, organized by genres, with direct download links for EPUB and PDF formats. Built with Vike (React-based SSG framework) for modern performance and developer experience.
 
 ## Agent Instructions
 
@@ -30,24 +30,28 @@ This practice keeps AGENT.md current and valuable. Remember: agents should not c
 
 Use the following `npm` scripts for common development tasks:
 
-- `npm run dev`: Start development server.
-- `npm run build`: Build for production.
+- `npm run dev`: Start Vike development server.
+- `npm run build`: Build for production using Vike.
 - `npm run preview`: Preview production build.
 - `npm run scrape`: Run book scraping CLI tool.
 - `npm run type-check`: Run TypeScript type checking.
 - `npm run check`: Run type-check, lint, and test together.
-- `npm run lint`: Run Biome linter and formatter checks.
-- `npm run lint:fix`: Run Biome linter and apply auto-fixes.
+- `npm run lint`: Run oxlint linter checks.
+- `npm run lint:fix`: Run oxlint with auto-fixes.
+- `npm run format`: Run Biome formatter.
+- `npm run format:check`: Check Biome formatting.
 - `npm test`: Run all tests.
 - `npm run test:watch`: Run tests in watch mode.
+- `npm run storybook`: Start Storybook development server.
+- `npm run build-storybook`: Build static Storybook for deployment.
 
 ## Code Style & Conventions
 
 ### File Naming
 
-- **Lowercase only**: All file names MUST use lowercase letters. No capital letters.
-- **Kebab-case**: Use hyphens to separate words (e.g., `book-card.tsx`).
-- This applies to all files: components, layouts, pages, utils, etc.
+- **Lowercase for most files**: All file names SHOULD use lowercase letters (e.g., `book-card.tsx`).
+  - **Exception**: Vike-specific files like `+Page.tsx`, `+Layout.tsx`, and `+Head.tsx` MUST use PascalCase as required by the framework.
+- **Kebab-case**: Use hyphens to separate words for non-Vike files (e.g., `book-card.tsx`, `genre-data-loader.ts`).
 
 ### Documentation
 
@@ -82,7 +86,8 @@ Use the following `npm` scripts for common development tasks:
 
 - **TypeScript Strict Mode**: The project uses strict mode with no `any` types.
 - **ESM Modules**: Use modern `.ts` imports for direct execution in Node.js scripts.
-- **Named Exports**: Always use named exports instead of default exports for components, utilities, and modules. This improves code discoverability, enables better IDE support, and makes refactoring safer.
+- **Named Exports**: Prefer named exports for shared modules like components (e.g., `book-card.tsx`) and utilities (`genre-utils.ts`). This improves code discoverability and refactoring.
+  - **Exception**: Use `default` exports for Vike's special files (`+Page.tsx`, `+data.ts`, `+config.ts`, etc.) as required by its file-based routing system.
 - **Static Imports**: Prefer top-level static imports over dynamic `await import()` statements. Use dynamic imports only when truly necessary for code splitting or conditional loading.
 - **Component Composition**: Favor composition over inheritance in React components.
 - **Separation of Concerns**: Maintain a clean separation between layout, components, and styles.
@@ -111,7 +116,8 @@ This approach ensures that tests live close to their implementation, while share
 The project uses GitHub Actions for automated quality assurance on every push and pull request:
 
 - **TypeScript Check**: `npm run check` ensures strict type compliance
-- **Linting**: `npm run lint` enforces code style and quality rules via Biome
+- **Linting**: `npm run lint` enforces code style and quality rules via `oxlint`.
+- **Formatting**: `npm run format` ensures consistent code style using `biome`.
 - **Testing**: `npm test` runs the full test suite with real fixture validation
 
 The CI pipeline must pass before code can be merged, ensuring consistent code quality across all contributions. The deployment workflow depends on successful CI completion.
@@ -166,26 +172,47 @@ console.log("Output:", result);
 
 ### Core Technology Stack
 
-- **Framework**: Astro.js v5 (SSG)
+- **Framework**: Vike v0.4.237 (React-based SSG)
 - **UI Library**: React v19
 - **Styling**: Tailwind CSS v4
-- **Language**: TypeScript v5 (Strict)
-- **Build Tool**: Vite (via Astro)
+- **Language**: TypeScript v5 (Strict, Node.js 24)
+- **Build Tool**: Vite v6
 - **Package Manager**: npm
+- **Component Development**: Storybook v9
 
 ### Project Structure
 
-The application source code is located in the `src/` directory. This includes Astro `pages/` and `layouts/`, React `components/`, shared `lib/` modules (such as scrapers, utilities, and type definitions), and executable `scripts/`. The primary data source for the application is stored in the `data/` directory, which is gitignored.
+The application source code is located in the `src/` directory. This includes Vike `pages/` with React components and data loaders, React `components/`, shared `lib/` modules (such as scrapers, utilities, and type definitions), and executable `scripts/`. The primary data source for the application is stored in the `data/` directory, which is gitignored.
 
 ### Data Flow & SSG
 
-The site is statically generated at build time. The build process reads a local dataset of books from the server-side, which is then passed as props to the UI components. Astro renders the final static HTML, and client-side JavaScript is used to hydrate components for interactivity where needed.
+The site is statically generated at build time using Vike's pre-rendering. Each page uses `+data.ts` files to load data server-side during build time. The build process reads a local dataset of books, processes and filters them, then passes the data as props to React components. Vike renders the final static HTML with automatic client-side hydration for interactivity.
+
+### Vike Page Architecture
+
+Pages follow Vike's file-based routing convention:
+
+- `+Page.tsx`: React component for the page UI
+- `+data.ts`: Server-side data loading function (runs at build time)
+- `+config.ts`: Page-specific configuration (meta tags, etc.)
+- `+Layout.tsx`: Layout wrapper component
+- `+Head.tsx`: HTML head content (global)
+
+Example page structure:
+
+```
+src/pages/beletrie/
+├── +Page.tsx      # React component
+├── +data.ts       # Data loader
+└── +config.ts     # Page config
+```
 
 ### Modular Script Architecture
 
 - **Separation of Concerns**: Scripts are broken into focused modules (scrapers, utils, config).
-- **Type Safety**: No `any` types are used; all modules have strict TypeScript coverage.
+- **Type Safety**: No `any` types are used; all modules have strict TypeScript coverage with Node.js 24 types.
 - **Native Node.js Execution**: Scripts are executed directly with `node script.ts`, requiring no build step.
+- **Shared Data Loaders**: Reusable data loading utilities for consistent book filtering and processing across pages.
 
 ### Data Types
 

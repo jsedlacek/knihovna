@@ -27,11 +27,10 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
         className="flex-shrink-0"
       >
         <img
-          src={book.imageUrl || placeholderCover.src}
+          src={book.imageUrl || placeholderCover}
           onError={(e) => {
             const img = e.currentTarget;
-            if (img.src !== placeholderCover.src)
-              img.src = placeholderCover.src;
+            if (img.src !== placeholderCover) img.src = placeholderCover;
           }}
           alt={`${book.title} book cover`}
           className="w-16 h-24 sm:w-20 sm:h-30 object-cover border border-border hover:opacity-80 transition-opacity mx-auto sm:mx-0"

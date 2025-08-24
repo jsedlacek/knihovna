@@ -4,7 +4,7 @@ import { join } from "node:path";
 
 const TIMESTAMP_FILE = join(process.cwd(), "data", "last-updated.json");
 
-interface TimestampData {
+export interface TimestampData {
   lastUpdated: string;
   timestamp: number;
 }

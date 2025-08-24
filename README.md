@@ -15,9 +15,10 @@ Knihovna displays highly-rated books (4.0+ stars on Goodreads) with direct downl
 
 ## Tech Stack
 
-- **Framework**: Astro.js (Static Site Generator)
+- **Framework**: Vike (React-based Static Site Generator)
 - **UI**: React + Tailwind CSS
 - **Language**: TypeScript
+- **Build Tool**: Vite
 - **Data**: Scraped from public library sources
 
 ## Development

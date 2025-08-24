@@ -61,11 +61,10 @@ export function GenreSection({
               className="block"
             >
               <img
-                src={book.imageUrl || placeholderCover.src}
+                src={book.imageUrl || placeholderCover}
                 onError={(e) => {
                   const img = e.currentTarget;
-                  if (img.src !== placeholderCover.src)
-                    img.src = placeholderCover.src;
+                  if (img.src !== placeholderCover) img.src = placeholderCover;
                 }}
                 alt={`${book.title} cover`}
                 className="h-25 object-cover border border-border mb-1 hover:opacity-80 transition-opacity"
