@@ -77,12 +77,21 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
         </div>
         <div className="flex justify-center sm:justify-start gap-2 flex-wrap">
           {book.epubUrl && (
-            <Button href={book.epubUrl} variant="primary">
+            <Button
+              href={book.epubUrl}
+              variant="primary"
+              rel="noopener noreferrer"
+            >
               STÁHNOUT EPUB
             </Button>
           )}
           {book.pdfUrl && (
-            <Button href={book.pdfUrl} variant="secondary">
+            <Button
+              href={book.pdfUrl}
+              variant="secondary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               ZOBRAZIT PDF
             </Button>
           )}

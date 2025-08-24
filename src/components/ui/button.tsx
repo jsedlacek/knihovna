@@ -13,8 +13,8 @@ export function Button({
   children,
   href,
   variant = "primary",
-  target = "_blank",
-  rel = "noopener noreferrer",
+  target,
+  rel,
   className = "",
 }: ButtonProps) {
   const baseClasses =
