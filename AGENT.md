@@ -10,7 +10,7 @@
 
 - **Never read test fixtures**: Files in `src/test/fixtures/` contain large HTML samples (`50KB+`).
 - **Never read data files**: `data/books.json` is a large dataset.
-- **Never read build artifacts**: Do not read from `dist/`, `.astro/`, etc.
+- **Never read build artifacts**: Do not read from `dist/`, `.wrangler/`, etc.
 - **Check file sizes first**: Use `ls -la` to check file sizes before reading.
 - **Prefer targeted searches**: Use `grep` to search within files instead of reading entire contents.
 - **Use line ranges**: When reading files, use `start_line` and `end_line` to read specific sections.

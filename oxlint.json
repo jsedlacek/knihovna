@@ -33,10 +33,5 @@
     "jsx-a11y/role-has-required-aria-props": "error",
     "jsx-a11y/role-supports-aria-props": "error"
   },
-  "ignorePatterns": [
-    "dist/**",
-    ".astro/**",
-    "node_modules/**",
-    "src/test/fixtures/**"
-  ]
+  "ignorePatterns": ["dist/**", "node_modules/**", "src/test/fixtures/**"]
 }
