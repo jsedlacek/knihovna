@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { formatDateTimeCzech } from "#@/lib/shared/utils/date-utils.ts";
 
 const TIMESTAMP_FILE = join(process.cwd(), "data", "last-updated.json");
 
@@ -48,14 +49,8 @@ export async function loadScrapingTimestamp(): Promise<TimestampData | null> {
 
 /**
  * Format timestamp for Czech locale display.
+ * Uses the shared date formatting utilities for consistency.
  */
 export function formatTimestampCzech(timestamp: TimestampData): string {
-  const date = new Date(timestamp.lastUpdated);
-  return date.toLocaleDateString("cs-CZ", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatDateTimeCzech(timestamp.lastUpdated);
 }

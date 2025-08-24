@@ -16,9 +16,14 @@ interface TimestampData {
 interface HomePageProps {
   books: Book[];
   lastUpdated?: TimestampData | null;
+  formattedLastUpdated?: string | null;
 }
 
-export function HomePage({ books, lastUpdated }: HomePageProps) {
+export function HomePage({
+  books,
+  lastUpdated,
+  formattedLastUpdated,
+}: HomePageProps) {
   // First filter out blocked books
   const unblockedBooks = filterBlockedBooks(books);
 
@@ -35,15 +40,6 @@ export function HomePage({ books, lastUpdated }: HomePageProps) {
 
   // Enable score display for debugging (set to true to show scores)
   const showScores = false;
-
-  // Format the last updated timestamp
-  const formattedLastUpdated = lastUpdated
-    ? new Date(lastUpdated.lastUpdated).toLocaleDateString("cs-CZ", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : null;
 
   return (
     <div className="min-h-screen bg-background text-foreground font-mono">
