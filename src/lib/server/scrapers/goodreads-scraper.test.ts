@@ -590,7 +590,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
             "Should extract valid book link pattern",
           );
         }
-      } catch (_error) {
+      } catch {
         // If fixture doesn't exist, test with synthetic data
         console.log("No search fixture found, using synthetic test data");
 

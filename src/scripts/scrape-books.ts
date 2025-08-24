@@ -267,7 +267,7 @@ async function main() {
               ...details,
               mlpScrapedAt: new Date().toISOString(),
             });
-          } catch (_error) {
+          } catch {
             console.error(
               `[ERROR] Failed MLP details for "${book.title}" after all retries. Skipping.`,
             );
@@ -340,7 +340,7 @@ async function main() {
               ...goodreadsData,
               goodreadsScrapedAt: new Date().toISOString(),
             });
-          } catch (_error) {
+          } catch {
             console.error(
               `[ERROR] Failed to fetch Goodreads data for "${book.title}" after all retries. Skipping.`,
             );

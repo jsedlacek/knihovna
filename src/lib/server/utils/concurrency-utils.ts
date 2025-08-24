@@ -22,7 +22,7 @@ export async function processBatch<T, U>({
   concurrency: number;
   onProgress?: (progress: number, total: number, item: T) => void;
 }): Promise<U[]> {
-  const results: U[] = new Array(items.length);
+  const results: U[] = Array.from({ length: items.length });
   // The queue includes the original index to preserve order in the results.
   const queue = items.map((data, index) => ({ data, index }));
   let processedCount = 0;

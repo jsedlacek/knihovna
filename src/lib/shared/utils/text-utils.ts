@@ -276,8 +276,8 @@ export function calculateSimilarity(s1: string, s2: string): number {
   if (len1 === 0 || len2 === 0) return 0.0;
 
   const matchDistance = Math.floor(Math.max(len1, len2) / 2) - 1;
-  const matches1 = new Array(len1).fill(false);
-  const matches2 = new Array(len2).fill(false);
+  const matches1 = Array.from({ length: len1 }).fill(false);
+  const matches2 = Array.from({ length: len2 }).fill(false);
   let matches = 0;
 
   for (let i = 0; i < len1; i++) {
