@@ -5,10 +5,11 @@ import path from "node:path";
 import Layout from "#@/layouts/layout.astro";
 import { HomePage } from "#@/components/home-page.tsx";
 import { loadScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
 
 // Read the books data at build time
 const booksPath = path.join(process.cwd(), "data", "books.json");
-let books = [];
+let books: Book[] = [];
 
 try {
     const booksData = fs.readFileSync(booksPath, "utf-8");

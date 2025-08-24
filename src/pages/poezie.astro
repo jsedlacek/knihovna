@@ -7,10 +7,11 @@ import { GenrePage } from "#@/components/genre-page.tsx";
 import { getBooksForGenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
 import { deduplicateBooks } from "#@/lib/shared/utils/book-deduplication.ts";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
 
 // Read the books data at build time
 const booksPath = path.join(process.cwd(), "data", "books.json");
-let books = [];
+let books: Book[] = [];
 
 try {
     const booksData = fs.readFileSync(booksPath, "utf-8");
