@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { GenreSection } from "#@/components/genre-section.tsx";
 import { Footer } from "#@/components/ui/footer.tsx";
 import { Header } from "#@/components/ui/header.tsx";
@@ -21,15 +20,10 @@ interface HomePageProps {
 }
 
 export function HomePage({ books, lastUpdated }: HomePageProps) {
-  const [formattedLastUpdated, setFormattedLastUpdated] = useState<
-    string | null
-  >(null);
+  const formattedLastUpdated = lastUpdated
+    ? formatDateCzech(lastUpdated.lastUpdated)
+    : null;
 
-  useEffect(() => {
-    if (lastUpdated) {
-      setFormattedLastUpdated(formatDateCzech(lastUpdated.lastUpdated));
-    }
-  }, [lastUpdated]);
   // First filter out blocked books
   const unblockedBooks = filterBlockedBooks(books);
 

@@ -1,17 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { GenrePage } from "#@/components/genre-page.tsx";
+import { loadGenreData } from "#@/lib/server/genre-data-loader.ts";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
 
 export type Data = {
-  books: any[];
+  books: Book[];
 };
 
-const getPoezieData = createServerFn({
+const getData = createServerFn({
   method: "GET",
-}).handler(async (): Promise<Data> => {
-  const { loadGenreData } = await import("#@/lib/server/genre-data-loader.ts");
-  return await loadGenreData("poezie");
-});
+}).handler(async () => await loadGenreData("poezie"));
 
 export const Route = createFileRoute("/poezie")({
   head: () => ({
@@ -26,7 +25,7 @@ export const Route = createFileRoute("/poezie")({
       },
     ],
   }),
-  loader: async () => await getPoezieData(),
+  loader: async () => await getData(),
   component: PoezieComponent,
 });
 

@@ -9,3 +9,4 @@ storybook-static
 .tanstack
 .nitro
 .output
+/.wrangler

@@ -5,7 +5,13 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [
-    tanstackStart({ target: "cloudflare-module", customViteReactPlugin: true }),
+    tanstackStart({
+      target: "cloudflare-module",
+      customViteReactPlugin: true,
+      prerender: {
+        enabled: true,
+      },
+    }),
     tailwindcss(),
     react(),
   ],

@@ -1,24 +1,22 @@
+import fs from "node:fs";
+import path from "node:path";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { HomePage } from "#@/components/home-page.tsx";
+import { loadScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
 
 export type Data = {
-  books: any[];
+  books: Book[];
   lastUpdated: any | null;
 };
 
 const getHomeData = createServerFn({
   method: "GET",
 }).handler(async (): Promise<Data> => {
-  const fs = await import("node:fs");
-  const path = await import("node:path");
-  const { loadScrapingTimestamp } = await import(
-    "#@/lib/server/utils/timestamp-utils.ts"
-  );
-
   // Read the books data at build time
   const booksPath = path.join(process.cwd(), "data", "books.json");
-  let books: any[] = [];
+  let books: Book[] = [];
 
   try {
     const booksData = fs.readFileSync(booksPath, "utf-8");
@@ -32,6 +30,8 @@ const getHomeData = createServerFn({
 
   // Read the timestamp data at build time
   const lastUpdated = await loadScrapingTimestamp();
+
+  console.log("Last updated:", lastUpdated);
 
   return {
     books,
