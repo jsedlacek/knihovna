@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { GenreSection } from "#@/components/genre-section.tsx";
 import { Footer } from "#@/components/ui/footer.tsx";
 import { Header } from "#@/components/ui/header.tsx";
@@ -5,6 +6,7 @@ import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { deduplicateBooks } from "#@/lib/shared/utils/book-deduplication.ts";
 import { sortBooksByScore } from "#@/lib/shared/utils/book-scoring.ts";
+import { formatDateCzech } from "#@/lib/shared/utils/date-utils.ts";
 import { getBooksForGenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 
@@ -16,14 +18,18 @@ interface TimestampData {
 interface HomePageProps {
   books: Book[];
   lastUpdated?: TimestampData | null;
-  formattedLastUpdated?: string | null;
 }
 
-export function HomePage({
-  books,
-  lastUpdated,
-  formattedLastUpdated,
-}: HomePageProps) {
+export function HomePage({ books, lastUpdated }: HomePageProps) {
+  const [formattedLastUpdated, setFormattedLastUpdated] = useState<
+    string | null
+  >(null);
+
+  useEffect(() => {
+    if (lastUpdated) {
+      setFormattedLastUpdated(formatDateCzech(lastUpdated.lastUpdated));
+    }
+  }, [lastUpdated]);
   // First filter out blocked books
   const unblockedBooks = filterBlockedBooks(books);
 
@@ -44,9 +50,10 @@ export function HomePage({
   return (
     <div className="min-h-screen bg-background text-foreground font-mono">
       <Header
-        {...(lastUpdated && {
-          subtitle: `Aktualizováno ${formattedLastUpdated}`,
-        })}
+        {...(lastUpdated &&
+          formattedLastUpdated && {
+            subtitle: `Aktualizováno ${formattedLastUpdated}`,
+          })}
       />
 
       {/* Main content */}

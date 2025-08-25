@@ -9,6 +9,7 @@
     "ignoreUnknown": false,
     "includes": [
       "src/**/*.{ts,tsx}",
+      "!src/routeTree.gen.ts",
       "*.{js,mjs,json,jsonc}",
       ".storybook/**/*.{js,jsx,ts,tsx}"
     ]

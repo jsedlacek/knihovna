@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**Knihovna** is a Czech e-books static site that showcases the best free e-books from Prague Municipal Library. The site displays books with ratings of 4.0+ from Goodreads, organized by genres, with direct download links for EPUB and PDF formats. Built with Vike (React-based SSG framework) for modern performance and developer experience.
+**Knihovna** is a Czech e-books static site that showcases the best free e-books from Prague Municipal Library. The site displays books with ratings of 4.0+ from Goodreads, organized by genres, with direct download links for EPUB and PDF formats. Built with TanStack Start (React-based full-stack framework) for modern performance and developer experience.
 
 ## Agent Instructions
 
@@ -26,12 +26,58 @@ After completing any significant changes to the project, agents should:
 
 This practice keeps AGENT.md current and valuable. Remember: agents should not create other documentation files.
 
+### Recent Migration: Vike → TanStack Start (2025-01-25)
+
+**Key Learnings from Migration**:
+
+- Server-side imports in TanStack Start routes must be dynamic imports within `createServerFn` handlers to avoid client bundling issues
+- Use `const { module } = await import("path")` pattern inside server function handlers
+- Route files should only import client-safe modules at the top level
+- Server utilities (using Node.js APIs like `fs`, `path`) will cause build failures if imported at route file top level
+- TanStack Start uses single route files (`.tsx`) instead of Vike's multiple file pattern (`+Page.tsx`, `+data.ts`, `+config.ts`)
+
+**Migration Pattern for Future Reference**:
+
+```typescript
+// ❌ Wrong - causes build errors
+import fs from "node:fs";
+import { serverUtil } from "#@/lib/server/utils.ts";
+
+// ✅ Correct - dynamic imports in server functions
+const getServerData = createServerFn({
+  method: "GET",
+}).handler(async () => {
+  const fs = await import("node:fs");
+  const { serverUtil } = await import("#@/lib/server/utils.ts");
+  // ... server logic
+});
+```
+
+**Hydration Fix Pattern**:
+
+- Server-side date formatting can cause hydration mismatches even when pre-formatted
+- Move date formatting to client-side with `useEffect` to prevent FOUC and hydration issues
+- Use `useState` + `useEffect` pattern for any server/client environment differences
+
+```typescript
+// ❌ Wrong - can cause hydration mismatch
+const formattedDate = formatDate(serverTimestamp);
+
+// ✅ Correct - client-side formatting after hydration
+const [formattedDate, setFormattedDate] = useState<string | null>(null);
+useEffect(() => {
+  if (timestamp) {
+    setFormattedDate(formatDate(timestamp));
+  }
+}, [timestamp]);
+```
+
 ## Build & Commands
 
 Use the following `npm` scripts for common development tasks:
 
-- `npm run dev`: Start Vike development server.
-- `npm run build`: Build for production using Vike.
+- `npm run dev`: Start TanStack Start development server.
+- `npm run build`: Build for production using TanStack Start.
 - `npm run preview`: Preview production build.
 - `npm run scrape`: Run book scraping CLI tool.
 - `npm run type-check`: Run TypeScript type checking.
@@ -50,8 +96,7 @@ Use the following `npm` scripts for common development tasks:
 ### File Naming
 
 - **Lowercase for most files**: All file names SHOULD use lowercase letters (e.g., `book-card.tsx`).
-  - **Exception**: Vike-specific files like `+Page.tsx`, `+Layout.tsx`, and `+Head.tsx` MUST use PascalCase as required by the framework.
-- **Kebab-case**: Use hyphens to separate words for non-Vike files (e.g., `book-card.tsx`, `genre-data-loader.ts`).
+- **Kebab-case**: Use hyphens to separate words (e.g., `book-card.tsx`, `genre-data-loader.ts`).
 
 ### Documentation
 
@@ -87,7 +132,6 @@ Use the following `npm` scripts for common development tasks:
 - **TypeScript Strict Mode**: The project uses strict mode with no `any` types.
 - **ESM Modules**: Use modern `.ts` imports for direct execution in Node.js scripts.
 - **Named Exports**: Prefer named exports for shared modules like components (e.g., `book-card.tsx`) and utilities (`genre-utils.ts`). This improves code discoverability and refactoring.
-  - **Exception**: Use `default` exports for Vike's special files (`+Page.tsx`, `+data.ts`, `+config.ts`, etc.) as required by its file-based routing system.
 - **Static Imports**: Prefer top-level static imports over dynamic `await import()` statements. Use dynamic imports only when truly necessary for code splitting or conditional loading.
 - **Component Composition**: Favor composition over inheritance in React components.
 - **Separation of Concerns**: Maintain a clean separation between layout, components, and styles.
@@ -172,7 +216,7 @@ console.log("Output:", result);
 
 ### Core Technology Stack
 
-- **Framework**: Vike v0.4.237 (React-based SSG)
+- **Framework**: TanStack Start v1.131.27 (React-based full-stack framework)
 - **UI Library**: React v19
 - **Styling**: Tailwind CSS v4
 - **Language**: TypeScript v5 (Strict, Node.js 24)
@@ -182,29 +226,29 @@ console.log("Output:", result);
 
 ### Project Structure
 
-The application source code is located in the `src/` directory. This includes Vike `pages/` with React components and data loaders, React `components/`, shared `lib/` modules (such as scrapers, utilities, and type definitions), and executable `scripts/`. The primary data source for the application is stored in the `data/` directory, which is gitignored.
+The application source code is located in the `src/` directory. This includes TanStack Start `routes/` with React components and data loaders, React `components/`, shared `lib/` modules (such as scrapers, utilities, and type definitions), and executable `scripts/`. The primary data source for the application is stored in the `data/` directory, which is gitignored.
 
 ### Data Flow & SSG
 
-The site is statically generated at build time using Vike's pre-rendering. Each page uses `+data.ts` files to load data server-side during build time. The build process reads a local dataset of books, processes and filters them, then passes the data as props to React components. Vike renders the final static HTML with automatic client-side hydration for interactivity.
+The site is statically generated at build time using TanStack Start's pre-rendering. Each route uses server functions to load data server-side during build time. The build process reads a local dataset of books, processes and filters them, then passes the data as props to React components. TanStack Start renders the final static HTML with automatic client-side hydration for interactivity.
 
-### Vike Page Architecture
+### TanStack Start Route Architecture
 
-Pages follow Vike's file-based routing convention:
+Routes follow TanStack Start's file-based routing convention:
 
-- `+Page.tsx`: React component for the page UI
-- `+data.ts`: Server-side data loading function (runs at build time)
-- `+config.ts`: Page-specific configuration (meta tags, etc.)
-- `+Layout.tsx`: Layout wrapper component
-- `+Head.tsx`: HTML head content (global)
+- Single route files in `src/routes/` directory
+- Each route exports a `Route` object with component, loader, and head configuration
+- Server functions handle data loading at build time
+- Automatic route generation based on file structure
 
-Example page structure:
+Example route structure:
 
 ```
-src/pages/beletrie/
-├── +Page.tsx      # React component
-├── +data.ts       # Data loader
-└── +config.ts     # Page config
+src/routes/
+├── __root.tsx     # Root layout
+├── index.tsx      # Home page
+├── beletrie.tsx   # Genre page
+└── deti.tsx       # Genre page
 ```
 
 ### Modular Script Architecture
