@@ -13,7 +13,6 @@ import { Route as PoezieRouteImport } from './routes/poezie'
 import { Route as OstatniRouteImport } from './routes/ostatni'
 import { Route as DivadloRouteImport } from './routes/divadlo'
 import { Route as DetiRouteImport } from './routes/deti'
-import { Route as DebugRouteImport } from './routes/debug'
 import { Route as BeletrieRouteImport } from './routes/beletrie'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -37,11 +36,6 @@ const DetiRoute = DetiRouteImport.update({
   path: '/deti',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DebugRoute = DebugRouteImport.update({
-  id: '/debug',
-  path: '/debug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BeletrieRoute = BeletrieRouteImport.update({
   id: '/beletrie',
   path: '/beletrie',
@@ -56,7 +50,6 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/beletrie': typeof BeletrieRoute
-  '/debug': typeof DebugRoute
   '/deti': typeof DetiRoute
   '/divadlo': typeof DivadloRoute
   '/ostatni': typeof OstatniRoute
@@ -65,7 +58,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/beletrie': typeof BeletrieRoute
-  '/debug': typeof DebugRoute
   '/deti': typeof DetiRoute
   '/divadlo': typeof DivadloRoute
   '/ostatni': typeof OstatniRoute
@@ -75,7 +67,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/beletrie': typeof BeletrieRoute
-  '/debug': typeof DebugRoute
   '/deti': typeof DetiRoute
   '/divadlo': typeof DivadloRoute
   '/ostatni': typeof OstatniRoute
@@ -83,28 +74,13 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/beletrie'
-    | '/debug'
-    | '/deti'
-    | '/divadlo'
-    | '/ostatni'
-    | '/poezie'
+  fullPaths: '/' | '/beletrie' | '/deti' | '/divadlo' | '/ostatni' | '/poezie'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/beletrie'
-    | '/debug'
-    | '/deti'
-    | '/divadlo'
-    | '/ostatni'
-    | '/poezie'
+  to: '/' | '/beletrie' | '/deti' | '/divadlo' | '/ostatni' | '/poezie'
   id:
     | '__root__'
     | '/'
     | '/beletrie'
-    | '/debug'
     | '/deti'
     | '/divadlo'
     | '/ostatni'
@@ -114,7 +90,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BeletrieRoute: typeof BeletrieRoute
-  DebugRoute: typeof DebugRoute
   DetiRoute: typeof DetiRoute
   DivadloRoute: typeof DivadloRoute
   OstatniRoute: typeof OstatniRoute
@@ -151,13 +126,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DetiRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/debug': {
-      id: '/debug'
-      path: '/debug'
-      fullPath: '/debug'
-      preLoaderRoute: typeof DebugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/beletrie': {
       id: '/beletrie'
       path: '/beletrie'
@@ -178,7 +146,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BeletrieRoute: BeletrieRoute,
-  DebugRoute: DebugRoute,
   DetiRoute: DetiRoute,
   DivadloRoute: DivadloRoute,
   OstatniRoute: OstatniRoute,
