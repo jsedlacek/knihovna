@@ -16,27 +16,42 @@ export const GENRE_GROUPS = {
   beletrie: {
     name: "Beletrie",
     genreIds: ["A1" as GenreId],
-    description: "Současná próza, romány a novely",
+    description: "Romány, novely a povídky",
+    title: "Beletrie - Nejlepší e-knihy zdarma",
+    metaDescription:
+      "Nejlepší beletristické e-knihy zdarma z Městské knihovny v Praze. Romány, novely a povídky s hodnocením 4,0 a vyšším.",
   },
   poezie: {
     name: "Poezie",
     genreIds: ["B2" as GenreId],
-    description: "Sbírky básní a veršů",
+    description: "Básnické sbírky a poezie",
+    title: "Poezie - Nejlepší e-knihy zdarma",
+    metaDescription:
+      "Nejlepší e-knihy poezie zdarma z Městské knihovny v Praze. Básnické sbírky s hodnocením 4,0 a vyšším.",
   },
   divadlo: {
     name: "Divadlo",
     genreIds: ["B1" as GenreId],
     description: "Divadelní hry a dramata",
+    title: "Divadlo - Nejlepší e-knihy zdarma",
+    metaDescription:
+      "Nejlepší e-knihy divadelních her zdarma z Městské knihovny v Praze. Divadelní texty s hodnocením 4,0 a vyšším.",
   },
   deti: {
     name: "Knížky pro děti",
     genreIds: ["A3" as GenreId, "A4" as GenreId],
-    description: "Literatura pro mladé čtenáře",
+    description: "Knihy pro děti a mládež",
+    title: "Dětské knihy - Nejlepší e-knihy zdarma",
+    metaDescription:
+      "Nejlepší dětské e-knihy zdarma z Městské knihovny v Praze. Knihy pro děti všech věků s hodnocením 4,0 a vyšším.",
   },
   ostatni: {
     name: "Ostatní",
     genreIds: [] as GenreId[],
-    description: "Další žánry a kategorie",
+    description: "Ostatní žánry a témata",
+    title: "Ostatní - Nejlepší e-knihy zdarma",
+    metaDescription:
+      "Nejlepší ostatní e-knihy zdarma z Městské knihovny v Praze. Různé žánry a témata s hodnocením 4,0 a vyšším.",
   },
 } as const;
 
