@@ -178,6 +178,24 @@ const mockTimestamp = {
   timestamp: 1734254200000,
 };
 
+// Helper function to convert books array to genres structure
+function createGenresFromBooks(books: Book[]) {
+  const genreMap = new Map<string, Book[]>();
+
+  for (const book of books) {
+    if (book.genre) {
+      const existing = genreMap.get(book.genre) || [];
+      genreMap.set(book.genre, [...existing, book]);
+    }
+  }
+
+  return Array.from(genreMap.entries()).map(([genre, genreBooks]) => ({
+    genre: genre as any,
+    books: genreBooks,
+    bookCount: genreBooks.length,
+  }));
+}
+
 const meta: Meta<typeof HomePage> = {
   title: "Pages/HomePage",
   component: HomePage,
@@ -190,6 +208,14 @@ const meta: Meta<typeof HomePage> = {
       control: { type: "object" },
       description: "Last update timestamp information",
     },
+    bookCount: {
+      control: { type: "number" },
+      description: "Total number of books",
+    },
+    genres: {
+      control: { type: "object" },
+      description: "Array of genre objects with books",
+    },
   },
 };
 
@@ -198,21 +224,24 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    books: sampleBooks,
+    bookCount: sampleBooks.length,
+    genres: createGenresFromBooks(sampleBooks),
     lastUpdated: mockTimestamp,
   },
 };
 
 export const WithoutTimestamp: Story = {
   args: {
-    books: sampleBooks,
+    bookCount: sampleBooks.length,
+    genres: createGenresFromBooks(sampleBooks),
     lastUpdated: null,
   },
 };
 
 export const WithManyBooks: Story = {
   args: {
-    books: [
+    bookCount: sampleBooks.length * 3,
+    genres: createGenresFromBooks([
       ...sampleBooks,
       ...sampleBooks.map((book) => ({
         ...book,
@@ -222,42 +251,53 @@ export const WithManyBooks: Story = {
         ...book,
         title: `${book.title} (další kopie)`,
       })),
-    ],
+    ]),
     lastUpdated: mockTimestamp,
   },
 };
 
 export const WithFewBooks: Story = {
   args: {
-    books: sampleBooks.slice(0, 3),
+    bookCount: 3,
+    genres: createGenresFromBooks(sampleBooks.slice(0, 3)),
     lastUpdated: mockTimestamp,
   },
 };
 
 export const EmptyLibrary: Story = {
   args: {
-    books: [],
+    bookCount: 0,
+    genres: [],
     lastUpdated: mockTimestamp,
   },
 };
 
 export const OnlyBeletrie: Story = {
   args: {
-    books: sampleBooks.filter((book) => book.genre === "beletrie"),
+    bookCount: sampleBooks.filter((book) => book.genre === "beletrie").length,
+    genres: createGenresFromBooks(
+      sampleBooks.filter((book) => book.genre === "beletrie"),
+    ),
     lastUpdated: mockTimestamp,
   },
 };
 
 export const WithLowRatedBooks: Story = {
   args: {
-    books: sampleBooks.map((book) => ({ ...book, rating: 3.5 })),
+    bookCount: sampleBooks.length,
+    genres: createGenresFromBooks(
+      sampleBooks.map((book) => ({ ...book, rating: 3.5 })),
+    ),
     lastUpdated: mockTimestamp,
   },
 };
 
 export const WithoutEpubLinks: Story = {
   args: {
-    books: sampleBooks.map((book) => ({ ...book, epubUrl: null })),
+    bookCount: sampleBooks.length,
+    genres: createGenresFromBooks(
+      sampleBooks.map((book) => ({ ...book, epubUrl: null })),
+    ),
     lastUpdated: mockTimestamp,
   },
 };

@@ -118,10 +118,6 @@ const meta: Meta<typeof GenreSection> = {
       control: { type: "select" },
       options: ["beletrie", "poezie", "divadlo", "deti", "ostatni"],
     },
-    maxBooks: {
-      control: { type: "number" },
-      description: "Maximum number of books to display",
-    },
   },
 };
 
@@ -132,39 +128,6 @@ export const Beletrie: Story = {
   args: {
     books: sampleBooks.filter((book) => book.genre === "beletrie"),
     genreKey: "beletrie",
-    maxBooks: 5,
-  },
-};
-
-export const Poezie: Story = {
-  args: {
-    books: sampleBooks.filter((book) => book.genre === "poezie"),
-    genreKey: "poezie",
-    maxBooks: 5,
-  },
-};
-
-export const Divadlo: Story = {
-  args: {
-    books: sampleBooks.filter((book) => book.genre === "divadlo"),
-    genreKey: "divadlo",
-    maxBooks: 5,
-  },
-};
-
-export const WithManyBooks: Story = {
-  args: {
-    books: [...sampleBooks, ...sampleBooks, ...sampleBooks],
-    genreKey: "beletrie",
-    maxBooks: 8,
-  },
-};
-
-export const WithFewBooks: Story = {
-  args: {
-    books: sampleBooks.slice(0, 2),
-    genreKey: "beletrie",
-    maxBooks: 5,
   },
 };
 
@@ -172,7 +135,6 @@ export const WithOneBook: Story = {
   args: {
     books: sampleBooks.slice(0, 1),
     genreKey: "beletrie",
-    maxBooks: 5,
   },
 };
 
@@ -180,6 +142,5 @@ export const EmptySection: Story = {
   args: {
     books: [],
     genreKey: "beletrie",
-    maxBooks: 5,
   },
 };
