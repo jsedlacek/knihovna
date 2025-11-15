@@ -1,40 +1,34 @@
-import fs from "node:fs";
-import path from "node:path";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { HomePage } from "#@/components/home-page.tsx";
-import { loadScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
-import type { Book } from "#@/lib/shared/types/book-types.ts";
+import { HomePage, type BookGenre } from "#@/components/home-page.tsx";
+import { books, lastUpdated } from "#@/lib/server/books.ts";
+import {
+  groupBooksByGenre,
+  type GenreGroup,
+} from "#@/lib/shared/utils/genre-utils.ts";
 
 export type Data = {
-  books: Book[];
+  bookCount: number;
+  genres: BookGenre[];
   lastUpdated: any | null;
 };
 
 const getHomeData = createServerFn({
   method: "GET",
 }).handler(async (): Promise<Data> => {
-  // Read the books data at build time
-  const booksPath = path.join(process.cwd(), "data", "books.json");
-  let books: Book[] = [];
+  const booksByGenre = groupBooksByGenre(books);
 
-  try {
-    const booksData = fs.readFileSync(booksPath, "utf-8");
-    books = JSON.parse(booksData);
-  } catch (error) {
-    console.warn(
-      "Could not read books.json, using empty array:",
-      error instanceof Error ? error.message : String(error),
-    );
-  }
-
-  // Read the timestamp data at build time
-  const lastUpdated = await loadScrapingTimestamp();
-
-  console.log("Last updated:", lastUpdated);
+  const genres: BookGenre[] = Object.entries(booksByGenre).map(
+    ([genre, books]) => ({
+      genre: genre as GenreGroup,
+      books: books.slice(0, 100),
+      bookCount: books.length,
+    }),
+  );
 
   return {
-    books,
+    bookCount: books.length,
+    genres,
     lastUpdated,
   };
 });
@@ -57,7 +51,9 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeComponent() {
-  const { books, lastUpdated } = Route.useLoaderData();
+  const { bookCount, genres, lastUpdated } = Route.useLoaderData();
 
-  return <HomePage books={books} lastUpdated={lastUpdated} />;
+  return (
+    <HomePage bookCount={bookCount} genres={genres} lastUpdated={lastUpdated} />
+  );
 }

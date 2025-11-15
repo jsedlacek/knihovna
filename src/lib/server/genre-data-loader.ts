@@ -13,11 +13,11 @@ export interface GenreData {
 
 export async function loadGenreData(genreKey: GenreKey): Promise<GenreData> {
   // Read the books data at build time
-  const booksPath = path.join(process.cwd(), "data", "books.json");
+  const booksPath = path.join("data", "books.json");
   let books: Book[] = [];
 
   try {
-    const booksData = fs.readFileSync(booksPath, "utf-8");
+    const booksData = await fs.promises.readFile(booksPath, "utf-8");
     books = JSON.parse(booksData);
   } catch (error) {
     console.warn(

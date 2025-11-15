@@ -1,18 +1,14 @@
 import tailwindcss from "@tailwindcss/vite";
-import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite'
+import { tanstackStart } from '@tanstack/react-start/plugin/vite'
+import { cloudflare } from '@cloudflare/vite-plugin'
+import viteReact from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [
-    tanstackStart({
-      target: "cloudflare-module",
-      customViteReactPlugin: true,
-      prerender: {
-        enabled: true,
-      },
-    }),
+    cloudflare({ viteEnvironment: { name: 'ssr' } }),
     tailwindcss(),
-    react(),
+    tanstackStart(),
+    viteReact(),
   ],
-});
+})

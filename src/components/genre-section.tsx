@@ -11,14 +11,13 @@ import { Card } from "./ui/card.tsx";
 interface GenreSectionProps {
   books: Book[];
   genreKey: keyof typeof GENRE_GROUPS;
-  showScores?: boolean;
-  maxBooks?: number;
+  bookCount: number;
 }
 
 export function GenreSection({
   books,
   genreKey,
-  maxBooks = 5,
+  bookCount,
 }: GenreSectionProps) {
   const genreConfig = GENRE_GROUPS[genreKey];
 
@@ -29,9 +28,6 @@ export function GenreSection({
   if (sortedBooks.length === 0) {
     return null;
   }
-
-  // Get featured books to display (limited number)
-  const featuredBooks = sortedBooks.slice(0, maxBooks);
 
   return (
     <Card className="space-y-4">
@@ -46,16 +42,16 @@ export function GenreSection({
             {genreConfig.description}
           </p>
           <div className="text-xs text-muted-foreground">
-            {formatNumberCzech(sortedBooks.length)} knih ke stažení
+            {formatNumberCzech(bookCount)} knih ke stažení
           </div>
         </div>
       </div>
 
       <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory">
-        {featuredBooks.map((book, index) => (
+        {books.map((book, index) => (
           <div
             key={`${genreKey}-${book.title}-${book.author}-${index}`}
-            className="flex-shrink-0 text-center snap-start"
+            className="shrink-0 text-center snap-start"
           >
             <BookCover
               src={book.imageUrl}
