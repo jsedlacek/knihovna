@@ -15,7 +15,7 @@ Knihovna displays highly-rated books (4.0+ stars on Goodreads) with direct downl
 
 ## Tech Stack
 
-- **Framework**: Vike (React-based Static Site Generator)
+- **Framework**: TanStack Start (React-based full-stack framework)
 - **UI**: React + Tailwind CSS
 - **Language**: TypeScript
 - **Build Tool**: Vite

@@ -6,3 +6,7 @@ data
 
 *storybook.log
 storybook-static
+.tanstack
+.nitro
+.output
+/.wrangler
