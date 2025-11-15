@@ -1,11 +1,10 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { GenrePage } from "#@/components/genre-page.tsx";
 import { books } from "#@/lib/server/books.ts";
 import {
   getBooksForGenreGroup,
-  GENRE_GROUPS,
+  type GenreGroup,
 } from "#@/lib/shared/utils/genre-utils.ts";
-import type { GenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 
 const GENRE_METADATA = {
   beletrie: {
@@ -36,8 +35,14 @@ const GENRE_METADATA = {
 } as const;
 
 export const Route = createFileRoute("/$genre")({
+  loader: async ({ params }) => {
+    const genre = params.genre as GenreGroup;
+
+    return getBooksForGenreGroup(books, genre);
+  },
   head: ({ params }) => {
     const genreKey = params.genre as GenreGroup;
+
     const metadata = GENRE_METADATA[genreKey];
 
     if (!metadata) {
@@ -56,18 +61,14 @@ export const Route = createFileRoute("/$genre")({
       ],
     };
   },
-  component: BeletrieComponent,
+  component: GenreComponent,
 });
 
-function BeletrieComponent() {
+function GenreComponent() {
+  const books = Route.useLoaderData();
   const params = Route.useParams();
+
   const genre = params.genre as GenreGroup;
 
-  if (!GENRE_GROUPS[genre]) {
-    throw notFound();
-  }
-
-  const genreBooks = getBooksForGenreGroup(books, genre);
-
-  return <GenrePage books={genreBooks} genreKey={genre} />;
+  return <GenrePage books={books} genreKey={genre} />;
 }

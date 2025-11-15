@@ -9,15 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as BeletrieRouteImport } from './routes/beletrie'
 import { Route as GenreRouteImport } from './routes/$genre'
 import { Route as IndexRouteImport } from './routes/index'
 
-const BeletrieRoute = BeletrieRouteImport.update({
-  id: '/beletrie',
-  path: '/beletrie',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const GenreRoute = GenreRouteImport.update({
   id: '/$genre',
   path: '/$genre',
@@ -32,42 +26,31 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$genre': typeof GenreRoute
-  '/beletrie': typeof BeletrieRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$genre': typeof GenreRoute
-  '/beletrie': typeof BeletrieRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$genre': typeof GenreRoute
-  '/beletrie': typeof BeletrieRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$genre' | '/beletrie'
+  fullPaths: '/' | '/$genre'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$genre' | '/beletrie'
-  id: '__root__' | '/' | '/$genre' | '/beletrie'
+  to: '/' | '/$genre'
+  id: '__root__' | '/' | '/$genre'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GenreRoute: typeof GenreRoute
-  BeletrieRoute: typeof BeletrieRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/beletrie': {
-      id: '/beletrie'
-      path: '/beletrie'
-      fullPath: '/beletrie'
-      preLoaderRoute: typeof BeletrieRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/$genre': {
       id: '/$genre'
       path: '/$genre'
@@ -88,7 +71,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GenreRoute: GenreRoute,
-  BeletrieRoute: BeletrieRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
