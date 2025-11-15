@@ -33,9 +33,13 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
       <Header
         {...(lastUpdated &&
           formattedLastUpdated && {
-            subtitle: `Aktualizováno ${formattedLastUpdated}`,
+            subtitle: (
+              <>
+                Aktualizováno{" "}
+                <span suppressHydrationWarning>{formattedLastUpdated}</span>
+              </>
+            ),
           })}
-        suppressHydrationWarning
       />
 
       {/* Main content */}

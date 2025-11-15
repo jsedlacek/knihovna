@@ -1,8 +1,9 @@
+import type { ReactNode } from "react";
 import icon from "#@/images/icon.svg";
 
 export interface HeaderProps {
   title?: string;
-  subtitle?: string;
+  subtitle?: ReactNode;
   showBackLink?: boolean;
 }
 
