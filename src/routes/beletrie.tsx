@@ -1,18 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 import { GenrePage } from "#@/components/genre-page.tsx";
-import { loadGenreData } from "#@/lib/server/genre-data-loader.ts";
-import type { Book } from "#@/lib/shared/types/book-types.ts";
-
-export type Data = {
-  books: Book[];
-};
-
-const getBeletrieData = createServerFn({
-  method: "GET",
-}).handler(async () => {
-  return await loadGenreData("beletrie");
-});
+import { books } from "#@/lib/server/books.ts";
+import { getBooksForGenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 
 export const Route = createFileRoute("/beletrie")({
   head: () => ({
@@ -27,12 +16,14 @@ export const Route = createFileRoute("/beletrie")({
       },
     ],
   }),
-  loader: async () => await getBeletrieData(),
+  loader: async () => {
+    return getBooksForGenreGroup(books, "beletrie");
+  },
   component: BeletrieComponent,
 });
 
 function BeletrieComponent() {
-  const { books } = Route.useLoaderData();
+  const books = Route.useLoaderData();
 
   return <GenrePage books={books} genreKey="beletrie" />;
 }

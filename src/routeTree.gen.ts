@@ -9,36 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PoezieRouteImport } from './routes/poezie'
-import { Route as OstatniRouteImport } from './routes/ostatni'
-import { Route as DivadloRouteImport } from './routes/divadlo'
-import { Route as DetiRouteImport } from './routes/deti'
 import { Route as BeletrieRouteImport } from './routes/beletrie'
+import { Route as GenreRouteImport } from './routes/$genre'
 import { Route as IndexRouteImport } from './routes/index'
 
-const PoezieRoute = PoezieRouteImport.update({
-  id: '/poezie',
-  path: '/poezie',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OstatniRoute = OstatniRouteImport.update({
-  id: '/ostatni',
-  path: '/ostatni',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DivadloRoute = DivadloRouteImport.update({
-  id: '/divadlo',
-  path: '/divadlo',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DetiRoute = DetiRouteImport.update({
-  id: '/deti',
-  path: '/deti',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BeletrieRoute = BeletrieRouteImport.update({
   id: '/beletrie',
   path: '/beletrie',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GenreRoute = GenreRouteImport.update({
+  id: '/$genre',
+  path: '/$genre',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -49,88 +31,48 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$genre': typeof GenreRoute
   '/beletrie': typeof BeletrieRoute
-  '/deti': typeof DetiRoute
-  '/divadlo': typeof DivadloRoute
-  '/ostatni': typeof OstatniRoute
-  '/poezie': typeof PoezieRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$genre': typeof GenreRoute
   '/beletrie': typeof BeletrieRoute
-  '/deti': typeof DetiRoute
-  '/divadlo': typeof DivadloRoute
-  '/ostatni': typeof OstatniRoute
-  '/poezie': typeof PoezieRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$genre': typeof GenreRoute
   '/beletrie': typeof BeletrieRoute
-  '/deti': typeof DetiRoute
-  '/divadlo': typeof DivadloRoute
-  '/ostatni': typeof OstatniRoute
-  '/poezie': typeof PoezieRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/beletrie' | '/deti' | '/divadlo' | '/ostatni' | '/poezie'
+  fullPaths: '/' | '/$genre' | '/beletrie'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/beletrie' | '/deti' | '/divadlo' | '/ostatni' | '/poezie'
-  id:
-    | '__root__'
-    | '/'
-    | '/beletrie'
-    | '/deti'
-    | '/divadlo'
-    | '/ostatni'
-    | '/poezie'
+  to: '/' | '/$genre' | '/beletrie'
+  id: '__root__' | '/' | '/$genre' | '/beletrie'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GenreRoute: typeof GenreRoute
   BeletrieRoute: typeof BeletrieRoute
-  DetiRoute: typeof DetiRoute
-  DivadloRoute: typeof DivadloRoute
-  OstatniRoute: typeof OstatniRoute
-  PoezieRoute: typeof PoezieRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/poezie': {
-      id: '/poezie'
-      path: '/poezie'
-      fullPath: '/poezie'
-      preLoaderRoute: typeof PoezieRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ostatni': {
-      id: '/ostatni'
-      path: '/ostatni'
-      fullPath: '/ostatni'
-      preLoaderRoute: typeof OstatniRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/divadlo': {
-      id: '/divadlo'
-      path: '/divadlo'
-      fullPath: '/divadlo'
-      preLoaderRoute: typeof DivadloRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/deti': {
-      id: '/deti'
-      path: '/deti'
-      fullPath: '/deti'
-      preLoaderRoute: typeof DetiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/beletrie': {
       id: '/beletrie'
       path: '/beletrie'
       fullPath: '/beletrie'
       preLoaderRoute: typeof BeletrieRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$genre': {
+      id: '/$genre'
+      path: '/$genre'
+      fullPath: '/$genre'
+      preLoaderRoute: typeof GenreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -145,11 +87,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GenreRoute: GenreRoute,
   BeletrieRoute: BeletrieRoute,
-  DetiRoute: DetiRoute,
-  DivadloRoute: DivadloRoute,
-  OstatniRoute: OstatniRoute,
-  PoezieRoute: PoezieRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
