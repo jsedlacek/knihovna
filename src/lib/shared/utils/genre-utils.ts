@@ -40,16 +40,19 @@ export const GENRE_GROUPS = {
   },
 } as const;
 
-/**
- * Groups books by genre categories
- */
-export function groupBooksByGenre(books: Book[]) {
-  const groups = {
-    beletrie: [] as Book[],
-    poezie: [] as Book[],
-    divadlo: [] as Book[],
-    deti: [] as Book[],
-    ostatni: [] as Book[],
+export type GenreGroup = keyof typeof GENRE_GROUPS;
+
+export type BooksByGenre = {
+  [K in GenreGroup]: Book[];
+};
+
+export function groupBooksByGenre(books: Book[]): BooksByGenre {
+  const groups: BooksByGenre = {
+    beletrie: [],
+    poezie: [],
+    divadlo: [],
+    deti: [],
+    ostatni: [],
   };
 
   for (const book of books) {

@@ -1,26 +1,25 @@
 import type { Preview } from "@storybook/react-vite";
-import "#@/styles/global.css";
+import "#@/styles/app.css";
 
 const preview: Preview = {
   parameters: {
     controls: {
       matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
+        color: /(background|color)$/i,
+        date: /Date$/i,
       },
     },
 
-
     backgrounds: {
-      default: 'light',
+      default: "light",
       values: [
         {
-          name: 'light',
-          value: '#ffffff',
+          name: "light",
+          value: "#ffffff",
         },
         {
-          name: 'dark',
-          value: '#333333',
+          name: "dark",
+          value: "#333333",
         },
       ],
     },
