@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "react-hooks", "jsx-a11y"],
+  "plugins": ["react", "jsx-a11y"],
   "env": {
     "browser": true,
     "es2022": true,
@@ -23,8 +23,8 @@
     "react/jsx-uses-vars": "error",
     "react/no-unused-prop-types": "error",
     "react/prop-types": "off",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "warn",
     "jsx-a11y/alt-text": "error",
     "jsx-a11y/anchor-has-content": "error",
     "jsx-a11y/aria-props": "error",
