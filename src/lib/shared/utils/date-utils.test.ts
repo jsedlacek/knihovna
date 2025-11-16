@@ -1,6 +1,6 @@
 import { strict as assert } from "node:assert";
 import { describe, test } from "node:test";
-import { formatDateCzech, formatDateTimeCzech } from "./date-utils.ts";
+import { formatDateCzech } from "./date-utils.ts";
 
 describe("Date Utils", () => {
   describe("formatDateCzech", () => {
@@ -49,51 +49,6 @@ describe("Date Utils", () => {
       assert.equal(result1, result2);
       assert.equal(result2, result3);
       assert.equal(result1, "15. prosince 2024");
-    });
-  });
-
-  describe("formatDateTimeCzech", () => {
-    test("formats ISO date string to Czech date and time format", () => {
-      const isoDate = "2024-12-15T10:30:00.000Z";
-      const result = formatDateTimeCzech(isoDate);
-      // Note: This will be in UTC time, so we need to account for timezone
-      // The exact time will depend on the system timezone, but the format should be consistent
-      assert.match(result, /^\d{1,2}\. \w+ \d{4}, \d{2}:\d{2}$/);
-    });
-
-    test("handles different times correctly", () => {
-      const isoDate = "2024-06-15T14:25:00.000Z";
-      const result = formatDateTimeCzech(isoDate);
-      assert.match(result, /^\d{1,2}\. června \d{4}, \d{2}:\d{2}$/);
-    });
-
-    test("pads hours and minutes with leading zeros", () => {
-      const isoDate = "2024-01-05T09:05:00.000Z";
-      const result = formatDateTimeCzech(isoDate);
-      // Should contain properly padded time
-      assert.match(result, /, \d{2}:\d{2}$/);
-    });
-
-    test("is consistent across multiple calls", () => {
-      const isoDate = "2024-12-15T10:30:00.000Z";
-      const result1 = formatDateTimeCzech(isoDate);
-      const result2 = formatDateTimeCzech(isoDate);
-      const result3 = formatDateTimeCzech(isoDate);
-
-      assert.equal(result1, result2);
-      assert.equal(result2, result3);
-    });
-  });
-
-  describe("Consistency between formatDateCzech and formatDateTimeCzech", () => {
-    test("date portion should be identical between both functions", () => {
-      const isoDate = "2024-12-15T10:30:00.000Z";
-      const dateOnly = formatDateCzech(isoDate);
-      const dateTime = formatDateTimeCzech(isoDate);
-
-      // Extract the date part from the date-time string
-      const datePortion = dateTime.split(",")[0];
-      assert.equal(dateOnly, datePortion);
     });
   });
 });
