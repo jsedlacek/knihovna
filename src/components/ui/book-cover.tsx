@@ -36,12 +36,12 @@ export function BookCover({ src, alt, href, className = "" }: BookCoverProps) {
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex-shrink-0"
+        className="shrink-0"
       >
         {image}
       </a>
     );
   }
 
-  return <div className="flex-shrink-0">{image}</div>;
+  return <div className="shrink-0">{image}</div>;
 }
