@@ -1,1 +1,1 @@
-/Users/jakub/Code/knihovna/AGENT.md
+AGENTS.md
