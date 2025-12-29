@@ -1,10 +1,7 @@
 import assert from "node:assert";
 import { describe, test } from "node:test";
 import * as cheerio from "cheerio";
-import {
-  cleanSearchTerm,
-  getTitleWithArabicNumerals,
-} from "#@/lib/shared/utils/text-utils.ts";
+import { cleanSearchTerm, getTitleWithArabicNumerals } from "#@/lib/shared/utils/text-utils.ts";
 import { loadFixture } from "#@/test/utils/test-utils.ts";
 import {
   extractBookCandidates,
@@ -273,10 +270,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
       });
 
       // Should get heavy penalty for Wikipedia source
-      assert.ok(
-        score < 0,
-        `Score should be negative for Wikipedia, got ${score}`,
-      );
+      assert.ok(score < 0, `Score should be negative for Wikipedia, got ${score}`);
     });
 
     test("should apply length penalty for overly long titles", () => {
@@ -290,8 +284,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
 
       const longCandidate = {
         url: "/book/show/456.Test",
-        title:
-          "This is a very long compilation title with many words and extra information",
+        title: "This is a very long compilation title with many words and extra information",
         author: "Test Author",
         ratingsCount: 100,
         score: 0,
@@ -307,10 +300,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
         author: "Test Author",
       });
 
-      assert.ok(
-        shortScore > longScore,
-        "Short title should score higher than long title",
-      );
+      assert.ok(shortScore > longScore, "Short title should score higher than long title");
     });
   });
 
@@ -358,10 +348,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
       const result = parseGoodreadsBookData(goodreadsHtml);
 
       assert.ok(result.rating !== null, "Rating should be extracted");
-      assert.ok(
-        result.ratingsCount !== null,
-        "Ratings count should be extracted",
-      );
+      assert.ok(result.ratingsCount !== null, "Ratings count should be extracted");
 
       console.log("Extracted Goodreads data:", result);
     });
@@ -538,8 +525,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
       console.log("Real fixture extraction result:", result);
 
       // Basic checks - at least some meaningful data should be extracted
-      const hasRatingData =
-        result.rating !== null || result.ratingsCount !== null;
+      const hasRatingData = result.rating !== null || result.ratingsCount !== null;
 
       assert.ok(
         hasRatingData,
@@ -548,18 +534,12 @@ describe("Goodreads Scraper HTML Parsing", () => {
 
       // If rating is present, it should be valid
       if (result.rating !== null) {
-        assert.ok(
-          result.rating >= 0 && result.rating <= 5,
-          "Rating should be in valid range",
-        );
+        assert.ok(result.rating >= 0 && result.rating <= 5, "Rating should be in valid range");
       }
 
       // If ratings count is present, it should be positive
       if (result.ratingsCount !== null) {
-        assert.ok(
-          result.ratingsCount >= 0,
-          "Ratings count should be non-negative",
-        );
+        assert.ok(result.ratingsCount >= 0, "Ratings count should be non-negative");
       }
 
       // All fields should have correct types
@@ -585,10 +565,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
         console.log("Search fixture result:", result);
 
         if (result !== null) {
-          assert.ok(
-            result.includes("/book/show/"),
-            "Should extract valid book link pattern",
-          );
+          assert.ok(result.includes("/book/show/"), "Should extract valid book link pattern");
         }
       } catch {
         // If fixture doesn't exist, test with synthetic data
@@ -628,11 +605,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
         "Jih proti Severu 2",
         "Should convert Roman numeral to Arabic",
       );
-      assert.notStrictEqual(
-        book.title,
-        fallbackTitle,
-        "Original and fallback should be different",
-      );
+      assert.notStrictEqual(book.title, fallbackTitle, "Original and fallback should be different");
     });
 
     test("should not attempt fallback when title has no Roman numerals", () => {
@@ -662,11 +635,7 @@ describe("Goodreads Scraper HTML Parsing", () => {
 
       for (const testCase of testCases) {
         const result = getTitleWithArabicNumerals(testCase.input);
-        assert.strictEqual(
-          result,
-          testCase.expected,
-          `Failed for ${testCase.input}`,
-        );
+        assert.strictEqual(result, testCase.expected, `Failed for ${testCase.input}`);
       }
     });
 
@@ -689,21 +658,9 @@ describe("Goodreads Scraper HTML Parsing", () => {
       const cleanedOriginal = cleanSearchTerm(originalTitle);
       const cleanedFallback = cleanSearchTerm(fallbackTitle);
 
-      assert.strictEqual(
-        cleanedOriginal,
-        "Jih proti Severu II",
-        "Should clean original title",
-      );
-      assert.strictEqual(
-        cleanedFallback,
-        "Jih proti Severu 2",
-        "Should clean fallback title",
-      );
-      assert.notStrictEqual(
-        cleanedOriginal,
-        cleanedFallback,
-        "Cleaned versions should differ",
-      );
+      assert.strictEqual(cleanedOriginal, "Jih proti Severu II", "Should clean original title");
+      assert.strictEqual(cleanedFallback, "Jih proti Severu 2", "Should clean fallback title");
+      assert.notStrictEqual(cleanedOriginal, cleanedFallback, "Cleaned versions should differ");
     });
   });
 });

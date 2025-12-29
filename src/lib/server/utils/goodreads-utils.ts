@@ -10,9 +10,7 @@ import { cleanTextForSearch } from "#@/lib/shared/utils/text-utils.ts";
  * @param book - A book object containing at least a title and author.
  * @returns A fully formed URL for searching on Goodreads.
  */
-export function createGoodreadsSearchUrl(
-  book: Pick<Book, "title" | "author">,
-): string {
+export function createGoodreadsSearchUrl(book: Pick<Book, "title" | "author">): string {
   // Use a centralized utility to clean the text for a search query
   const cleanedTitle = cleanTextForSearch(book.title);
 

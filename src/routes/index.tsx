@@ -2,10 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { HomePage, type BookGenre } from "#@/components/home-page.tsx";
 import { books, lastUpdated } from "#@/lib/server/books.ts";
-import {
-  groupBooksByGenre,
-  type GenreGroup,
-} from "#@/lib/shared/utils/genre-utils.ts";
+import { groupBooksByGenre, type GenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 
 export type Data = {
   bookCount: number;
@@ -18,13 +15,11 @@ const getHomeData = createServerFn({
 }).handler(async (): Promise<Data> => {
   const booksByGenre = groupBooksByGenre(books);
 
-  const genres: BookGenre[] = Object.entries(booksByGenre).map(
-    ([genre, books]) => ({
-      genre: genre as GenreGroup,
-      books: books.slice(0, 100),
-      bookCount: books.length,
-    }),
-  );
+  const genres: BookGenre[] = Object.entries(booksByGenre).map(([genre, books]) => ({
+    genre: genre as GenreGroup,
+    books: books.slice(0, 100),
+    bookCount: books.length,
+  }));
 
   return {
     bookCount: books.length,
@@ -53,7 +48,5 @@ export const Route = createFileRoute("/")({
 function HomeComponent() {
   const { bookCount, genres, lastUpdated } = Route.useLoaderData();
 
-  return (
-    <HomePage bookCount={bookCount} genres={genres} lastUpdated={lastUpdated} />
-  );
+  return <HomePage bookCount={bookCount} genres={genres} lastUpdated={lastUpdated} />;
 }

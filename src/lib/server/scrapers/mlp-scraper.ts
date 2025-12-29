@@ -1,15 +1,8 @@
 import * as cheerio from "cheerio";
 import type { AnyNode } from "domhandler";
 import { createUrl, fetchHtml } from "#@/lib/server/utils/fetch-utils.ts";
-import {
-  MAX_PAGES,
-  MLP_BASE_URL,
-  MLP_START_URL,
-} from "#@/lib/shared/config/scraper-config.ts";
-import type {
-  MlpBookDetails,
-  MlpBookListing,
-} from "#@/lib/shared/types/book-types.ts";
+import { MAX_PAGES, MLP_BASE_URL, MLP_START_URL } from "#@/lib/shared/config/scraper-config.ts";
+import type { MlpBookDetails, MlpBookListing } from "#@/lib/shared/types/book-types.ts";
 import {
   cleanAuthorName,
   cleanTitle,
@@ -76,30 +69,25 @@ export function parseMlpBookDetails(
     let genreId: string | null = null;
     let genre: string | null = null;
 
-    $detail(".book-content.book-info-table table tbody tr").each(
-      (_: number, element: AnyNode) => {
-        const fieldName = $detail(element).find("td.itemlefttd").text().trim();
-        const fieldValue = cleanTitle(
-          $detail(element).find("td").eq(1).text().trim(),
-        );
+    $detail(".book-content.book-info-table table tbody tr").each((_: number, element: AnyNode) => {
+      const fieldName = $detail(element).find("td.itemlefttd").text().trim();
+      const fieldValue = cleanTitle($detail(element).find("td").eq(1).text().trim());
 
-        if (fieldName === "Podnázev") {
-          subtitle = fieldValue;
-        } else if (fieldName === "Název části") {
-          partTitle = fieldValue;
-        } else if (fieldName === 'Obsahová char. "OCH"') {
-          genreId = fieldValue;
-        } else if (fieldName === "Obsah OCHu") {
-          genre = fieldValue;
-        }
-      },
-    );
+      if (fieldName === "Podnázev") {
+        subtitle = fieldValue;
+      } else if (fieldName === "Název části") {
+        partTitle = fieldValue;
+      } else if (fieldName === 'Obsahová char. "OCH"') {
+        genreId = fieldValue;
+      } else if (fieldName === "Obsah OCHu") {
+        genre = fieldValue;
+      }
+    });
 
     const imageUrl = $detail(".cover-img").attr("src") || null;
 
     const descriptionText = $detail("p.book-info-preview").text().trim();
-    const description =
-      descriptionText && descriptionText.length > 0 ? descriptionText : null;
+    const description = descriptionText && descriptionText.length > 0 ? descriptionText : null;
 
     return {
       subtitle,
@@ -157,9 +145,7 @@ export function parseMlpDownloadLinks(reservationHtml: string): {
 /**
  * Scrape details and download links from an MLP book detail page.
  */
-export async function scrapeMlpBookDetails(
-  detailUrl: string,
-): Promise<MlpBookDetails> {
+export async function scrapeMlpBookDetails(detailUrl: string): Promise<MlpBookDetails> {
   const detailHtml = await fetchHtml(detailUrl);
   const details = parseMlpBookDetails(detailHtml);
 
@@ -230,9 +216,7 @@ export async function scrapeMlpListingPages(): Promise<MlpBookListing[]> {
     }
   }
 
-  const validBooks = booksWithBasicInfo.filter(
-    (b): b is NonNullable<typeof b> => b !== null,
-  );
+  const validBooks = booksWithBasicInfo.filter((b): b is NonNullable<typeof b> => b !== null);
   console.log(`Found ${validBooks.length} books from listing pages.`);
 
   return validBooks;

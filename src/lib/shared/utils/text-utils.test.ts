@@ -15,20 +15,12 @@ test("romanToArabic - converts Roman numerals to Arabic numbers", () => {
   assert.strictEqual(romanToArabic("IX"), 9, "Should convert IX to 9");
   assert.strictEqual(romanToArabic("XIV"), 14, "Should convert XIV to 14");
   assert.strictEqual(romanToArabic("XX"), 20, "Should convert XX to 20");
-  assert.strictEqual(
-    romanToArabic("invalid"),
-    0,
-    "Should return 0 for invalid input",
-  );
+  assert.strictEqual(romanToArabic("invalid"), 0, "Should return 0 for invalid input");
   assert.strictEqual(romanToArabic(""), 0, "Should return 0 for empty string");
 });
 
 test("cleanSearchTerm - removes special characters and normalizes whitespace", () => {
-  assert.strictEqual(
-    cleanSearchTerm("Hello, World!"),
-    "Hello World",
-    "Should remove punctuation",
-  );
+  assert.strictEqual(cleanSearchTerm("Hello, World!"), "Hello World", "Should remove punctuation");
 
   assert.strictEqual(
     cleanSearchTerm("Test:   Multiple    Spaces"),
@@ -196,11 +188,7 @@ test("formatAuthorName - converts from Last, First to First Last format", () => 
     "Should leave names without comma unchanged",
   );
 
-  assert.strictEqual(
-    formatAuthorName("Čapek, Karel"),
-    "Karel Čapek",
-    "Should handle Czech names",
-  );
+  assert.strictEqual(formatAuthorName("Čapek, Karel"), "Karel Čapek", "Should handle Czech names");
 
   assert.strictEqual(formatAuthorName(""), "", "Should handle empty string");
 

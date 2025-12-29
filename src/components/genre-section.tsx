@@ -14,11 +14,7 @@ interface GenreSectionProps {
   bookCount: number;
 }
 
-export function GenreSection({
-  books,
-  genreKey,
-  bookCount,
-}: GenreSectionProps) {
+export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) {
   const genreConfig = GENRE_GROUPS[genreKey];
 
   // Sort books by score within this genre
@@ -38,9 +34,7 @@ export function GenreSection({
               {genreConfig.name}
             </a>
           </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground mb-3">
-            {genreConfig.description}
-          </p>
+          <p className="text-xs sm:text-sm text-muted-foreground mb-3">{genreConfig.description}</p>
           <div className="text-xs text-muted-foreground">
             {formatNumberCzech(bookCount)} knih ke stažení
           </div>
@@ -62,9 +56,7 @@ export function GenreSection({
             <div className="text-xs text-muted-foreground flex items-center justify-center">
               {book.rating ? (
                 <span className="inline-flex items-center">
-                  <span>
-                    {formatNumberCzech(Math.round(book.rating * 10) / 10)}
-                  </span>
+                  <span>{formatNumberCzech(Math.round(book.rating * 10) / 10)}</span>
                   <StarIcon className="ml-1 size-2.5 fill-current" />
                 </span>
               ) : (

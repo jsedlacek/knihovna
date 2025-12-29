@@ -84,8 +84,8 @@ Use the following `npm` scripts for common development tasks:
 - `npm run check`: Run type-check, lint, and test together.
 - `npm run lint`: Run oxlint linter checks.
 - `npm run lint:fix`: Run oxlint with auto-fixes.
-- `npm run format`: Run Biome formatter.
-- `npm run format:check`: Check Biome formatting.
+- `npm run format`: Run formatter.
+- `npm run format:check`: Check formatting.
 - `npm test`: Run all tests.
 - `npm run test:watch`: Run tests in watch mode.
 - `npm run storybook`: Start Storybook development server.
@@ -161,7 +161,7 @@ The project uses GitHub Actions for automated quality assurance on every push an
 
 - **TypeScript Check**: `npm run check` ensures strict type compliance
 - **Linting**: `npm run lint` enforces code style and quality rules via `oxlint`.
-- **Formatting**: `npm run format` ensures consistent code style using `biome`.
+- **Formatting**: `npm run format` ensures consistent code style using `oxfmt`.
 - **Testing**: `npm test` runs the full test suite with real fixture validation
 
 The CI pipeline must pass before code can be merged, ensuring consistent code quality across all contributions. The deployment workflow depends on successful CI completion.

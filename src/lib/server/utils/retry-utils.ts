@@ -52,17 +52,8 @@ export interface RetryOptions {
  * ```
  */
 
-export async function withRetry<T>(
-  fn: () => Promise<T>,
-  options: RetryOptions = {},
-): Promise<T> {
-  const {
-    retries = 3,
-    delay = 1000,
-    factor = 2,
-    maxDelay = 30000,
-    onRetry,
-  } = options;
+export async function withRetry<T>(fn: () => Promise<T>, options: RetryOptions = {}): Promise<T> {
+  const { retries = 3, delay = 1000, factor = 2, maxDelay = 30000, onRetry } = options;
 
   let lastError: Error = new Error("Retry failed");
   let currentDelay = delay;

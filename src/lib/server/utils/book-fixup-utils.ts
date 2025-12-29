@@ -1,8 +1,4 @@
-import type {
-  Book,
-  MlpBookDetails,
-  MlpBookListing,
-} from "#@/lib/shared/types/book-types.ts";
+import type { Book, MlpBookDetails, MlpBookListing } from "#@/lib/shared/types/book-types.ts";
 
 /**
  * Fields that can be fixed via the fixup system.
@@ -32,8 +28,7 @@ const BOOK_FIXUPS: BookFixup[] = [
   {
     detailUrl: "https://search.mlp.cz/cz/titul/ceske-okamziky/4359869/",
     title: "České snění",
-    reason:
-      "Original title is incorrect on MLP - should be 'České snění' not 'České okamžiky'",
+    reason: "Original title is incorrect on MLP - should be 'České snění' not 'České okamžiky'",
   },
   // Add more fixups here as needed
   // Example:

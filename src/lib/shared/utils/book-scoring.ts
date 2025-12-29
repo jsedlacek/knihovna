@@ -34,9 +34,7 @@ export function calculateBookScore(book: Book): number {
   // A book needs at least 100 ratings for full confidence (1.0).
   // Uses a logarithmic scale for a smoother, more impactful penalty.
   const confidenceFactor =
-    reviewCount > 0
-      ? Math.min(1, Math.log10(reviewCount) / Math.log10(100))
-      : 0;
+    reviewCount > 0 ? Math.min(1, Math.log10(reviewCount) / Math.log10(100)) : 0;
 
   return (ratingScore + maxReviewBoost) * confidenceFactor;
 }
@@ -89,9 +87,7 @@ export function testBookScoring(): void {
  * @returns New array of books sorted by score (highest first)
  */
 export function sortBooksByScore(books: Book[]): Book[] {
-  return [...books].sort(
-    (a, b) => calculateBookScore(b) - calculateBookScore(a),
-  );
+  return [...books].sort((a, b) => calculateBookScore(b) - calculateBookScore(a));
 }
 
 /**
@@ -100,19 +96,14 @@ export function sortBooksByScore(books: Book[]): Book[] {
  * @param books - Array of books to group and sort
  * @returns Object with genre names as keys and sorted book arrays as values
  */
-export function groupAndSortBooksByGenre(
-  books: Book[],
-): Record<string, Book[]> {
+export function groupAndSortBooksByGenre(books: Book[]): Record<string, Book[]> {
   const booksByGenre = books.reduce(
     (acc, book) => {
       if (!book.genre) {
         // If no genre description, put in 'Ostatní' category
-        // biome-ignore lint/complexity/useLiteralKeys: TypeScript requires bracket notation for index signatures
         if (!acc["Ostatní"]) {
-          // biome-ignore lint/complexity/useLiteralKeys: TypeScript requires bracket notation for index signatures
           acc["Ostatní"] = [];
         }
-        // biome-ignore lint/complexity/useLiteralKeys: TypeScript requires bracket notation for index signatures
         acc["Ostatní"].push(book);
       } else {
         // Extract primary genre from description (text before first delimiter)
@@ -125,12 +116,9 @@ export function groupAndSortBooksByGenre(
           acc[primaryGenre].push(book);
         } else {
           // Fallback to 'Ostatní' if parsing fails
-          // biome-ignore lint/complexity/useLiteralKeys: TypeScript requires bracket notation for index signatures
           if (!acc["Ostatní"]) {
-            // biome-ignore lint/complexity/useLiteralKeys: TypeScript requires bracket notation for index signatures
             acc["Ostatní"] = [];
           }
-          // biome-ignore lint/complexity/useLiteralKeys: TypeScript requires bracket notation for index signatures
           acc["Ostatní"].push(book);
         }
       }

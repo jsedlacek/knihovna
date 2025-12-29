@@ -24,9 +24,7 @@ interface HomePageProps {
 }
 
 export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
-  const formattedLastUpdated = lastUpdated
-    ? formatDateCzech(lastUpdated.lastUpdated)
-    : null;
+  const formattedLastUpdated = lastUpdated ? formatDateCzech(lastUpdated.lastUpdated) : null;
 
   return (
     <div className="min-h-screen bg-background text-foreground font-mono">
@@ -35,8 +33,7 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
           formattedLastUpdated && {
             subtitle: (
               <>
-                Aktualizováno{" "}
-                <span suppressHydrationWarning>{formattedLastUpdated}</span>
+                Aktualizováno <span suppressHydrationWarning>{formattedLastUpdated}</span>
               </>
             ),
           })}
@@ -47,13 +44,9 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
         <section className="space-y-4">
           <div className="text-sm leading-relaxed space-y-4">
             <p>
-              Tady najdete{" "}
-              <span className="font-semibold">
-                {formatNumberCzech(bookCount)}
-              </span>{" "}
-              románů, klasiky, poezie i divadla – všechno, co má od čtenářů
-              aspoň čtyři hvězdičky. A hlavně zdarma ke stažení z městské
-              knihovny.
+              Tady najdete <span className="font-semibold">{formatNumberCzech(bookCount)}</span>{" "}
+              románů, klasiky, poezie i divadla – všechno, co má od čtenářů aspoň čtyři hvězdičky. A
+              hlavně zdarma ke stažení z městské knihovny.
             </p>
           </div>
         </section>
@@ -61,12 +54,7 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
         {/* Genre sections */}
         <div className="space-y-8">
           {genres.map(({ genre, books, bookCount }) => (
-            <GenreSection
-              key={genre}
-              books={books}
-              genreKey={genre}
-              bookCount={bookCount}
-            />
+            <GenreSection key={genre} books={books} genreKey={genre} bookCount={bookCount} />
           ))}
         </div>
 
@@ -74,8 +62,7 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
         {bookCount === 0 && (
           <section className="space-y-4">
             <p className="text-muted-foreground">
-              Žádné knihy nejsou momentálně k dispozici. Zkontrolujte soubor
-              data/books.json.
+              Žádné knihy nejsou momentálně k dispozici. Zkontrolujte soubor data/books.json.
             </p>
           </section>
         )}

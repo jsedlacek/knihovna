@@ -275,9 +275,7 @@ export const EmptyLibrary: Story = {
 export const OnlyBeletrie: Story = {
   args: {
     bookCount: sampleBooks.filter((book) => book.genre === "beletrie").length,
-    genres: createGenresFromBooks(
-      sampleBooks.filter((book) => book.genre === "beletrie"),
-    ),
+    genres: createGenresFromBooks(sampleBooks.filter((book) => book.genre === "beletrie")),
     lastUpdated: mockTimestamp,
   },
 };
@@ -285,9 +283,7 @@ export const OnlyBeletrie: Story = {
 export const WithLowRatedBooks: Story = {
   args: {
     bookCount: sampleBooks.length,
-    genres: createGenresFromBooks(
-      sampleBooks.map((book) => ({ ...book, rating: 3.5 })),
-    ),
+    genres: createGenresFromBooks(sampleBooks.map((book) => ({ ...book, rating: 3.5 }))),
     lastUpdated: mockTimestamp,
   },
 };
@@ -295,9 +291,7 @@ export const WithLowRatedBooks: Story = {
 export const WithoutEpubLinks: Story = {
   args: {
     bookCount: sampleBooks.length,
-    genres: createGenresFromBooks(
-      sampleBooks.map((book) => ({ ...book, epubUrl: null })),
-    ),
+    genres: createGenresFromBooks(sampleBooks.map((book) => ({ ...book, epubUrl: null }))),
     lastUpdated: mockTimestamp,
   },
 };

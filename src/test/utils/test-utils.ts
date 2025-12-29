@@ -40,9 +40,7 @@ export function createMockBook(overrides: Partial<Book> = {}): Book {
 /**
  * Create a mock Goodreads data object for testing
  */
-export function createMockGoodreadsData(
-  overrides: Partial<GoodreadsData> = {},
-): GoodreadsData {
+export function createMockGoodreadsData(overrides: Partial<GoodreadsData> = {}): GoodreadsData {
   return {
     rating: 4.5,
     ratingsCount: 1000,
@@ -66,11 +64,7 @@ export function assertDefined<T>(
 /**
  * Assert that two arrays contain the same elements (order independent)
  */
-export function assertArraysEqual<T>(
-  actual: T[],
-  expected: T[],
-  message?: string,
-): void {
+export function assertArraysEqual<T>(actual: T[], expected: T[], message?: string): void {
   const sortedActual = [...actual].sort();
   const sortedExpected = [...expected].sort();
 
@@ -85,11 +79,7 @@ export function assertArraysEqual<T>(
 /**
  * Assert that a string contains a substring
  */
-export function assertContains(
-  haystack: string,
-  needle: string,
-  message?: string,
-): void {
+export function assertContains(haystack: string, needle: string, message?: string): void {
   if (!haystack.includes(needle)) {
     throw new Error(message || `Expected "${haystack}" to contain "${needle}"`);
   }
@@ -98,15 +88,8 @@ export function assertContains(
 /**
  * Assert that a number is within a range
  */
-export function assertInRange(
-  value: number,
-  min: number,
-  max: number,
-  message?: string,
-): void {
+export function assertInRange(value: number, min: number, max: number, message?: string): void {
   if (value < min || value > max) {
-    throw new Error(
-      message || `Expected ${value} to be between ${min} and ${max}`,
-    );
+    throw new Error(message || `Expected ${value} to be between ${min} and ${max}`);
   }
 }

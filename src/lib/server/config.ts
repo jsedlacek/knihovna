@@ -7,11 +7,4 @@ import { join } from "node:path";
  */
 
 // --- File Configuration ---
-export const OUTPUT_FILE = join(
-  import.meta.dirname,
-  "..",
-  "..",
-  "..",
-  "data",
-  "books.json",
-);
+export const OUTPUT_FILE = join(import.meta.dirname, "..", "..", "..", "data", "books.json");

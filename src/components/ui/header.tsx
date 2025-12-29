@@ -19,15 +19,10 @@ export function Header({
           <h1 className="text-base font-bold">{title}</h1>
           <img src={icon} alt="Book icon" className="h-lh shrink-0" />
         </div>
-        {subtitle && (
-          <div className="text-sm text-muted-foreground">{subtitle}</div>
-        )}
+        {subtitle && <div className="text-sm text-muted-foreground">{subtitle}</div>}
         {showBackLink && (
           <div className="text-sm text-muted-foreground">
-            <a
-              href="/"
-              className="text-blue-600 hover:text-blue-800 hover:underline"
-            >
+            <a href="/" className="text-blue-600 hover:text-blue-800 hover:underline">
               ← Zpět na hlavní stránku
             </a>
           </div>

@@ -8,8 +8,7 @@ export interface BookCoverProps {
 }
 
 export function BookCover({ src, alt, href, className = "" }: BookCoverProps) {
-  const baseClasses =
-    "w-16 h-24 sm:w-20 sm:h-30 object-cover border border-border";
+  const baseClasses = "w-16 h-24 sm:w-20 sm:h-30 object-cover border border-border";
   const imageClasses = href
     ? `${baseClasses} hover:opacity-80 transition-opacity mx-auto sm:mx-0 ${className}`
     : `${baseClasses} mx-auto sm:mx-0 ${className}`;
@@ -22,22 +21,12 @@ export function BookCover({ src, alt, href, className = "" }: BookCoverProps) {
   };
 
   const image = (
-    <img
-      src={src || placeholderCover}
-      onError={handleError}
-      alt={alt}
-      className={imageClasses}
-    />
+    <img src={src || placeholderCover} onError={handleError} alt={alt} className={imageClasses} />
   );
 
   if (href) {
     return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="shrink-0"
-      >
+      <a href={href} target="_blank" rel="noopener noreferrer" className="shrink-0">
         {image}
       </a>
     );

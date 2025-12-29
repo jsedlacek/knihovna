@@ -85,12 +85,8 @@ export function deduplicateBooks(books: Book[]): Book[] {
       } else {
         // If at least one book has a year, we only consider those with a year
         // and discard any that don't.
-        const maxYear = Math.max(
-          ...booksWithYear.map((book) => book.year as number),
-        );
-        const newestBooks = booksWithYear.filter(
-          (book) => book.year === maxYear,
-        );
+        const maxYear = Math.max(...booksWithYear.map((book) => book.year as number));
+        const newestBooks = booksWithYear.filter((book) => book.year === maxYear);
 
         if (newestBooks.length > 1) {
           // This is a conflict: multiple books from the same (newest) year.

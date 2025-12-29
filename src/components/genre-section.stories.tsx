@@ -32,8 +32,7 @@ const sampleBooks: Book[] = [
     subtitle: null,
     partTitle: null,
     imageUrl: "https://covers.openlibrary.org/b/id/8225261-M.jpg",
-    description:
-      "Satirický román o konfliktu mezi lidstvem a inteligentními mlaky.",
+    description: "Satirický román o konfliktu mezi lidstvem a inteligentními mlaky.",
     pdfUrl: null,
     epubUrl: "https://example.com/valka-s-mloky.epub",
     genreId: "beletrie",

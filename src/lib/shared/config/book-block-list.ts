@@ -23,8 +23,6 @@ export function isBookBlocked(detailUrl: string): boolean {
 /**
  * Filter out blocked books from a list of books.
  */
-export function filterBlockedBooks<T extends { detailUrl: string }>(
-  books: T[],
-): T[] {
+export function filterBlockedBooks<T extends { detailUrl: string }>(books: T[]): T[] {
   return books.filter((book) => !isBookBlocked(book.detailUrl));
 }

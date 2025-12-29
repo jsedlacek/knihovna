@@ -28,9 +28,7 @@ export function cleanAuthorName(author: string | null): string | null {
 /**
  * Parses publisher information to extract publisher name and year.
  */
-export function parsePublisherInfo(
-  publisherInfo: string | null,
-): PublisherInfo {
+export function parsePublisherInfo(publisherInfo: string | null): PublisherInfo {
   if (!publisherInfo?.trim()) {
     return { publisher: null, year: null };
   }
@@ -87,9 +85,7 @@ export function getHighResImageUrl(lowResUrl: string): string | null {
  * Gets the best available image URL, preferring high-res if it exists.
  * Validates that the high-res URL exists before returning it.
  */
-export async function getBestImageUrl(
-  originalUrl: string | null,
-): Promise<string | null> {
+export async function getBestImageUrl(originalUrl: string | null): Promise<string | null> {
   if (!originalUrl) return null;
 
   const highResUrl = getHighResImageUrl(originalUrl);
@@ -125,8 +121,7 @@ export function romanToArabic(roman: string): number {
   const upperRoman = roman.toUpperCase();
 
   // Validate against a strict pattern for valid Roman numerals
-  const validRomanPattern =
-    /^(M{0,4})(CM|CD|D?C{0,3})(XL|XC|L?X{0,3})(IV|IX|V?I{0,3})$/;
+  const validRomanPattern = /^(M{0,4})(CM|CD|D?C{0,3})(XL|XC|L?X{0,3})(IV|IX|V?I{0,3})$/;
   if (!validRomanPattern.test(upperRoman)) {
     return 0; // Invalid Roman numeral pattern
   }
@@ -305,11 +300,7 @@ export function calculateSimilarity(s1: string, s2: string): number {
     }
   }
 
-  const jaro =
-    (matches / len1 +
-      matches / len2 +
-      (matches - transpositions / 2) / matches) /
-    3;
+  const jaro = (matches / len1 + matches / len2 + (matches - transpositions / 2) / matches) / 3;
 
   // Winkler bonus for common prefix
   let prefix = 0;

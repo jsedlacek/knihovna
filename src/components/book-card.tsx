@@ -23,22 +23,15 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
       key={`${book.title}-${book.author}-${index}`}
       className="flex flex-col sm:flex-row gap-3 sm:gap-4"
     >
-      <BookCover
-        src={book.imageUrl}
-        alt={`${book.title} book cover`}
-        href={book.detailUrl}
-      />
+      <BookCover src={book.imageUrl} alt={`${book.title} book cover`} href={book.detailUrl} />
       <div className="flex-1 text-center sm:text-left">
         <h3 className="font-bold text-sm mb-2">
           <Link href={book.detailUrl}>
             {formatAuthorName(book.author)} – {book.title}
-            {(book.partTitle || book.subtitle) &&
-              ` (${book.partTitle || book.subtitle})`}
+            {(book.partTitle || book.subtitle) && ` (${book.partTitle || book.subtitle})`}
           </Link>
         </h3>
-        <p className="text-sm text-card-foreground mb-2 line-clamp-3">
-          {book.description}
-        </p>
+        <p className="text-sm text-card-foreground mb-2 line-clamp-3">{book.description}</p>
         <div className="text-xs text-muted-foreground mb-3">
           {book.rating ? (
             <div className="flex items-center justify-center sm:justify-start">
@@ -77,11 +70,7 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
         </div>
         <div className="flex justify-center sm:justify-start gap-2 flex-wrap">
           {book.epubUrl && (
-            <Button
-              href={book.epubUrl}
-              variant="primary"
-              rel="noopener noreferrer"
-            >
+            <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
               STÁHNOUT EPUB
             </Button>
           )}

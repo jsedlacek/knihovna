@@ -1,10 +1,6 @@
 import * as cheerio from "cheerio";
 import { createUrl, fetchHtml } from "#@/lib/server/utils/fetch-utils.ts";
-import {
-  GOODREADS_BASE_URL,
-  MAX_RATING,
-  MIN_RATING,
-} from "#@/lib/shared/config/scraper-config.ts";
+import { GOODREADS_BASE_URL, MAX_RATING, MIN_RATING } from "#@/lib/shared/config/scraper-config.ts";
 import type { GoodreadsData } from "#@/lib/shared/types/book-types.ts";
 import {
   calculateSimilarity,
@@ -45,10 +41,7 @@ function extractFromJsonLd($: cheerio.CheerioAPI): {
       rating = parseFloat(data.aggregateRating.ratingValue);
     }
     if (data.aggregateRating?.ratingCount) {
-      ratingsCount = parseInt(
-        data.aggregateRating.ratingCount.toString().replace(/,/g, ""),
-        10,
-      );
+      ratingsCount = parseInt(data.aggregateRating.ratingCount.toString().replace(/,/g, ""), 10);
     }
 
     return { rating, ratingsCount };
@@ -75,9 +68,7 @@ function extractFromHtml($: cheerio.CheerioAPI): {
 
   // Try to extract ratings count
   const ratingsCountText = $(".RatingStatistics__meta").first().text();
-  const countMatch = ratingsCountText.match(
-    /(\d{1,3}(?:,\d{3})*|\d+)\sratings/,
-  );
+  const countMatch = ratingsCountText.match(/(\d{1,3}(?:,\d{3})*|\d+)\sratings/);
   if (countMatch?.[1]) {
     ratingsCount = parseInt(countMatch[1].replace(/,/g, ""), 10);
   }
@@ -100,14 +91,8 @@ export function validateRating(
   validatedRating: number | null;
   validatedCount: number | null;
 } {
-  if (
-    rating !== null &&
-    !Number.isNaN(rating) &&
-    rating >= MIN_RATING &&
-    rating <= MAX_RATING
-  ) {
-    const validatedCount =
-      ratingsCount !== null && !Number.isNaN(ratingsCount) ? ratingsCount : 0;
+  if (rating !== null && !Number.isNaN(rating) && rating >= MIN_RATING && rating <= MAX_RATING) {
+    const validatedCount = ratingsCount !== null && !Number.isNaN(ratingsCount) ? ratingsCount : 0;
     if (validatedCount > 0) {
       return {
         isValid: true,
@@ -120,10 +105,7 @@ export function validateRating(
   return {
     isValid: false,
     validatedRating: null,
-    validatedCount:
-      ratingsCount !== null && !Number.isNaN(ratingsCount)
-        ? ratingsCount
-        : null,
+    validatedCount: ratingsCount !== null && !Number.isNaN(ratingsCount) ? ratingsCount : null,
   };
 }
 
@@ -148,9 +130,7 @@ export function extractBookCandidates($: cheerio.CheerioAPI): BookCandidate[] {
     // Extract ratings count
     const ratingsText = bookRow.find(".minirating").text();
     const ratingsMatch = ratingsText.match(/([\d,]+)\s+ratings/);
-    const ratingsCount = ratingsMatch?.[1]
-      ? parseInt(ratingsMatch[1].replace(/,/g, ""), 10)
-      : 0;
+    const ratingsCount = ratingsMatch?.[1] ? parseInt(ratingsMatch[1].replace(/,/g, ""), 10) : 0;
 
     candidates.push({
       url: candidateUrl,
@@ -196,9 +176,7 @@ export function scoreBookCandidate(
   }
 
   // Length penalty for overly long titles (compilation books)
-  const titleLengthDiff = Math.abs(
-    candidate.title.length - searchBook.title.length,
-  );
+  const titleLengthDiff = Math.abs(candidate.title.length - searchBook.title.length);
   if (titleLengthDiff > 10) {
     score -= titleLengthDiff * 0.3;
   }
@@ -290,13 +268,9 @@ export async function scrapeGoodreads(book: {
     // --- Helper function to perform a search query ---
     const performSearch = async (title: string): Promise<string | null> => {
       const cleanedTitle = cleanSearchTerm(title);
-      const searchQuery = encodeURIComponent(
-        `${cleanedTitle} ${authorForSearch}`,
-      );
+      const searchQuery = encodeURIComponent(`${cleanedTitle} ${authorForSearch}`);
       const searchUrl = `${GOODREADS_BASE_URL}/search?q=${searchQuery}&search_type=books`;
-      console.log(
-        `Searching Goodreads for: "${cleanedTitle}" by ${authorForSearch}`,
-      );
+      console.log(`Searching Goodreads for: "${cleanedTitle}" by ${authorForSearch}`);
       const searchHtml = await fetchHtml(searchUrl);
       return findBookLinkFromSearch(searchHtml, { title, author: book.author });
     };
@@ -315,9 +289,7 @@ export async function scrapeGoodreads(book: {
     }
 
     if (!bookUrlPath) {
-      console.warn(
-        `! No book link found for: ${book.title} (after all attempts)`,
-      );
+      console.warn(`! No book link found for: ${book.title} (after all attempts)`);
       return {
         rating: null,
         ratingsCount: null,
@@ -330,10 +302,7 @@ export async function scrapeGoodreads(book: {
     const { rating, ratingsCount } = parseGoodreadsBookData(bookHtml);
 
     // Validate the rating data
-    const { isValid, validatedRating, validatedCount } = validateRating(
-      rating,
-      ratingsCount,
-    );
+    const { isValid, validatedRating, validatedCount } = validateRating(rating, ratingsCount);
 
     if (isValid) {
       console.log(

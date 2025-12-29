@@ -119,9 +119,7 @@ describe("Book Fixup Utils", () => {
   });
 
   test("hasFixup returns true for books with configured fixups", () => {
-    const result = hasFixup(
-      "https://search.mlp.cz/cz/titul/ceske-okamziky/4359869/",
-    );
+    const result = hasFixup("https://search.mlp.cz/cz/titul/ceske-okamziky/4359869/");
     assert.strictEqual(result, true);
   });
 
@@ -138,9 +136,7 @@ describe("Book Fixup Utils", () => {
 
     // Check that the known fixup is present
     const czechBookFixup = fixups.find(
-      (f) =>
-        f.detailUrl ===
-        "https://search.mlp.cz/cz/titul/ceske-okamziky/4359869/",
+      (f) => f.detailUrl === "https://search.mlp.cz/cz/titul/ceske-okamziky/4359869/",
     );
 
     assert.ok(czechBookFixup);

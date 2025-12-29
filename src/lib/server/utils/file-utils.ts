@@ -16,9 +16,7 @@ export async function loadExistingBooks(): Promise<Book[]> {
   try {
     const fileContent = await readFile(OUTPUT_FILE, "utf-8");
     const existingBooks: Book[] = JSON.parse(fileContent);
-    console.log(
-      `📚 Loaded ${existingBooks.length} existing books from ${OUTPUT_FILE}`,
-    );
+    console.log(`📚 Loaded ${existingBooks.length} existing books from ${OUTPUT_FILE}`);
     return existingBooks;
   } catch (error) {
     console.error("Error loading existing data file:", error);
@@ -37,9 +35,7 @@ export async function saveBooks(books: Book[]): Promise<void> {
     await mkdir(outputDir, { recursive: true });
 
     await writeFile(OUTPUT_FILE, JSON.stringify(books, null, 2));
-    console.log(
-      `✅ Successfully saved ${books.length} books to ${OUTPUT_FILE}`,
-    );
+    console.log(`✅ Successfully saved ${books.length} books to ${OUTPUT_FILE}`);
   } catch (error) {
     console.error("❌ Failed to write output file:", error);
     throw error;

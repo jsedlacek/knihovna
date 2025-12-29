@@ -70,13 +70,10 @@ async function generateMockLastUpdated() {
 
 async function main() {
   // Check if running in CI environment
-  const isCI =
-    process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
+  const isCI = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
 
   if (!isCI && (existsSync(BOOKS_FILE) || existsSync(LAST_UPDATED_FILE))) {
-    console.log(
-      "Not in CI environment and data files exist - skipping mock generation",
-    );
+    console.log("Not in CI environment and data files exist - skipping mock generation");
     return;
   }
 
@@ -90,9 +87,7 @@ async function main() {
   if (!existsSync(LAST_UPDATED_FILE)) {
     await generateMockLastUpdated();
   } else {
-    console.log(
-      `${LAST_UPDATED_FILE} already exists, skipping mock generation`,
-    );
+    console.log(`${LAST_UPDATED_FILE} already exists, skipping mock generation`);
   }
 
   console.log("Mock data generation completed");

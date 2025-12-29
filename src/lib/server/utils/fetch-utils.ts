@@ -1,7 +1,4 @@
-import {
-  ACCEPT_LANGUAGE,
-  USER_AGENT,
-} from "#@/lib/shared/config/scraper-config.ts";
+import { ACCEPT_LANGUAGE, USER_AGENT } from "#@/lib/shared/config/scraper-config.ts";
 
 /**
  * A simple fetch wrapper with a user-agent header.

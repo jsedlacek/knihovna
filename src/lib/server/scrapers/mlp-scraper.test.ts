@@ -12,8 +12,7 @@ describe("MLP Scraper HTML Parsing", () => {
 
       assert.ok(result.description, "Description should be extracted");
       assert.ok(
-        result.description.includes("Violoncello") ||
-          result.description.includes("Partitur"),
+        result.description.includes("Violoncello") || result.description.includes("Partitur"),
         "Description should contain expected content from fixture",
       );
       console.log("Extracted description:", result.description);
@@ -24,11 +23,7 @@ describe("MLP Scraper HTML Parsing", () => {
 
       const result = parseMlpBookDetails(mlpHtml);
 
-      assert.strictEqual(
-        result.genreId,
-        "V7b4e",
-        "Should extract genre ID from OCH field",
-      );
+      assert.strictEqual(result.genreId, "V7b4e", "Should extract genre ID from OCH field");
       assert.ok(result.genre, "Should extract genre from Obsah OCHu field");
       assert.ok(
         result.genre.includes("Sextety") || result.genre.includes("skladby"),
@@ -268,18 +263,10 @@ describe("MLP Scraper HTML Parsing", () => {
       const result = parseMlpBookDetails(malformedHtml);
 
       // Should not throw and should return reasonable defaults
-      assert.ok(
-        typeof result.partTitle === "string" || result.partTitle === null,
-      );
-      assert.ok(
-        typeof result.subtitle === "string" || result.subtitle === null,
-      );
-      assert.ok(
-        typeof result.imageUrl === "string" || result.imageUrl === null,
-      );
-      assert.ok(
-        typeof result.description === "string" || result.description === null,
-      );
+      assert.ok(typeof result.partTitle === "string" || result.partTitle === null);
+      assert.ok(typeof result.subtitle === "string" || result.subtitle === null);
+      assert.ok(typeof result.imageUrl === "string" || result.imageUrl === null);
+      assert.ok(typeof result.description === "string" || result.description === null);
       assert.ok(typeof result.genreId === "string" || result.genreId === null);
       assert.ok(typeof result.genre === "string" || result.genre === null);
     });
@@ -301,14 +288,8 @@ describe("MLP Scraper HTML Parsing", () => {
 
       const result = parseMlpDownloadLinks(reservationHtml);
 
-      assert.strictEqual(
-        result.pdfUrl,
-        "https://search.mlp.cz/download/book.pdf",
-      );
-      assert.strictEqual(
-        result.epubUrl,
-        "https://search.mlp.cz/download/book.epub",
-      );
+      assert.strictEqual(result.pdfUrl, "https://search.mlp.cz/download/book.pdf");
+      assert.strictEqual(result.epubUrl, "https://search.mlp.cz/download/book.epub");
     });
 
     test("should handle missing download links", () => {
@@ -339,10 +320,7 @@ describe("MLP Scraper HTML Parsing", () => {
 
       const result = parseMlpDownloadLinks(reservationHtml);
 
-      assert.strictEqual(
-        result.pdfUrl,
-        "https://search.mlp.cz/files/document.pdf",
-      );
+      assert.strictEqual(result.pdfUrl, "https://search.mlp.cz/files/document.pdf");
       assert.strictEqual(result.epubUrl, null);
     });
 
@@ -358,10 +336,7 @@ describe("MLP Scraper HTML Parsing", () => {
       const result = parseMlpDownloadLinks(reservationHtml);
 
       assert.strictEqual(result.pdfUrl, null);
-      assert.strictEqual(
-        result.epubUrl,
-        "https://search.mlp.cz/files/ebook.epub",
-      );
+      assert.strictEqual(result.epubUrl, "https://search.mlp.cz/files/ebook.epub");
     });
 
     test("should handle multiple links of same type (take first)", () => {
@@ -378,14 +353,8 @@ describe("MLP Scraper HTML Parsing", () => {
 
       const result = parseMlpDownloadLinks(reservationHtml);
 
-      assert.strictEqual(
-        result.pdfUrl,
-        "https://search.mlp.cz/files/first.pdf",
-      );
-      assert.strictEqual(
-        result.epubUrl,
-        "https://search.mlp.cz/files/first.epub",
-      );
+      assert.strictEqual(result.pdfUrl, "https://search.mlp.cz/files/first.pdf");
+      assert.strictEqual(result.epubUrl, "https://search.mlp.cz/files/first.epub");
     });
 
     test("should handle links without download attribute", () => {
@@ -438,10 +407,7 @@ describe("MLP Scraper HTML Parsing", () => {
         result.subtitle !== null ||
         result.imageUrl !== null;
 
-      assert.ok(
-        hasData,
-        "Should extract at least some data from real MLP fixture",
-      );
+      assert.ok(hasData, "Should extract at least some data from real MLP fixture");
 
       // Check genre data specifically
       if (result.genreId || result.genre) {
@@ -547,16 +513,8 @@ describe("MLP Scraper HTML Parsing", () => {
 
       const result = parseMlpBookDetails(htmlWithOnlySubtitle);
 
-      assert.strictEqual(
-        result.subtitle,
-        "The Complete Guide",
-        "Should extract subtitle",
-      );
-      assert.strictEqual(
-        result.partTitle,
-        null,
-        "Part title should be null when not present",
-      );
+      assert.strictEqual(result.subtitle, "The Complete Guide", "Should extract subtitle");
+      assert.strictEqual(result.partTitle, null, "Part title should be null when not present");
 
       // Test backwards compatibility - should fall back to subtitle
       assert.strictEqual(

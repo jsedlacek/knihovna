@@ -12,11 +12,7 @@ interface GenrePageProps {
   showScores?: boolean;
 }
 
-export function GenrePage({
-  books,
-  genreKey,
-  showScores = false,
-}: GenrePageProps) {
+export function GenrePage({ books, genreKey, showScores = false }: GenrePageProps) {
   const genreConfig = GENRE_GROUPS[genreKey];
 
   // Sort books by score within this genre
@@ -32,12 +28,7 @@ export function GenrePage({
             <h2 className="text-lg font-bold">{genreConfig.name}</h2>
             <p className="text-sm text-muted-foreground mt-1">
               {genreConfig.description} ({formatNumberCzech(sortedBooks.length)}{" "}
-              {sortedBooks.length === 1
-                ? "kniha"
-                : sortedBooks.length < 5
-                  ? "knihy"
-                  : "knih"}
-              )
+              {sortedBooks.length === 1 ? "kniha" : sortedBooks.length < 5 ? "knihy" : "knih"})
             </p>
           </div>
         </section>

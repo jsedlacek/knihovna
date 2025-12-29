@@ -69,11 +69,7 @@ describe("Book Deduplication", () => {
       const result = deduplicateBooks(books);
 
       assert.strictEqual(result.length, 1);
-      assert.strictEqual(
-        result[0]?.year,
-        2018,
-        "Should keep the book with year",
-      );
+      assert.strictEqual(result[0]?.year, 2018, "Should keep the book with year");
       assert.strictEqual(result[0]?.title, "O umění a kultuře (I)");
     });
 
@@ -99,16 +95,8 @@ describe("Book Deduplication", () => {
 
       assert.ok(book2);
       assert.ok(book3);
-      assert.strictEqual(
-        book2.year,
-        2020,
-        "Should keep 2020 over 2019 for book 2",
-      );
-      assert.strictEqual(
-        book3.year,
-        2021,
-        "Should keep 2021 over null for book 3",
-      );
+      assert.strictEqual(book2.year, 2020, "Should keep 2020 over 2019 for book 2");
+      assert.strictEqual(book3.year, 2021, "Should keep 2021 over null for book 3");
     });
 
     test("should handle complex Roman numerals", () => {
@@ -123,12 +111,8 @@ describe("Book Deduplication", () => {
 
       assert.strictEqual(result.length, 2);
 
-      const harryPotter = result.find((book) =>
-        book.title.includes("Harry Potter"),
-      );
-      const chronicles = result.find((book) =>
-        book.title.includes("Chronicles"),
-      );
+      const harryPotter = result.find((book) => book.title.includes("Harry Potter"));
+      const chronicles = result.find((book) => book.title.includes("Chronicles"));
 
       assert.ok(harryPotter);
       assert.ok(chronicles);
@@ -184,11 +168,7 @@ describe("Book Deduplication", () => {
 
       const result = deduplicateBooks(books);
 
-      assert.strictEqual(
-        result.length,
-        2,
-        "Should keep all books when no years available",
-      );
+      assert.strictEqual(result.length, 2, "Should keep all books when no years available");
     });
 
     test("should keep all books when multiple books have same newest year", () => {
@@ -277,11 +257,7 @@ describe("Book Deduplication", () => {
 
       const result = deduplicateBooks(books);
 
-      assert.strictEqual(
-        result.length,
-        1,
-        "null and empty string should be treated as equivalent",
-      );
+      assert.strictEqual(result.length, 1, "null and empty string should be treated as equivalent");
       assert.strictEqual(result[0]?.year, 2020, "Should keep the newer book");
     });
   });
@@ -435,16 +411,8 @@ describe("Book Deduplication", () => {
 
       const result = deduplicateBooks(books);
 
-      assert.strictEqual(
-        result.length,
-        1,
-        "Should deduplicate books with diacritic differences",
-      );
-      assert.strictEqual(
-        result[0]?.year,
-        2018,
-        "Should keep the version with year (2018)",
-      );
+      assert.strictEqual(result.length, 1, "Should deduplicate books with diacritic differences");
+      assert.strictEqual(result[0]?.year, 2018, "Should keep the version with year (2018)");
       assert.strictEqual(
         result[0]?.title,
         "O věcech obecných, čili, Zoon politikon",
@@ -487,12 +455,9 @@ describe("Book Deduplication", () => {
           publisher: "Městská knihovna v Praze",
           year: 2018,
           imageUrl: "https://web2.mlp.cz/koweb/00/04/34/55/25.jpg",
-          detailUrl:
-            "https://search.mlp.cz/cz/titul/o-umeni-a-kulture/4345525/",
-          pdfUrl:
-            "https://web2.mlp.cz/koweb/00/04/34/55/25/o_umeni_a_kulture_i.pdf",
-          epubUrl:
-            "https://web2.mlp.cz/koweb/00/04/34/55/25/o_umeni_a_kulture_i.epub",
+          detailUrl: "https://search.mlp.cz/cz/titul/o-umeni-a-kulture/4345525/",
+          pdfUrl: "https://web2.mlp.cz/koweb/00/04/34/55/25/o_umeni_a_kulture_i.pdf",
+          epubUrl: "https://web2.mlp.cz/koweb/00/04/34/55/25/o_umeni_a_kulture_i.epub",
           description:
             "První ze 3 dílů souboru Čapkovy kulturně publicistické činnosti obsahuje jeho novinářskou a časopiseckou tvorbu zabývající se uměním a kulturou z let 1907-1918.",
           rating: 5,
@@ -510,12 +475,9 @@ describe("Book Deduplication", () => {
           publisher: "Městská knihovna v Praze",
           year: null,
           imageUrl: null,
-          detailUrl:
-            "https://search.mlp.cz/cz/titul/o-umeni-a-kulture/3347611/",
-          pdfUrl:
-            "https://web2.mlp.cz/koweb/00/03/34/76/11/o_umeni_a_kulture_i.pdf",
-          epubUrl:
-            "https://web2.mlp.cz/koweb/00/03/34/76/11/o_umeni_a_kulture_i.epub",
+          detailUrl: "https://search.mlp.cz/cz/titul/o-umeni-a-kulture/3347611/",
+          pdfUrl: "https://web2.mlp.cz/koweb/00/03/34/76/11/o_umeni_a_kulture_i.pdf",
+          epubUrl: "https://web2.mlp.cz/koweb/00/03/34/76/11/o_umeni_a_kulture_i.epub",
           description:
             "První ze 3 dílů obsahuje Čapkovu novinářskou a časopiseckou tvorbu zabývající se uměním a kulturou z let 1907-1918.",
           rating: 5,
@@ -535,20 +497,13 @@ describe("Book Deduplication", () => {
         1,
         "Should deduplicate the Roman vs Arabic numeral versions",
       );
-      assert.strictEqual(
-        result[0]?.year,
-        2018,
-        "Should keep the version with year (2018)",
-      );
+      assert.strictEqual(result[0]?.year, 2018, "Should keep the version with year (2018)");
       assert.strictEqual(
         result[0]?.title,
         "O umění a kultuře (I)",
         "Should keep the Roman numeral version",
       );
-      assert.ok(
-        result[0]?.imageUrl,
-        "Should keep the version with more complete data",
-      );
+      assert.ok(result[0]?.imageUrl, "Should keep the version with more complete data");
     });
   });
 
@@ -575,11 +530,7 @@ describe("Book Deduplication", () => {
       const result = deduplicateBooks([originalBook]);
 
       assert.strictEqual(result.length, 1);
-      assert.deepStrictEqual(
-        result[0],
-        originalBook,
-        "All properties should be preserved",
-      );
+      assert.deepStrictEqual(result[0], originalBook, "All properties should be preserved");
     });
 
     test("should handle books with very similar but not identical content", () => {

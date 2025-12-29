@@ -108,10 +108,7 @@ export function getGenreName(genreId: string | null): string {
 /**
  * Get books for a specific genre group
  */
-export function getBooksForGenreGroup(
-  books: Book[],
-  groupKey: keyof typeof GENRE_GROUPS,
-): Book[] {
+export function getBooksForGenreGroup(books: Book[], groupKey: keyof typeof GENRE_GROUPS): Book[] {
   const groupConfig = GENRE_GROUPS[groupKey];
 
   if (groupKey === "ostatni") {
@@ -131,7 +128,6 @@ export function getBooksForGenreGroup(
   }
 
   return books.filter(
-    (book) =>
-      book.genreId && groupConfig.genreIds.includes(book.genreId as GenreId),
+    (book) => book.genreId && groupConfig.genreIds.includes(book.genreId as GenreId),
   );
 }
