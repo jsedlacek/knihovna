@@ -11,11 +11,12 @@ import {
 describe("Book Fixup Utils", () => {
   // Create a sample book for testing
   const createSampleBook = (overrides: Partial<Book> = {}): Book => ({
+    titulKey: 999999,
     title: "Original Title",
     author: "Original Author",
     publisher: "Original Publisher",
     year: 2020,
-    detailUrl: "https://search.mlp.cz/cz/titul/test-book/123456/",
+    detailUrl: "https://search.mlp.cz/cz/titul/test-book/999999/",
     subtitle: "Original Subtitle",
     partTitle: null,
     imageUrl: "https://example.com/image.jpg",
@@ -33,9 +34,7 @@ describe("Book Fixup Utils", () => {
   });
 
   test("applyBookFixups returns original book when no fixup exists", () => {
-    const book = createSampleBook({
-      detailUrl: "https://search.mlp.cz/cz/titul/no-fixup/999999/",
-    });
+    const book = createSampleBook();
 
     const result = applyBookFixups(book);
 
@@ -44,7 +43,7 @@ describe("Book Fixup Utils", () => {
 
   test("applyBookFixups applies title correction for known book", () => {
     const book = createSampleBook({
-      detailUrl: "https://search.mlp.cz/cz/titul/ceske-okamziky/4359869/",
+      titulKey: 4359869,
       title: "České okamžiky",
     });
 
@@ -57,7 +56,7 @@ describe("Book Fixup Utils", () => {
 
   test("applyBookFixups preserves all other fields when applying fixups", () => {
     const book = createSampleBook({
-      detailUrl: "https://search.mlp.cz/cz/titul/ceske-okamziky/4359869/",
+      titulKey: 4359869,
       title: "České okamžiky",
       rating: 4.2,
       ratingsCount: 150,
@@ -84,15 +83,15 @@ describe("Book Fixup Utils", () => {
   test("applyBookFixupsToArray processes multiple books", () => {
     const books = [
       createSampleBook({
-        detailUrl: "https://search.mlp.cz/cz/titul/no-fixup/111111/",
+        titulKey: 111111,
         title: "No Fixup Book",
       }),
       createSampleBook({
-        detailUrl: "https://search.mlp.cz/cz/titul/ceske-okamziky/4359869/",
+        titulKey: 4359869,
         title: "České okamžiky",
       }),
       createSampleBook({
-        detailUrl: "https://search.mlp.cz/cz/titul/another-book/222222/",
+        titulKey: 222222,
         title: "Another Book",
       }),
     ];
@@ -108,7 +107,7 @@ describe("Book Fixup Utils", () => {
   test("applyBookFixupsToArray returns new array", () => {
     const books = [
       createSampleBook({
-        detailUrl: "https://search.mlp.cz/cz/titul/no-fixup/111111/",
+        titulKey: 111111,
       }),
     ];
 
@@ -119,12 +118,12 @@ describe("Book Fixup Utils", () => {
   });
 
   test("hasFixup returns true for books with configured fixups", () => {
-    const result = hasFixup("https://search.mlp.cz/cz/titul/ceske-okamziky/4359869/");
+    const result = hasFixup(4359869);
     assert.strictEqual(result, true);
   });
 
   test("hasFixup returns false for books without fixups", () => {
-    const result = hasFixup("https://search.mlp.cz/cz/titul/no-fixup/999999/");
+    const result = hasFixup(999999);
     assert.strictEqual(result, false);
   });
 
@@ -135,9 +134,7 @@ describe("Book Fixup Utils", () => {
     assert.ok(fixups.length > 0);
 
     // Check that the known fixup is present
-    const czechBookFixup = fixups.find(
-      (f) => f.detailUrl === "https://search.mlp.cz/cz/titul/ceske-okamziky/4359869/",
-    );
+    const czechBookFixup = fixups.find((f) => f.titulKey === 4359869);
 
     assert.ok(czechBookFixup);
     assert.strictEqual(czechBookFixup.title, "České snění");
@@ -146,7 +143,7 @@ describe("Book Fixup Utils", () => {
 
   test("applyBookFixups handles null and undefined values correctly", () => {
     const book = createSampleBook({
-      detailUrl: "https://search.mlp.cz/cz/titul/ceske-okamziky/4359869/",
+      titulKey: 4359869,
       subtitle: null,
       partTitle: null,
     });
