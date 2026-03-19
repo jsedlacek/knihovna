@@ -19,32 +19,41 @@ const mode = (import.meta.env?.MODE ?? process.env?.["NODE_ENV"] ?? "production"
   | "development"
   | "production";
 
+const isCI = process.env["CI"] === "true";
+
 export async function configureLogging() {
+  const prettyFormatter = getPrettyFormatter({
+    colors: !isCI,
+    align: false,
+    timestamp: "time",
+    level: "ABBR",
+    properties: true,
+    inspectOptions: {
+      compact: true,
+    },
+    icons: false,
+    timestampColor: null,
+    timestampStyle: "dim",
+    categoryColor: null,
+    categoryStyle: "dim",
+    messageColor: null,
+    messageStyle: null,
+    levelStyle: "bold",
+    levelColors: {
+      debug: "blue",
+      info: "green",
+      warning: "yellow",
+      error: "red",
+      fatal: "magenta",
+    },
+  });
+
+  const jsonFormatter = getJsonLinesFormatter({ properties: "flatten" });
+
   await configure({
     sinks: {
       console: getConsoleSink({
-        formatter:
-          mode === "production"
-            ? getJsonLinesFormatter({ properties: "flatten" })
-            : getPrettyFormatter({
-                align: false,
-                properties: true,
-                icons: false,
-                timestampColor: null,
-                timestampStyle: "dim",
-                categoryColor: null,
-                categoryStyle: "dim",
-                messageColor: null,
-                messageStyle: null,
-                levelStyle: "bold",
-                levelColors: {
-                  debug: "blue",
-                  info: "green",
-                  warning: "yellow",
-                  error: "red",
-                  fatal: "magenta",
-                },
-              }),
+        formatter: mode === "production" ? jsonFormatter : prettyFormatter,
       }),
     },
     loggers: [
