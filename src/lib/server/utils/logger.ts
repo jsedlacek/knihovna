@@ -1,11 +1,11 @@
 import {
   configure,
-  getAnsiColorFormatter,
   getConsoleSink,
   getJsonLinesFormatter,
   getLogger,
   type LogLevel,
 } from "@logtape/logtape";
+import { prettyFormatter } from "@logtape/pretty";
 
 const levelEnv = process.env["LOG_LEVEL"] ?? "info";
 
@@ -19,17 +19,14 @@ function isCloudflareWorkers(): boolean {
   return typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers";
 }
 
-function getFormatter() {
-  if (isCloudflareWorkers()) {
-    return getJsonLinesFormatter({ properties: "flatten" });
-  }
-  return getAnsiColorFormatter({ timestamp: "time" });
-}
-
 export async function configureLogging() {
   await configure({
     sinks: {
-      console: getConsoleSink({ formatter: getFormatter() }),
+      console: getConsoleSink({
+        formatter: isCloudflareWorkers()
+          ? getJsonLinesFormatter({ properties: "flatten" })
+          : prettyFormatter,
+      }),
     },
     loggers: [
       {
