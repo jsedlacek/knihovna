@@ -30,22 +30,6 @@ Use `ls -la` to check sizes. Prefer `grep` and line ranges over reading entire f
 - **No markdown docs** — code should be self-documenting
 - **Co-located tests** alongside source files using `node:test`
 
-## TanStack Start Patterns
-
-Server-side imports must use dynamic imports inside `createServerFn` handlers — top-level Node.js imports break the client bundle:
-
-```typescript
-// ❌ Wrong
-import fs from "node:fs";
-
-// ✅ Correct
-const getData = createServerFn({ method: "GET" }).handler(async () => {
-  const fs = await import("node:fs");
-});
-```
-
-Date formatting must use a stable format and explicit timezone (e.g., `Europe/Prague`) to avoid hydration mismatches.
-
 ## Testing
 
 - Uses `node:test` with real HTML fixtures (no external test frameworks)
