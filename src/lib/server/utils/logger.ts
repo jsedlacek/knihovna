@@ -15,17 +15,18 @@ function parseLevel(level: string): LogLevel | null {
   return level as LogLevel;
 }
 
-function isCloudflareWorkers(): boolean {
-  return typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers";
-}
+const mode = (import.meta.env?.MODE ?? process.env?.["NODE_ENV"] ?? "production") as
+  | "development"
+  | "production";
 
 export async function configureLogging() {
   await configure({
     sinks: {
       console: getConsoleSink({
-        formatter: isCloudflareWorkers()
-          ? getJsonLinesFormatter({ properties: "flatten" })
-          : prettyFormatter,
+        formatter:
+          mode === "production"
+            ? getJsonLinesFormatter({ properties: "flatten" })
+            : prettyFormatter,
       }),
     },
     loggers: [
