@@ -12,6 +12,8 @@ Czech e-books static site showcasing free e-books from Prague Municipal Library 
 
 Use `ls -la` to check sizes. Prefer `grep` and line ranges over reading entire files.
 
+**Run `pnpm check` after every change before committing.**
+
 ## Commands
 
 - `pnpm dev` / `pnpm build` / `pnpm preview`
