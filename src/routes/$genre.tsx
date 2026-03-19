@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { GenrePage } from "#@/components/genre-page.tsx";
 import { books } from "#@/lib/server/books.ts";
 import {
@@ -7,20 +7,24 @@ import {
   type GenreGroup,
 } from "#@/lib/shared/utils/genre-utils.ts";
 
+function isValidGenre(genre: string): genre is GenreGroup {
+  return genre in GENRE_GROUPS;
+}
+
 export const Route = createFileRoute("/$genre")({
   loader: async ({ params }) => {
-    const genre = params.genre as GenreGroup;
+    if (!isValidGenre(params.genre)) {
+      throw notFound();
+    }
 
-    return getBooksForGenreGroup(books, genre);
+    return getBooksForGenreGroup(books, params.genre);
   },
   head: ({ params }) => {
-    const genreKey = params.genre as GenreGroup;
-
-    const genreGroup = GENRE_GROUPS[genreKey];
-
-    if (!genreGroup) {
+    if (!isValidGenre(params.genre)) {
       return {};
     }
+
+    const genreGroup = GENRE_GROUPS[params.genre];
 
     return {
       meta: [
@@ -39,9 +43,11 @@ export const Route = createFileRoute("/$genre")({
 
 function GenreComponent() {
   const books = Route.useLoaderData();
-  const params = Route.useParams();
+  const { genre } = Route.useParams();
 
-  const genre = params.genre as GenreGroup;
+  if (!isValidGenre(genre)) {
+    return null;
+  }
 
   return <GenrePage books={books} genreKey={genre} />;
 }
