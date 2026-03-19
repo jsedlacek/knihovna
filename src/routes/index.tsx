@@ -40,6 +40,19 @@ export const Route = createFileRoute("/")({
         content:
           "Nejlepší české e-knihy zdarma z městské knihovny. Moderní romány, klasika, poezie i divadelní hry s hodnocením 4,0 a vyšším.",
       },
+      {
+        property: "og:title",
+        content: "Nejlepší e-knihy zdarma",
+      },
+      {
+        property: "og:description",
+        content:
+          "Nejlepší české e-knihy zdarma z městské knihovny. Moderní romány, klasika, poezie i divadelní hry s hodnocením 4,0 a vyšším.",
+      },
+      {
+        property: "og:url",
+        content: "https://knihovna.jakub.contact",
+      },
     ],
   }),
   loader: async () => await getHomeData(),

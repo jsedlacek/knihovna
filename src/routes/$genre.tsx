@@ -35,6 +35,18 @@ export const Route = createFileRoute("/$genre")({
           name: "description",
           content: genreGroup.metaDescription,
         },
+        {
+          property: "og:title",
+          content: genreGroup.title,
+        },
+        {
+          property: "og:description",
+          content: genreGroup.metaDescription,
+        },
+        {
+          property: "og:url",
+          content: `https://knihovna.jakub.contact/${params.genre}`,
+        },
       ],
     };
   },

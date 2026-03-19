@@ -42,6 +42,18 @@ export const Route = createRootRoute({
         content:
           "Nejlepší české e-knihy zdarma z městské knihovny. Moderní romány, klasika, poezie i divadelní hry s hodnocením 4,0 a vyšším.",
       },
+      {
+        property: "og:type",
+        content: "website",
+      },
+      {
+        property: "og:locale",
+        content: "cs_CZ",
+      },
+      {
+        property: "og:site_name",
+        content: "Nejlepší e-knihy zdarma",
+      },
     ],
     links: [
       {
