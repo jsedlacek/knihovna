@@ -24,6 +24,8 @@ async function generateMockBooks() {
   // Create a minimal mock book that matches the Book interface
   const mockBooks = [
     {
+      titulKey: 9999999,
+
       // MlpBookListing fields
       title: "Mock Book",
       author: "Mock Author",
