@@ -19,12 +19,12 @@ Use `ls -la` to check sizes. Prefer `grep` and line ranges over reading entire f
 ## Commands
 
 - `pnpm dev` / `pnpm build` / `pnpm preview`
-- `pnpm check` — type-check + lint + format check + test (CI runs this)
+- `pnpm check` — typecheck + lint + format check + test (CI runs this)
 - `pnpm test` / `pnpm run test:watch`
 - `pnpm run lint` / `pnpm run lint:fix` — oxlint
 - `pnpm run format` / `pnpm run format:check` — oxfmt
 - `pnpm run scrape` — book scraping CLI
-- `pnpm storybook` / `pnpm run build-storybook`
+- `pnpm storybook` / `pnpm run storybook:build`
 
 ## Code Conventions
 

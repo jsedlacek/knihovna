@@ -14,9 +14,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "pnpm run build && wrangler deploy",
-    "cf-typegen": "wrangler types",
-    "type-check": "tsgo",
-    "check": "pnpm run type-check && pnpm run lint && pnpm run format:check && pnpm test",
+    "wrangler:types": "wrangler types",
+    "typecheck": "tsgo",
+    "check": "pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm test",
     "scrape": "node src/scripts/scrape-books.ts",
     "test": "LOG_LEVEL=silent node --test --test-reporter=./src/test/reporters/failures-only.ts src/**/*.test.ts",
     "test:verbose": "node --test --test-reporter=spec src/**/*.test.ts",
@@ -25,9 +25,8 @@
     "lint:fix": "oxlint src/ --fix",
     "format": "oxfmt --write",
     "format:check": "oxfmt --check",
-    "fix": "pnpm run lint:fix && pnpm run format",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "storybook:build": "storybook build"
   },
   "dependencies": {
     "@tanstack/react-router": "^1.167.5",

@@ -32,7 +32,7 @@ jobs:
         run: node scripts/generate-mock-data.js
 
       - name: Run TypeScript check
-        run: pnpm run type-check
+        run: pnpm run typecheck
 
       - name: Run linting
         run: pnpm run lint
