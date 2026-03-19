@@ -15,7 +15,7 @@
     "preview": "vite preview",
     "deploy": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc",
     "check": "npm run type-check && npm run lint && npm run format:check && npm test",
     "scrape": "node src/scripts/scrape-books.ts",
     "test": "node --test src/**/*.test.ts",
