@@ -29,10 +29,21 @@ export async function configureLogging() {
             : getPrettyFormatter({
                 properties: true,
                 icons: false,
-                
-
-
-            }),
+                timestampColor: null,
+                timestampStyle: "dim",
+                categoryColor: null,
+                categoryStyle: "dim",
+                messageColor: null,
+                messageStyle: null,
+                levelStyle: "bold",
+                levelColors: {
+                  debug: "blue",
+                  info: "green",
+                  warning: "yellow",
+                  error: "red",
+                  fatal: "magenta",
+                },
+              }),
       }),
     },
     loggers: [
