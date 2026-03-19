@@ -24,9 +24,9 @@ Knihovna displays highly-rated books (4.0+ stars on Goodreads) with direct downl
 ## Development
 
 ```bash
-npm install
-npm run dev     # Start development server
-npm run build   # Build for production
+pnpm install
+pnpm dev        # Start development server
+pnpm build      # Build for production
 ```
 
 ## License
