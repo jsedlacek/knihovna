@@ -1,7 +1,6 @@
 /// <reference types="vite/client" />
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import icon from "#@/images/icon.svg?url";
 import appCss from "#@/styles/app.css?url";
 
 function NotFound() {
@@ -80,7 +79,7 @@ export const Route = createRootRoute({
       {
         rel: "icon",
         type: "image/svg+xml",
-        href: icon,
+        href: "/icon.svg",
       },
     ],
   }),
