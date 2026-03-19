@@ -1,4 +1,4 @@
-const placeholderCover = "/book-placeholder.svg";
+import placeholderCover from "#@/images/book-placeholder.svg";
 
 export interface BookCoverProps {
   src?: string | null;
