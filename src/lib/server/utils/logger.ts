@@ -23,6 +23,10 @@ export async function configureLogging() {
     },
     loggers: [
       {
+        category: ["logtape", "meta"],
+        lowestLevel: "warning",
+      },
+      {
         category: ["knihovna"],
         sinks: ["console"],
         lowestLevel: parseLevel(levelEnv),
