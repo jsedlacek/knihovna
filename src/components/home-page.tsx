@@ -1,15 +1,10 @@
 import { GenreSection } from "#@/components/genre-section.tsx";
 import { Footer } from "#@/components/ui/footer.tsx";
 import { Header } from "#@/components/ui/header.tsx";
-import type { Book } from "#@/lib/shared/types/book-types.ts";
+import type { Book, TimestampData } from "#@/lib/shared/types/book-types.ts";
 import { formatDateCzech } from "#@/lib/shared/utils/date-utils.ts";
 import { type GenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
-
-interface TimestampData {
-  lastUpdated: string;
-  timestamp: number;
-}
 
 export interface BookGenre {
   genre: GenreGroup;

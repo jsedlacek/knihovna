@@ -52,6 +52,11 @@ export interface DownloadLinks {
   description: string | null;
 }
 
+export interface TimestampData {
+  lastUpdated: string;
+  timestamp: number;
+}
+
 export interface ScrapingOptions {
   forceMlp: boolean;
   forceGoodreads: boolean;

@@ -2,12 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { HomePage, type BookGenre } from "#@/components/home-page.tsx";
 import { books, lastUpdated } from "#@/lib/server/books.ts";
+import type { TimestampData } from "#@/lib/shared/types/book-types.ts";
 import { groupBooksByGenre, type GenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 
 export type Data = {
   bookCount: number;
   genres: BookGenre[];
-  lastUpdated: any | null;
+  lastUpdated: TimestampData | null;
 };
 
 const getHomeData = createServerFn({
