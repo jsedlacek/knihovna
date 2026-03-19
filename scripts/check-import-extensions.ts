@@ -1,6 +1,10 @@
 /**
  * Checks that all relative imports include file extensions (required for ESM).
  * Exits with code 1 if any violations are found.
+ *
+ * Ideally this would be handled by oxlint's import/extensions rule, but its
+ * "always" mode is broken since v1.37.0 (https://github.com/oxc-project/oxc/issues/17693).
+ * Replace this script with the oxlint rule once that's fixed.
  */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
