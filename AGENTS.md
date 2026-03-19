@@ -14,6 +14,8 @@ Use `ls -la` to check sizes. Prefer `grep` and line ranges over reading entire f
 
 **Run `pnpm check` after every change before committing.**
 
+**Commit after each increment** — run `pnpm check` first, then commit the working change before moving on.
+
 ## Commands
 
 - `pnpm dev` / `pnpm build` / `pnpm preview`
