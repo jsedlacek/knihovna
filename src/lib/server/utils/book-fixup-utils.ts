@@ -8,14 +8,14 @@ type FixableBookFields = MlpBookListing & MlpBookDetails;
 
 /**
  * Configuration for fixing specific book data issues.
- * Each fixup is identified by the book's detail URL and contains the corrections to apply.
+ * Each fixup is identified by the book's titulKey and contains the corrections to apply.
  *
  * Derived from the Book interface to ensure all fixable fields are available
  * and automatically stay in sync with schema changes.
  */
 interface BookFixup extends Partial<FixableBookFields> {
-  /** The MLP detail URL to match against */
-  detailUrl: string;
+  /** The MLP titul key to match against */
+  titulKey: number;
   /** Reason for the fixup (for documentation) */
   reason: string;
 }
@@ -26,18 +26,10 @@ interface BookFixup extends Partial<FixableBookFields> {
  */
 const BOOK_FIXUPS: BookFixup[] = [
   {
-    detailUrl: "https://search.mlp.cz/cz/titul/ceske-okamziky/4359869/",
+    titulKey: 4359869,
     title: "České snění",
     reason: "Original title is incorrect on MLP - should be 'České snění' not 'České okamžiky'",
   },
-  // Add more fixups here as needed
-  // Example:
-  // {
-  //   detailUrl: "https://search.mlp.cz/cz/titul/some-book/123456/",
-  //   author: "Corrected Author Name",
-  //   genres: ["Fiction", "Classic"],
-  //   reason: "Author name was misspelled and genres were missing",
-  // },
 ];
 
 /**
@@ -47,7 +39,7 @@ const BOOK_FIXUPS: BookFixup[] = [
  * @returns The book with fixups applied, or the original book if no fixups match
  */
 export function applyBookFixups(book: Book): Book {
-  const fixup = BOOK_FIXUPS.find((f) => f.detailUrl === book.detailUrl);
+  const fixup = BOOK_FIXUPS.find((f) => f.titulKey === book.titulKey);
 
   if (!fixup) {
     return book;
@@ -127,9 +119,9 @@ export function getConfiguredFixups(): readonly BookFixup[] {
 /**
  * Checks if a book has a configured fixup.
  *
- * @param detailUrl - The detail URL to check
+ * @param titulKey - The titul key to check
  * @returns True if a fixup exists for this book
  */
-export function hasFixup(detailUrl: string): boolean {
-  return BOOK_FIXUPS.some((fixup) => fixup.detailUrl === detailUrl);
+export function hasFixup(titulKey: number): boolean {
+  return BOOK_FIXUPS.some((fixup) => fixup.titulKey === titulKey);
 }

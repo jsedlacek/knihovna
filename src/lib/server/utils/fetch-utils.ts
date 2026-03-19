@@ -17,6 +17,23 @@ export async function fetchHtml(url: string): Promise<string> {
 }
 
 /**
+ * Fetch JSON from a URL with standard headers.
+ */
+export async function fetchJson<T>(url: string): Promise<T> {
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent": USER_AGENT,
+      "Accept-Language": ACCEPT_LANGUAGE,
+      Accept: "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status} for ${url}`);
+  }
+  return (await response.json()) as T;
+}
+
+/**
  * Creates a URL by joining a base URL with a relative path.
  */
 export function createUrl(baseUrl: string, path: string): string {

@@ -1,5 +1,6 @@
 // Data scraped from an MLP listing page
 export interface MlpBookListing {
+  titulKey: number;
   title: string;
   author: string;
   publisher: string | null;

@@ -1,14 +1,13 @@
 // --- URL Configuration ---
-export const MLP_START_URL =
-  "https://search.mlp.cz/cz/davka/e-knihy_volne_ke_stazeni/?action=c_s_ol&espQCId=e-knihy_volne_ke_stazeni&sortBy1=docdatetime&sortOrder1=desc&numHits=100";
-
-export const MLP_BASE_URL = "https://search.mlp.cz";
+export const MLP_BASE_URL = "https://www.mlp.cz";
+export const MLP_API_URL = "https://www.mlp.cz/katalog/api/";
+export const MLP_KOWEB_URL = "https://web2.mlp.cz/koweb/";
 export const GOODREADS_BASE_URL = "https://www.goodreads.com";
 
 // --- File Configuration ---
 
 // --- Scraping Configuration ---
-export const MAX_PAGES = Infinity;
+export const MLP_PAGE_SIZE = 100; // Results per API page
 export const CONCURRENCY = 20; // Number of concurrent requests
 
 // --- Retry Configuration ---

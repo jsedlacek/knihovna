@@ -1,223 +1,298 @@
-import * as cheerio from "cheerio";
-import type { AnyNode } from "domhandler";
-import { createUrl, fetchHtml } from "#@/lib/server/utils/fetch-utils.ts";
-import { MAX_PAGES, MLP_BASE_URL, MLP_START_URL } from "#@/lib/shared/config/scraper-config.ts";
-import type { MlpBookDetails, MlpBookListing } from "#@/lib/shared/types/book-types.ts";
+import { fetchJson } from "#@/lib/server/utils/fetch-utils.ts";
 import {
-  cleanAuthorName,
-  cleanTitle,
-  getBestImageUrl,
-  parsePublisherInfo,
-} from "#@/lib/shared/utils/text-utils.ts";
+  MLP_API_URL,
+  MLP_BASE_URL,
+  MLP_KOWEB_URL,
+  MLP_PAGE_SIZE,
+} from "#@/lib/shared/config/scraper-config.ts";
+import type { MlpBook, MlpBookDetails, MlpBookListing } from "#@/lib/shared/types/book-types.ts";
+import { cleanAuthorName, cleanTitle } from "#@/lib/shared/utils/text-utils.ts";
+
+// --- Elasticsearch API response types ---
+
+interface MlpApiNazevMarc {
+  name: string;
+  name_view_value: string;
+  value: string;
+}
+
+interface MlpApiOsoba {
+  jmeno: string;
+  role_kod: string;
+  role: string;
+  prozahlavi?: string;
+}
+
+interface MlpApiOch {
+  txoch_och_full: string;
+  tema: string;
+}
+
+interface MlpApiDigi {
+  digi_ptr_soubor: string;
+  digi_format: string;
+  digi_filesize: string;
+}
+
+interface MlpApiHitSource {
+  titul_key: number;
+  nazev?: string[];
+  nazev_marc?: MlpApiNazevMarc[];
+  osoba?: MlpApiOsoba[];
+  nakladatelstvi?: string[];
+  rok?: string[];
+  anotace?: string[];
+  anotace_dlouha?: string[];
+  tag?: string[];
+  ke_stazeni?: string[];
+  format?: string[];
+  och?: MlpApiOch[];
+  digi?: MlpApiDigi[];
+  has_img_small?: boolean;
+  has_img?: boolean;
+}
+
+interface MlpApiSearchResponse {
+  hits: {
+    total: { value: number };
+    hits: Array<{ _source: MlpApiHitSource }>;
+  };
+}
+
+interface MlpApiDetailResponse {
+  hits: {
+    hits: Array<{ _source: MlpApiHitSource }>;
+  };
+}
+
+// --- URL construction helpers ---
 
 /**
- * Parse book data from MLP listing page items.
+ * Build a koweb download path from a titul_key.
+ * Pads to 10 digits, splits into 5 groups of 2.
+ * Example: 4345513 -> "00/04/34/55/13/"
  */
-function parseMlpBookData(
-  item: cheerio.Cheerio<AnyNode>,
-  layoutType: "grid" | "row",
-): MlpBookListing | null {
-  try {
-    let titleElement: cheerio.Cheerio<AnyNode>;
-    let authorElement: cheerio.Cheerio<AnyNode>;
-    let publisherElement: cheerio.Cheerio<AnyNode>;
-    let coverLinkElement: cheerio.Cheerio<AnyNode>;
-
-    if (layoutType === "grid") {
-      titleElement = item.find(".title-info-title a");
-      authorElement = item.find(".title-info-author");
-      publisherElement = item.find(".title-info-publisher");
-      coverLinkElement = item.find("a.cover");
-    } else {
-      titleElement = item.find(".katalog-row-title a");
-      authorElement = item.find(".katalog-row-author");
-      publisherElement = item.find(".katalog-row-publishments[title]");
-      coverLinkElement = item.find(".katalog-row-img a.cover");
-    }
-
-    const title = cleanTitle(titleElement.attr("title"));
-    const rawAuthor = authorElement.attr("title")?.trim() || "";
-    const author = cleanAuthorName(rawAuthor) || "Unknown Author";
-
-    const publisherInfo = publisherElement.attr("title")?.trim() || "";
-    const { publisher, year } = parsePublisherInfo(publisherInfo);
-
-    const detailHref = coverLinkElement.attr("href");
-    if (!detailHref) return null;
-    const detailUrl = createUrl(MLP_BASE_URL, detailHref);
-
-    if (!title || title === "Title Not Found") return null;
-
-    return { title, author, publisher, year, detailUrl };
-  } catch (error) {
-    console.error("Error parsing MLP book item:", error);
-    return null;
+export function buildKowebDownloadPath(key: number): string {
+  const padded = key.toString().padStart(10, "0");
+  const groups = [];
+  for (let i = 0; i < 5; i++) {
+    groups.push(padded.substring(2 * i, 2 * (i + 1)));
   }
+  return groups.join("/") + "/";
 }
 
 /**
- * Parse details from MLP book detail page HTML.
+ * Build a cover image URL from a titul_key.
+ * Pads to 10 digits, first 4 groups of 2 for path, last 2 digits as suffix.
+ * Example: 4961244 -> "https://web2.mlp.cz/koweb/00/04/96/12/Small.44.jpg"
  */
-export function parseMlpBookDetails(
-  detailHtml: string,
-): Omit<MlpBookDetails, "pdfUrl" | "epubUrl"> {
-  try {
-    const $detail = cheerio.load(detailHtml);
+export function buildImageUrl(titulKey: number): string {
+  const padded = titulKey.toString().padStart(10, "0");
+  const groups = [];
+  for (let i = 0; i < 4; i++) {
+    groups.push(padded.substring(2 * i, 2 * (i + 1)));
+  }
+  const suffix = padded.substring(8, 10);
+  return `${MLP_KOWEB_URL}${groups.join("/")}/Small.${suffix}.jpg`;
+}
 
-    let subtitle: string | null = null;
-    let partTitle: string | null = null;
-    let genreId: string | null = null;
-    let genre: string | null = null;
+/**
+ * Build a download URL for a specific file format.
+ */
+export function buildDownloadUrl(
+  titulKey: number,
+  filename: string,
+  format: string,
+): string {
+  return `${MLP_KOWEB_URL}${buildKowebDownloadPath(titulKey)}${filename}.${format}`;
+}
 
-    $detail(".book-content.book-info-table table tbody tr").each((_: number, element: AnyNode) => {
-      const fieldName = $detail(element).find("td.itemlefttd").text().trim();
-      const fieldValue = cleanTitle($detail(element).find("td").eq(1).text().trim());
+/**
+ * Create a slug from a title for use in URLs.
+ */
+function createSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
 
-      if (fieldName === "Podnázev") {
-        subtitle = fieldValue;
-      } else if (fieldName === "Název části") {
-        partTitle = fieldValue;
-      } else if (fieldName === 'Obsahová char. "OCH"') {
-        genreId = fieldValue;
-      } else if (fieldName === "Obsah OCHu") {
-        genre = fieldValue;
-      }
-    });
+// --- Data parsing helpers ---
 
-    const imageUrl = $detail(".cover-img").attr("src") || null;
+/**
+ * Extract title from API hit source.
+ */
+function extractTitle(source: MlpApiHitSource): string {
+  if (source.nazev_marc) {
+    const hln = source.nazev_marc.find((m) => m.name === "HLN");
+    if (hln?.value) return cleanTitle(hln.value);
+  }
+  if (source.nazev?.[0]) return cleanTitle(source.nazev[0]);
+  return "Title Not Found";
+}
 
-    const descriptionText = $detail("p.book-info-preview").text().trim();
-    const description = descriptionText && descriptionText.length > 0 ? descriptionText : null;
+/**
+ * Extract subtitle from nazev_marc PODN entry.
+ */
+function extractSubtitle(source: MlpApiHitSource): string | null {
+  const podn = source.nazev_marc?.find((m) => m.name === "PODN");
+  return podn?.value ? cleanTitle(podn.value) : null;
+}
 
-    return {
-      subtitle,
-      partTitle,
-      imageUrl,
-      description,
-      genreId,
-      genre,
-    };
-  } catch (error) {
-    console.error("Error parsing MLP book details:", error);
+/**
+ * Extract part title from nazev_marc CAST entry.
+ */
+function extractPartTitle(source: MlpApiHitSource): string | null {
+  const cast = source.nazev_marc?.find((m) => m.name === "CAST");
+  return cast?.value ? cleanTitle(cast.value) : null;
+}
+
+/**
+ * Extract author name from osoba array.
+ * Prefers the entry with prozahlavi="1", then falls back to first author.
+ */
+function extractAuthor(source: MlpApiHitSource): string {
+  if (!source.osoba?.length) return "Unknown Author";
+
+  const authors = source.osoba.filter((o) => o.role_kod === "aut");
+  if (authors.length === 0) return cleanAuthorName(source.osoba[0].jmeno) || "Unknown Author";
+
+  const primary = authors.find((a) => a.prozahlavi === "1");
+  const author = primary || authors[0];
+  return cleanAuthorName(author.jmeno) || "Unknown Author";
+}
+
+/**
+ * Extract year from rok field.
+ */
+function extractYear(source: MlpApiHitSource): number | null {
+  if (!source.rok?.[0]) return null;
+  const year = Number.parseInt(source.rok[0], 10);
+  return Number.isNaN(year) ? null : year;
+}
+
+/**
+ * Parse listing data from an API search hit.
+ */
+export function parseApiBookListing(source: MlpApiHitSource): MlpBookListing {
+  const title = extractTitle(source);
+  const slug = createSlug(title);
+  return {
+    titulKey: source.titul_key,
+    title,
+    author: extractAuthor(source),
+    publisher: source.nakladatelstvi?.[0] || null,
+    year: extractYear(source),
+    detailUrl: `${MLP_BASE_URL}/katalog/titul/${slug}/${source.titul_key}/`,
+  };
+}
+
+/**
+ * Parse detail data from a full API source (requires source=full).
+ */
+export function parseApiBookDetails(source: MlpApiHitSource): MlpBookDetails {
+  // Genre from OCH
+  let genreId: string | null = null;
+  let genre: string | null = null;
+  if (source.och?.length) {
+    genreId = source.och[0].txoch_och_full || null;
+    genre = source.och[0].tema || null;
+  }
+
+  // Image URL from titul_key (uses has_img_small/has_img flags)
+  let imageUrl: string | null = null;
+  if (source.has_img_small || source.has_img) {
+    imageUrl = buildImageUrl(source.titul_key);
+  }
+
+  // Download URLs from digi
+  let pdfUrl: string | null = null;
+  let epubUrl: string | null = null;
+  if (source.digi?.length) {
+    for (const digi of source.digi) {
+      const url = buildDownloadUrl(source.titul_key, digi.digi_ptr_soubor, digi.digi_format);
+      if (digi.digi_format === "pdf" && !pdfUrl) pdfUrl = url;
+      if (digi.digi_format === "epub" && !epubUrl) epubUrl = url;
+    }
+  }
+
+  // Description: prefer long annotation, fall back to short
+  const description = source.anotace_dlouha?.[0] || source.anotace?.[0] || null;
+
+  return {
+    subtitle: extractSubtitle(source),
+    partTitle: extractPartTitle(source),
+    imageUrl,
+    description,
+    pdfUrl,
+    epubUrl,
+    genreId,
+    genre,
+  };
+}
+
+// --- Main scraping functions ---
+
+/**
+ * Fetch full book details from the MLP detail API.
+ */
+export async function fetchMlpBookDetails(titulKey: number): Promise<MlpBookDetails> {
+  const url = `${MLP_API_URL}titul?id=${titulKey}&source=full`;
+  const data = await fetchJson<MlpApiDetailResponse>(url);
+
+  if (!data.hits.hits.length) {
+    console.warn(`No detail data found for titulKey ${titulKey}`);
     return {
       subtitle: null,
       partTitle: null,
       imageUrl: null,
       description: null,
+      pdfUrl: null,
+      epubUrl: null,
       genreId: null,
       genre: null,
     };
   }
+
+  return parseApiBookDetails(data.hits.hits[0]._source);
 }
 
 /**
- * Parse download links from MLP reservation page HTML.
- */
-export function parseMlpDownloadLinks(reservationHtml: string): {
-  pdfUrl: string | null;
-  epubUrl: string | null;
-} {
-  try {
-    const $reserv = cheerio.load(reservationHtml);
-
-    let pdfUrl: string | null = null;
-    let epubUrl: string | null = null;
-
-    $reserv("a[download]").each((_: number, element: AnyNode) => {
-      const href = $reserv(element).attr("href");
-      if (href) {
-        const fullUrl = createUrl(MLP_BASE_URL, href);
-        if (href.includes(".pdf") && !pdfUrl) pdfUrl = fullUrl;
-        if (href.includes(".epub") && !epubUrl) epubUrl = fullUrl;
-      }
-    });
-
-    return { pdfUrl, epubUrl };
-  } catch (error) {
-    console.error("Error parsing MLP download links:", error);
-    return {
-      pdfUrl: null,
-      epubUrl: null,
-    };
-  }
-}
-
-/**
- * Scrape details and download links from an MLP book detail page.
- */
-export async function scrapeMlpBookDetails(detailUrl: string): Promise<MlpBookDetails> {
-  const detailHtml = await fetchHtml(detailUrl);
-  const details = parseMlpBookDetails(detailHtml);
-
-  // Get the best available image URL (high-res if it exists, otherwise original)
-  const bestImageUrl = await getBestImageUrl(details.imageUrl);
-
-  const bookIdMatch = detailUrl.match(/\/(\d+)\/$/);
-  if (!bookIdMatch) {
-    return {
-      pdfUrl: null,
-      epubUrl: null,
-      ...details,
-      imageUrl: bestImageUrl,
-    };
-  }
-
-  const reservationUrl = `${MLP_BASE_URL}/cz/vypujcka/${bookIdMatch[1]}`;
-  const reservationHtml = await fetchHtml(reservationUrl);
-  const downloadLinks = parseMlpDownloadLinks(reservationHtml);
-
-  return {
-    ...details,
-    ...downloadLinks,
-    imageUrl: bestImageUrl,
-  };
-}
-
-/**
- * Scrape books from MLP listing pages.
+ * Scrape all free e-books from MLP using the search API.
+ * Returns listing data for all books. Detail data (downloads, genre) must be
+ * fetched separately via fetchMlpBookDetails().
  */
 export async function scrapeMlpListingPages(): Promise<MlpBookListing[]> {
-  console.log("Starting MLP listing pages scraping...");
-  let currentPageUrl: string | null = MLP_START_URL;
-  let pageCount = 0;
-  const booksWithBasicInfo: ReturnType<typeof parseMlpBookData>[] = [];
+  console.log("Starting MLP API scraping...");
+  const books: MlpBookListing[] = [];
+  let from = 0;
 
-  while (currentPageUrl && pageCount < MAX_PAGES) {
-    pageCount++;
-    console.log(`Scraping MLP page ${pageCount}: ${currentPageUrl}`);
-    try {
-      const html = await fetchHtml(currentPageUrl);
-      const $ = cheerio.load(html);
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const url = `${MLP_API_URL}titul/search?filter%5Bformat%5D%5Beq%5D=e-kniha&size=${MLP_PAGE_SIZE}&from=${from}`;
+    console.log(`Fetching MLP API page (from=${from})...`);
 
-      let bookItems = $("li.kat-tile.titul");
-      let layoutType: "grid" | "row" = "grid";
-      if (bookItems.length === 0) {
-        bookItems = $("li.katalog-row.titul");
-        layoutType = "row";
-      }
+    const data = await fetchJson<MlpApiSearchResponse>(url);
+    const hits = data.hits.hits;
 
-      if (bookItems.length === 0) {
-        console.log(`No books found on page ${pageCount}. Stopping.`);
-        break;
-      }
+    if (hits.length === 0) break;
 
-      bookItems.each((_: number, item: AnyNode) => {
-        const bookData = parseMlpBookData($(item), layoutType);
-        if (bookData) {
-          booksWithBasicInfo.push(bookData);
-        }
-      });
+    for (const hit of hits) {
+      const source = hit._source;
+      // Only include downloadable e-books
+      if (source.ke_stazeni?.[0] !== "T") continue;
 
-      const nextPage = $("a.pagination-arrow.next").attr("href");
-      currentPageUrl = nextPage ? createUrl(MLP_BASE_URL, nextPage) : null;
-    } catch (error) {
-      console.error(`Failed to scrape page ${currentPageUrl}:`, error);
-      break;
+      const listing = parseApiBookListing(source);
+      books.push(listing);
     }
+
+    from += MLP_PAGE_SIZE;
+
+    if (from >= data.hits.total.value) break;
   }
 
-  const validBooks = booksWithBasicInfo.filter((b): b is NonNullable<typeof b> => b !== null);
-  console.log(`Found ${validBooks.length} books from listing pages.`);
-
-  return validBooks;
+  console.log(`Found ${books.length} downloadable e-books from MLP API.`);
+  return books;
 }

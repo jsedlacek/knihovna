@@ -26,11 +26,12 @@ type Story = StoryObj<typeof meta>;
 
 // Sample book data for stories
 const sampleBook: Book = {
+  titulKey: 123456,
   title: "Válka s mloky",
   author: "Karel Čapek",
   publisher: "Československý spisovatel",
   year: 1936,
-  detailUrl: "https://search.mlp.cz/cz/titul/valka-s-mloky/123456",
+  detailUrl: "https://www.mlp.cz/katalog/titul/valka-s-mloky/123456/",
   subtitle: null,
   partTitle: null,
   imageUrl: "https://covers.example.com/book-cover.jpg",

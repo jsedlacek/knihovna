@@ -3,7 +3,7 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { scrapeGoodreads } from "#@/lib/server/scrapers/goodreads-scraper.ts";
-import { scrapeMlpBookDetails, scrapeMlpListingPages } from "#@/lib/server/scrapers/mlp-scraper.ts";
+import { fetchMlpBookDetails, scrapeMlpListingPages } from "#@/lib/server/scrapers/mlp-scraper.ts";
 import { applyBookFixupsToArray } from "#@/lib/server/utils/book-fixup-utils.ts";
 import { processBatch } from "#@/lib/server/utils/concurrency-utils.ts";
 import { loadExistingBooks, saveBooks } from "#@/lib/server/utils/file-utils.ts";
@@ -16,7 +16,7 @@ import {
   RETRY_FACTOR,
   RETRY_MAX_DELAY,
 } from "#@/lib/shared/config/scraper-config.ts";
-import type { Book, MlpBookListing } from "#@/lib/shared/types/book-types.ts";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
 
 /**
  * Main scraping function.
@@ -25,34 +25,21 @@ async function main() {
   // 1. Parse command line arguments
   const argv = await yargs(hideBin(process.argv))
     .usage("Usage: $0 [options]")
-    .example("$0", "Normal scraping: MLP list + details + Goodreads for outdated books")
+    .example("$0", "Normal scraping: MLP + Goodreads for outdated books")
     .example("$0 --force", "Force re-scrape all enabled stages regardless of existing data")
     .example("$0 --no-goodreads", "Scrape only MLP data, skip Goodreads entirely")
-    .example("$0 --no-mlp-list --no-mlp-detail", "Only scrape Goodreads for existing books")
+    .example("$0 --no-mlp", "Only scrape Goodreads for existing books")
     .example("$0 --book-name 'Kafka'", "Re-scrape only books with 'Kafka' in the title")
     .example("$0 --author 'Karel Čapek'", "Re-scrape only books by author Karel Čapek")
-    .example(
-      "$0 --book-name 'Война' --force",
-      "Force re-scrape all data for books with 'Война' in title",
-    )
-    .example(
-      "$0 --author 'Tolkien' --no-goodreads",
-      "Re-scrape MLP data only for books by authors matching 'Tolkien'",
-    )
     .option("force", {
       alias: "f",
       type: "boolean",
       description: "Force re-scraping for all enabled stages (ignore existing data)",
       default: false,
     })
-    .option("mlp-list", {
+    .option("mlp", {
       type: "boolean",
-      description: "Scrape MLP book listings to discover new books",
-      default: true,
-    })
-    .option("mlp-detail", {
-      type: "boolean",
-      description: "Scrape detailed information for MLP books",
+      description: "Scrape MLP book listings and details",
       default: true,
     })
     .option("goodreads", {
@@ -73,10 +60,8 @@ async function main() {
     })
 
     .check((argv) => {
-      if (!argv["mlp-list"] && !argv["mlp-detail"] && !argv.goodreads) {
-        throw new Error(
-          "At least one scraping stage must be enabled (--mlp-list, --mlp-detail, or --goodreads)",
-        );
+      if (!argv.mlp && !argv.goodreads) {
+        throw new Error("At least one scraping stage must be enabled (--mlp or --goodreads)");
       }
       return true;
     })
@@ -87,8 +72,7 @@ async function main() {
 
   // Show enabled stages
   const enabledStages = [];
-  if (argv.mlpList) enabledStages.push("MLP list");
-  if (argv.mlpDetail) enabledStages.push("MLP details");
+  if (argv.mlp) enabledStages.push("MLP");
   if (argv.goodreads) enabledStages.push("Goodreads");
   console.log(`📋 Enabled stages: ${enabledStages.join(", ")}`);
 
@@ -102,9 +86,22 @@ async function main() {
     console.log(`👤 Selective mode: Only processing books by author "${argv.author}".`);
   }
 
-  // 2. Initialization: Load existing books into a Map for efficient updates.
+  // 2. Initialization: Load existing books into a Map keyed by titulKey.
   const existingBooks = await loadExistingBooks();
-  const booksMap = new Map<string, Book>(existingBooks.map((book) => [book.detailUrl, book]));
+  const booksMap = new Map<number, Book>();
+
+  // Migrate existing books: use titulKey if present, otherwise extract from detailUrl
+  for (const book of existingBooks) {
+    if (book.titulKey) {
+      booksMap.set(book.titulKey, book);
+    } else if (book.detailUrl) {
+      const match = book.detailUrl.match(/\/(\d+)\/?$/);
+      if (match) {
+        const titulKey = Number(match[1]);
+        booksMap.set(titulKey, { ...book, titulKey });
+      }
+    }
+  }
   console.log(`📚 Found ${booksMap.size} existing books.`);
 
   const oneMonthAgo = new Date();
@@ -129,24 +126,19 @@ async function main() {
     console.log(
       `🎯 Selective criteria matches: ${matchingBooks.length}/${booksMap.size} books qualify for processing.`,
     );
-
-    if (matchingBooks.length === 0) {
-      console.log("⚠️ No books match the selective criteria. Exiting.");
-      return;
-    }
   }
 
-  // 3. MLP List Scraping Phase
-  if (argv.mlpList) {
-    console.log("📚 Scraping MLP listings...");
-    const basicMlpBooks: MlpBookListing[] = await scrapeMlpListingPages();
+  // 3. MLP Scraping Phase (listing + details combined)
+  if (argv.mlp) {
+    // Stage 1: Discover books via API listing
+    console.log("📚 Scraping MLP listings via API...");
+    const mlpListings = await scrapeMlpListingPages();
 
-    // Add new books to the map
     let newBooksCount = 0;
-    for (const basicBook of basicMlpBooks) {
-      if (!booksMap.has(basicBook.detailUrl)) {
-        booksMap.set(basicBook.detailUrl, {
-          ...basicBook,
+    for (const listing of mlpListings) {
+      if (!booksMap.has(listing.titulKey)) {
+        booksMap.set(listing.titulKey, {
+          ...listing,
           subtitle: null,
           partTitle: null,
           imageUrl: null,
@@ -168,36 +160,29 @@ async function main() {
     if (newBooksCount > 0) {
       console.log(`+ Discovered ${newBooksCount} new books from MLP.`);
     }
-  }
 
-  // 4. MLP Detail Scraping Phase
-  if (argv.mlpDetail) {
-    console.log("📝 Scraping MLP details...");
-
-    // Identify books needing MLP detail scraping
-    const booksNeedingMlpDetails = Array.from(booksMap.values()).filter((book) => {
-      // First check if book matches selective criteria
+    // Stage 2: Fetch details for books needing updates
+    console.log("📝 Fetching MLP book details...");
+    const booksNeedingDetails = Array.from(booksMap.values()).filter((book) => {
       if (!matchesSelectiveCriteria(book)) return false;
-
       if (argv.force) return true;
-      const isOutOfDate = !book.mlpScrapedAt || new Date(book.mlpScrapedAt) < oneMonthAgo;
-      return isOutOfDate;
+      return !book.mlpScrapedAt || new Date(book.mlpScrapedAt) < oneMonthAgo;
     });
 
     console.log(
-      `[MLP] ${booksNeedingMlpDetails.length} books need detail scraping (new, or outdated).`,
+      `[MLP] ${booksNeedingDetails.length} books need detail scraping (new, or outdated).`,
     );
 
-    if (booksNeedingMlpDetails.length > 0) {
+    if (booksNeedingDetails.length > 0) {
       await processBatch({
-        items: booksNeedingMlpDetails,
+        items: booksNeedingDetails,
         concurrency: CONCURRENCY,
         onProgress: (progress, total, item) => {
           console.log(`[MLP ${progress}/${total}] Fetching details: ${item.title}`);
         },
         processItem: async (book) => {
           try {
-            const details = await withRetry(() => scrapeMlpBookDetails(book.detailUrl), {
+            const details = await withRetry(() => fetchMlpBookDetails(book.titulKey), {
               retries: RETRY_COUNT,
               delay: RETRY_DELAY,
               factor: RETRY_FACTOR,
@@ -209,12 +194,9 @@ async function main() {
               },
             });
 
-            const existingBook = booksMap.get(book.detailUrl);
-            if (!existingBook) {
-              console.error(`Book not found in map: ${book.detailUrl}`);
-              return;
-            }
-            booksMap.set(book.detailUrl, {
+            const existingBook = booksMap.get(book.titulKey);
+            if (!existingBook) return;
+            booksMap.set(book.titulKey, {
               ...existingBook,
               ...details,
               mlpScrapedAt: new Date().toISOString(),
@@ -227,10 +209,10 @@ async function main() {
         },
       });
     }
-    console.log(`✅ MLP detail scraping complete.`);
+    console.log(`✅ MLP scraping complete.`);
   }
 
-  // 5. Apply fixups to correct known data issues (before Goodreads scraping)
+  // 4. Apply fixups to correct known data issues (before Goodreads scraping)
   console.log("🔧 Applying book fixups...");
   const booksBeforeFixups = Array.from(booksMap.values());
   const booksWithFixups = applyBookFixupsToArray(booksBeforeFixups);
@@ -238,10 +220,10 @@ async function main() {
   // Update the booksMap with fixed data
   booksMap.clear();
   for (const book of booksWithFixups) {
-    booksMap.set(book.detailUrl, book);
+    booksMap.set(book.titulKey, book);
   }
 
-  // 6. Goodreads Scraping Phase
+  // 5. Goodreads Scraping Phase
   if (argv.goodreads) {
     console.log("⭐ Scraping Goodreads...");
     const booksForGoodreads = Array.from(booksMap.values()).filter((book) => {
@@ -277,12 +259,9 @@ async function main() {
               },
             });
 
-            const existingBook = booksMap.get(book.detailUrl);
-            if (!existingBook) {
-              console.error(`Book not found in map: ${book.detailUrl}`);
-              return;
-            }
-            booksMap.set(book.detailUrl, {
+            const existingBook = booksMap.get(book.titulKey);
+            if (!existingBook) return;
+            booksMap.set(book.titulKey, {
               ...existingBook,
               ...goodreadsData,
               goodreadsScrapedAt: new Date().toISOString(),
@@ -298,7 +277,7 @@ async function main() {
     console.log("✅ Goodreads scraping complete.");
   }
 
-  // 7. Finalization
+  // 6. Finalization
   const allBooks = Array.from(booksMap.values());
   console.log(`📚 Total books to save: ${allBooks.length}`);
 

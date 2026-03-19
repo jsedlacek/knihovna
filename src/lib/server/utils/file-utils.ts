@@ -43,8 +43,8 @@ export async function saveBooks(books: Book[]): Promise<void> {
 }
 
 /**
- * Create a map of existing books by detailUrl for fast lookup.
+ * Create a map of existing books by titulKey for fast lookup.
  */
-export function createBookMap(books: Book[]): Map<string, Book> {
-  return new Map(books.map((book) => [book.detailUrl, book]));
+export function createBookMap(books: Book[]): Map<number, Book> {
+  return new Map(books.map((book) => [book.titulKey, book]));
 }
