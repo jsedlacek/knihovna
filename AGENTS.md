@@ -44,7 +44,7 @@ const getData = createServerFn({ method: "GET" }).handler(async () => {
 });
 ```
 
-Date formatting must happen client-side (`useState` + `useEffect`) to avoid hydration mismatches.
+Date formatting must use a stable format and explicit timezone (e.g., `Europe/Prague`) to avoid hydration mismatches.
 
 ## Testing
 
