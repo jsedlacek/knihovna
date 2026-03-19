@@ -17,7 +17,7 @@
     "wrangler:types": "wrangler types",
     "typecheck": "tsgo",
     "check": "pnpm run typecheck && pnpm run lint && pnpm run lint:imports && pnpm run format:check && pnpm test",
-    "scrape": "node src/scripts/scrape-books.ts",
+    "scrape": "node --env-file-if-exists=.env.local src/scripts/scrape-books.ts",
     "test": "LOG_LEVEL=silent node --test --test-reporter=./src/test/reporters/failures-only.ts src/**/*.test.ts",
     "test:verbose": "node --test --test-reporter=spec src/**/*.test.ts",
     "test:watch": "node --test --watch --test-reporter=spec src/**/*.test.ts",

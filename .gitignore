@@ -10,3 +10,4 @@ storybook-static
 .nitro
 .output
 /.wrangler
+.env.local
