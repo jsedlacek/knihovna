@@ -27,6 +27,7 @@ export async function configureLogging() {
           mode === "production"
             ? getJsonLinesFormatter({ properties: "flatten" })
             : getPrettyFormatter({
+                align: false,
                 properties: true,
                 icons: false,
                 timestampColor: null,
