@@ -1,7 +1,8 @@
 import pino from "pino";
 
 const level = process.env["LOG_LEVEL"] ?? "info";
-const isDev = import.meta.env.DEV;
+const mode = import.meta.env?.["MODE"] || process.env["NODE_ENV"];
+const isDev = mode === "development";
 
 const stream = isDev ? await import("pino-pretty").then((m) => m.default()) : undefined;
 
