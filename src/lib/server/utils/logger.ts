@@ -5,7 +5,7 @@ import {
   getLogger,
   type LogLevel,
 } from "@logtape/logtape";
-import { prettyFormatter } from "@logtape/pretty";
+import { getPrettyFormatter } from "@logtape/pretty";
 
 const levelEnv = process.env["LOG_LEVEL"] ?? "info";
 
@@ -26,7 +26,13 @@ export async function configureLogging() {
         formatter:
           mode === "production"
             ? getJsonLinesFormatter({ properties: "flatten" })
-            : prettyFormatter,
+            : getPrettyFormatter({
+                properties: true,
+                icons: false,
+                
+
+
+            }),
       }),
     },
     loggers: [
