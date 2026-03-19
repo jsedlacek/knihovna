@@ -1,5 +1,6 @@
 import {
   configure,
+  getAnsiColorFormatter,
   getConsoleSink,
   getJsonLinesFormatter,
   getLogger,
@@ -14,12 +15,21 @@ function parseLevel(level: string): LogLevel | null {
   return level as LogLevel;
 }
 
+function isCloudflareWorkers(): boolean {
+  return typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers";
+}
+
+function getFormatter() {
+  if (isCloudflareWorkers()) {
+    return getJsonLinesFormatter({ properties: "flatten" });
+  }
+  return getAnsiColorFormatter({ timestamp: "time" });
+}
+
 export async function configureLogging() {
   await configure({
     sinks: {
-      console: getConsoleSink({
-        formatter: getJsonLinesFormatter({ properties: "flatten" }),
-      }),
+      console: getConsoleSink({ formatter: getFormatter() }),
     },
     loggers: [
       {
