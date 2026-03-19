@@ -1,5 +1,9 @@
 import { createStartHandler, defaultStreamHandler } from "@tanstack/react-start/server";
+import { configureLogging, createLogger } from "#@/lib/server/utils/logger.ts";
 
+await configureLogging();
+
+const log = createLogger("server");
 const handler = createStartHandler(defaultStreamHandler);
 
 const SITE_URL = "https://knihovna.jakub.contact";
@@ -47,15 +51,34 @@ export default {
   async fetch(...args: Parameters<typeof handler>): Promise<Response> {
     const request = args[0];
     const url = new URL(request.url);
+    const start = Date.now();
+
+    let response: Response;
 
     if (url.pathname === "/robots.txt") {
-      return addSecurityHeaders(handleRobotsTxt());
-    }
-    if (url.pathname === "/sitemap.xml") {
-      return addSecurityHeaders(handleSitemapXml());
+      response = addSecurityHeaders(handleRobotsTxt());
+    } else if (url.pathname === "/sitemap.xml") {
+      response = addSecurityHeaders(handleSitemapXml());
+    } else {
+      try {
+        response = addSecurityHeaders(await handler(...args));
+      } catch (error) {
+        log.error("Request failed", {
+          method: request.method,
+          path: url.pathname,
+          err: error,
+        });
+        throw error;
+      }
     }
 
-    const response = await handler(...args);
-    return addSecurityHeaders(response);
+    log.info("Request handled", {
+      method: request.method,
+      path: url.pathname,
+      status: response.status,
+      duration: Date.now() - start,
+    });
+
+    return response;
   },
 };
