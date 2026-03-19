@@ -225,7 +225,7 @@ export function findBookLinkFromSearch(
 
     return selectBestBookCandidate(candidates, book);
   } catch (error) {
-    log.error({ err: error }, "Error parsing search results with scoring");
+    log.error("Error parsing search results with scoring", { err: error });
     return null;
   }
 }
@@ -252,7 +252,7 @@ export function parseGoodreadsBookData(bookHtml: string): {
 
     return { rating, ratingsCount };
   } catch (error) {
-    log.error({ err: error }, "Error parsing book data");
+    log.error("Error parsing book data", { err: error });
     return { rating: null, ratingsCount: null };
   }
 }
@@ -272,7 +272,7 @@ export async function scrapeGoodreads(book: {
       const cleanedTitle = cleanSearchTerm(title);
       const searchQuery = encodeURIComponent(`${cleanedTitle} ${authorForSearch}`);
       const searchUrl = `${GOODREADS_BASE_URL}/search?q=${searchQuery}&search_type=books`;
-      log.info({ title: cleanedTitle, author: authorForSearch }, "Searching Goodreads");
+      log.info("Searching Goodreads", { title: cleanedTitle, author: authorForSearch });
       const searchHtml = await fetchHtml(searchUrl);
       return findBookLinkFromSearch(searchHtml, { title, author: book.author });
     };
@@ -291,7 +291,7 @@ export async function scrapeGoodreads(book: {
     }
 
     if (!bookUrlPath) {
-      log.warn({ title: book.title }, "No book link found after all attempts");
+      log.warn("No book link found after all attempts", { title: book.title });
       return {
         rating: null,
         ratingsCount: null,
@@ -307,7 +307,7 @@ export async function scrapeGoodreads(book: {
     const { isValid, validatedRating, validatedCount } = validateRating(rating, ratingsCount);
 
     if (isValid) {
-      log.info({ rating: validatedRating, ratingsCount: validatedCount }, "Found rating");
+      log.info("Found rating", { rating: validatedRating, ratingsCount: validatedCount });
       return {
         rating: validatedRating,
         ratingsCount: validatedCount,
@@ -316,14 +316,14 @@ export async function scrapeGoodreads(book: {
     }
 
     // Found a book page but no valid ratings
-    log.warn({ title: book.title }, "Could not parse valid rating");
+    log.warn("Could not parse valid rating", { title: book.title });
     return {
       rating: null,
       ratingsCount: validatedCount,
       url: bookUrl,
     };
   } catch (error) {
-    log.error({ title: book.title, err: error }, "Error scraping Goodreads");
+    log.error("Error scraping Goodreads", { title: book.title, err: error });
     return {
       rating: null,
       ratingsCount: null,

@@ -242,7 +242,7 @@ export async function fetchMlpBookDetails(titulKey: number): Promise<MlpBookDeta
   const data = await fetchJson<MlpApiDetailResponse>(url);
 
   if (!data.hits.hits.length) {
-    log.warn({ titulKey }, "No detail data found");
+    log.warn("No detail data found", { titulKey });
     return {
       subtitle: null,
       partTitle: null,
@@ -271,7 +271,7 @@ export async function scrapeMlpListingPages(): Promise<MlpBookListing[]> {
   // eslint-disable-next-line no-constant-condition
   while (true) {
     const url = `${MLP_API_URL}titul/search?filter%5Bformat%5D%5Beq%5D=e-kniha&size=${MLP_PAGE_SIZE}&from=${from}`;
-    log.info({ from }, "Fetching MLP API page");
+    log.info("Fetching MLP API page", { from });
 
     const data = await fetchJson<MlpApiSearchResponse>(url);
     const hits = data.hits.hits;
@@ -292,6 +292,6 @@ export async function scrapeMlpListingPages(): Promise<MlpBookListing[]> {
     if (from >= data.hits.total.value) break;
   }
 
-  log.info({ count: books.length }, "Found downloadable e-books from MLP API");
+  log.info("Found downloadable e-books from MLP API", { count: books.length });
   return books;
 }

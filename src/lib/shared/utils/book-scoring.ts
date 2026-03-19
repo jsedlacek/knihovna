@@ -75,12 +75,12 @@ export function testBookScoring(): void {
   ];
 
   logger.debug("Book Scoring Test Results:");
-  testBooks.forEach((book) => {
+  for (const book of testBooks) {
     const score = calculateBookScore(book);
     logger.debug(
       `${book.title}: ${book.rating}/5 (${book.ratingsCount} reviews) = Score: ${score.toFixed(2)}`,
     );
-  });
+  }
 }
 
 /**

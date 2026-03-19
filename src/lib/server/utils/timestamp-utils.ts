@@ -24,9 +24,9 @@ export async function saveScrapingTimestamp(): Promise<void> {
 
   try {
     await writeFile(TIMESTAMP_FILE, JSON.stringify(timestampData, null, 2));
-    log.info({ timestamp: now.toISOString() }, "Timestamp saved");
+    log.info("Timestamp saved", { timestamp: now.toISOString() });
   } catch (error) {
-    log.error({ err: error }, "Failed to save timestamp");
+    log.error("Failed to save timestamp", { err: error });
     // Don't throw - timestamp is not critical for scraping operation
   }
 }
@@ -44,7 +44,7 @@ export async function loadScrapingTimestamp(): Promise<TimestampData | null> {
     const timestampData: TimestampData = JSON.parse(fileContent);
     return timestampData;
   } catch (error) {
-    log.warn({ err: error }, "Could not read timestamp file");
+    log.warn("Could not read timestamp file", { err: error });
     return null;
   }
 }

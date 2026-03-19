@@ -48,38 +48,38 @@ export function applyBookFixups(book: Book): Book {
     return book;
   }
 
-  log.info({ title: book.title, reason: fixup.reason }, "Applying fixup");
+  log.info("Applying fixup", { title: book.title, reason: fixup.reason });
 
   // Create a new book object with fixups applied
   const fixedBook: Book = { ...book };
 
   if (fixup.title !== undefined) {
-    log.info({ field: "title", from: book.title, to: fixup.title }, "Fixup applied");
+    log.info("Fixup applied", { field: "title", from: book.title, to: fixup.title });
     fixedBook.title = fixup.title;
   }
 
   if (fixup.author !== undefined) {
-    log.info({ field: "author", from: book.author, to: fixup.author }, "Fixup applied");
+    log.info("Fixup applied", { field: "author", from: book.author, to: fixup.author });
     fixedBook.author = fixup.author;
   }
 
   if (fixup.subtitle !== undefined) {
-    log.info({ field: "subtitle", from: book.subtitle, to: fixup.subtitle }, "Fixup applied");
+    log.info("Fixup applied", { field: "subtitle", from: book.subtitle, to: fixup.subtitle });
     fixedBook.subtitle = fixup.subtitle;
   }
 
   if (fixup.description !== undefined) {
-    log.info({ field: "description" }, "Fixup applied");
+    log.info("Fixup applied", { field: "description" });
     fixedBook.description = fixup.description;
   }
 
   if (fixup.publisher !== undefined) {
-    log.info({ field: "publisher", from: book.publisher, to: fixup.publisher }, "Fixup applied");
+    log.info("Fixup applied", { field: "publisher", from: book.publisher, to: fixup.publisher });
     fixedBook.publisher = fixup.publisher;
   }
 
   if (fixup.year !== undefined) {
-    log.info({ field: "year", from: book.year, to: fixup.year }, "Fixup applied");
+    log.info("Fixup applied", { field: "year", from: book.year, to: fixup.year });
     fixedBook.year = fixup.year;
   }
 
@@ -104,7 +104,7 @@ export function applyBookFixupsToArray(books: Book[]): Book[] {
   });
 
   if (fixupsApplied > 0) {
-    log.info({ count: fixupsApplied }, "Book fixups applied");
+    log.info("Book fixups applied", { count: fixupsApplied });
   }
 
   return fixedBooks;

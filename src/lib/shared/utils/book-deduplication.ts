@@ -81,10 +81,10 @@ export function deduplicateBooks(books: Book[]): Book[] {
         // This might indicate a data issue, so a log is useful.
         const firstBook = groupBooks[0];
         if (!firstBook) continue;
-        logger.warn(
-          { author: firstBook.author, title: firstBook.title },
-          "Deduplication skipped: No year found.",
-        );
+        logger.warn("Deduplication skipped: No year found.", {
+          author: firstBook.author,
+          title: firstBook.title,
+        });
         result.push(...groupBooks);
       } else {
         // If at least one book has a year, we only consider those with a year
@@ -97,10 +97,11 @@ export function deduplicateBooks(books: Book[]): Book[] {
           // We'll log it and keep all of them.
           const firstBook = newestBooks[0];
           if (!firstBook) continue;
-          logger.warn(
-            { author: firstBook.author, title: firstBook.title, year: maxYear },
-            "Conflict: Multiple books from same year. Keeping all.",
-          );
+          logger.warn("Conflict: Multiple books from same year. Keeping all.", {
+            author: firstBook.author,
+            title: firstBook.title,
+            year: maxYear,
+          });
         }
 
         // Add the single newest book, or multiple in case of a conflict.

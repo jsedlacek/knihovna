@@ -19,10 +19,10 @@ export async function loadExistingBooks(): Promise<Book[]> {
   try {
     const fileContent = await readFile(OUTPUT_FILE, "utf-8");
     const existingBooks: Book[] = JSON.parse(fileContent);
-    log.info({ count: existingBooks.length, file: OUTPUT_FILE }, "Loaded existing books");
+    log.info("Loaded existing books", { count: existingBooks.length, file: OUTPUT_FILE });
     return existingBooks;
   } catch (error) {
-    log.error({ err: error }, "Error loading existing data file");
+    log.error("Error loading existing data file", { err: error });
     log.info("Starting fresh scrape");
     return [];
   }
@@ -38,9 +38,9 @@ export async function saveBooks(books: Book[]): Promise<void> {
     await mkdir(outputDir, { recursive: true });
 
     await writeFile(OUTPUT_FILE, JSON.stringify(books, null, 2));
-    log.info({ count: books.length, file: OUTPUT_FILE }, "Successfully saved books");
+    log.info("Successfully saved books", { count: books.length, file: OUTPUT_FILE });
   } catch (error) {
-    log.error({ err: error }, "Failed to write output file");
+    log.error("Failed to write output file", { err: error });
     throw error;
   }
 }
