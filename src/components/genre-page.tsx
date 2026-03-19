@@ -18,8 +18,22 @@ export function GenrePage({ books, genreKey, showScores = false }: GenrePageProp
   // Sort books by score within this genre
   const sortedBooks = sortBooksByScore(books);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: genreConfig.name,
+    description: genreConfig.metaDescription,
+    url: `https://knihovna.jakub.contact/${genreKey}`,
+    inLanguage: "cs",
+    numberOfItems: sortedBooks.length,
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header showBackLink />
 
       <main className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">

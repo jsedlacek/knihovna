@@ -21,8 +21,22 @@ interface HomePageProps {
 export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
   const formattedLastUpdated = lastUpdated ? formatDateCzech(lastUpdated.lastUpdated) : null;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Nejlepší e-knihy zdarma",
+    url: "https://knihovna.jakub.contact",
+    description:
+      "Nejlepší české e-knihy zdarma z městské knihovny. Moderní romány, klasika, poezie i divadelní hry s hodnocením 4,0 a vyšším.",
+    inLanguage: "cs",
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header
         {...(lastUpdated &&
           formattedLastUpdated && {
