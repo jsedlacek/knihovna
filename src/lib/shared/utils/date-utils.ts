@@ -5,5 +5,6 @@ export function formatDateCzech(dateString: string): string {
     day: "numeric",
     month: "long",
     year: "numeric",
+    timeZone: "Europe/Prague",
   }).format(date);
 }
