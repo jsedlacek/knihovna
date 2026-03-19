@@ -1,11 +1,13 @@
 import * as cheerio from "cheerio";
 import { createUrl, fetchHtml } from "#@/lib/server/utils/fetch-utils.ts";
+import { createLogger } from "#@/lib/server/utils/logger.ts";
 import { GOODREADS_BASE_URL, MAX_RATING, MIN_RATING } from "#@/lib/shared/config/scraper-config.ts";
+
+const log = createLogger("goodreads");
 import type { GoodreadsData } from "#@/lib/shared/types/book-types.ts";
 import {
   calculateSimilarity,
   cleanSearchTerm,
-  formatNumberCzech,
   getAuthorForSearch,
   getTitleWithArabicNumerals,
 } from "#@/lib/shared/utils/text-utils.ts";
@@ -223,7 +225,7 @@ export function findBookLinkFromSearch(
 
     return selectBestBookCandidate(candidates, book);
   } catch (error) {
-    console.error("Error parsing search results with scoring:", error);
+    log.error({ err: error }, "Error parsing search results with scoring");
     return null;
   }
 }
@@ -250,7 +252,7 @@ export function parseGoodreadsBookData(bookHtml: string): {
 
     return { rating, ratingsCount };
   } catch (error) {
-    console.error("Error parsing book data:", error);
+    log.error({ err: error }, "Error parsing book data");
     return { rating: null, ratingsCount: null };
   }
 }
@@ -270,7 +272,7 @@ export async function scrapeGoodreads(book: {
       const cleanedTitle = cleanSearchTerm(title);
       const searchQuery = encodeURIComponent(`${cleanedTitle} ${authorForSearch}`);
       const searchUrl = `${GOODREADS_BASE_URL}/search?q=${searchQuery}&search_type=books`;
-      console.log(`Searching Goodreads for: "${cleanedTitle}" by ${authorForSearch}`);
+      log.info({ title: cleanedTitle, author: authorForSearch }, "Searching Goodreads");
       const searchHtml = await fetchHtml(searchUrl);
       return findBookLinkFromSearch(searchHtml, { title, author: book.author });
     };
@@ -283,13 +285,13 @@ export async function scrapeGoodreads(book: {
       const fallbackTitle = getTitleWithArabicNumerals(book.title);
       // Only attempt fallback if the title was actually changed
       if (fallbackTitle !== book.title) {
-        console.log(`-> Primary search failed. Trying fallback title...`);
+        log.info("Primary search failed, trying fallback title");
         bookUrlPath = await performSearch(fallbackTitle);
       }
     }
 
     if (!bookUrlPath) {
-      console.warn(`! No book link found for: ${book.title} (after all attempts)`);
+      log.warn({ title: book.title }, "No book link found after all attempts");
       return {
         rating: null,
         ratingsCount: null,
@@ -305,9 +307,7 @@ export async function scrapeGoodreads(book: {
     const { isValid, validatedRating, validatedCount } = validateRating(rating, ratingsCount);
 
     if (isValid) {
-      console.log(
-        `⭐ Found rating: ${validatedRating} (${validatedCount ? formatNumberCzech(validatedCount) : "0"} ratings)`,
-      );
+      log.info({ rating: validatedRating, ratingsCount: validatedCount }, "Found rating");
       return {
         rating: validatedRating,
         ratingsCount: validatedCount,
@@ -316,17 +316,14 @@ export async function scrapeGoodreads(book: {
     }
 
     // Found a book page but no valid ratings
-    console.warn(`! Could not parse valid rating for: ${book.title}`);
+    log.warn({ title: book.title }, "Could not parse valid rating");
     return {
       rating: null,
       ratingsCount: validatedCount,
       url: bookUrl,
     };
   } catch (error) {
-    console.error(
-      `❌ Error scraping Goodreads for "${book.title}"`,
-      error instanceof Error ? error.message : error,
-    );
+    log.error({ title: book.title, err: error }, "Error scraping Goodreads");
     return {
       rating: null,
       ratingsCount: null,

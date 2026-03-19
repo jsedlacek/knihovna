@@ -2,25 +2,28 @@ import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { OUTPUT_FILE } from "#@/lib/server/config.ts";
+import { createLogger } from "#@/lib/server/utils/logger.ts";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
+
+const log = createLogger("file-utils");
 
 /**
  * Load existing books from the output file if it exists.
  */
 export async function loadExistingBooks(): Promise<Book[]> {
   if (!existsSync(OUTPUT_FILE)) {
-    console.log("No existing data file found. Starting fresh scrape.");
+    log.info("No existing data file found, starting fresh scrape");
     return [];
   }
 
   try {
     const fileContent = await readFile(OUTPUT_FILE, "utf-8");
     const existingBooks: Book[] = JSON.parse(fileContent);
-    console.log(`📚 Loaded ${existingBooks.length} existing books from ${OUTPUT_FILE}`);
+    log.info({ count: existingBooks.length, file: OUTPUT_FILE }, "Loaded existing books");
     return existingBooks;
   } catch (error) {
-    console.error("Error loading existing data file:", error);
-    console.log("Starting fresh scrape.");
+    log.error({ err: error }, "Error loading existing data file");
+    log.info("Starting fresh scrape");
     return [];
   }
 }
@@ -35,9 +38,9 @@ export async function saveBooks(books: Book[]): Promise<void> {
     await mkdir(outputDir, { recursive: true });
 
     await writeFile(OUTPUT_FILE, JSON.stringify(books, null, 2));
-    console.log(`✅ Successfully saved ${books.length} books to ${OUTPUT_FILE}`);
+    log.info({ count: books.length, file: OUTPUT_FILE }, "Successfully saved books");
   } catch (error) {
-    console.error("❌ Failed to write output file:", error);
+    log.error({ err: error }, "Failed to write output file");
     throw error;
   }
 }

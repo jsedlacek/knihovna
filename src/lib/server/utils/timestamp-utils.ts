@@ -1,6 +1,9 @@
 import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { createLogger } from "#@/lib/server/utils/logger.ts";
+
+const log = createLogger("timestamp");
 
 const TIMESTAMP_FILE = join(process.cwd(), "data", "last-updated.json");
 
@@ -21,9 +24,9 @@ export async function saveScrapingTimestamp(): Promise<void> {
 
   try {
     await writeFile(TIMESTAMP_FILE, JSON.stringify(timestampData, null, 2));
-    console.log(`✅ Timestamp saved: ${now.toISOString()}`);
+    log.info({ timestamp: now.toISOString() }, "Timestamp saved");
   } catch (error) {
-    console.error("❌ Failed to save timestamp:", error);
+    log.error({ err: error }, "Failed to save timestamp");
     // Don't throw - timestamp is not critical for scraping operation
   }
 }
@@ -41,7 +44,7 @@ export async function loadScrapingTimestamp(): Promise<TimestampData | null> {
     const timestampData: TimestampData = JSON.parse(fileContent);
     return timestampData;
   } catch (error) {
-    console.warn("Warning: Could not read timestamp file:", error);
+    log.warn({ err: error }, "Could not read timestamp file");
     return null;
   }
 }

@@ -1,4 +1,7 @@
+import { createLogger } from "#@/lib/server/utils/logger.ts";
 import type { Book, MlpBookDetails, MlpBookListing } from "#@/lib/shared/types/book-types.ts";
+
+const log = createLogger("book-fixup");
 
 /**
  * Fields that can be fixed via the fixup system.
@@ -45,38 +48,38 @@ export function applyBookFixups(book: Book): Book {
     return book;
   }
 
-  console.log(`📝 Applying fixup to "${book.title}": ${fixup.reason}`);
+  log.info({ title: book.title, reason: fixup.reason }, "Applying fixup");
 
   // Create a new book object with fixups applied
   const fixedBook: Book = { ...book };
 
   if (fixup.title !== undefined) {
-    console.log(`  • Title: "${book.title}" → "${fixup.title}"`);
+    log.info({ field: "title", from: book.title, to: fixup.title }, "Fixup applied");
     fixedBook.title = fixup.title;
   }
 
   if (fixup.author !== undefined) {
-    console.log(`  • Author: "${book.author}" → "${fixup.author}"`);
+    log.info({ field: "author", from: book.author, to: fixup.author }, "Fixup applied");
     fixedBook.author = fixup.author;
   }
 
   if (fixup.subtitle !== undefined) {
-    console.log(`  • Subtitle: "${book.subtitle}" → "${fixup.subtitle}"`);
+    log.info({ field: "subtitle", from: book.subtitle, to: fixup.subtitle }, "Fixup applied");
     fixedBook.subtitle = fixup.subtitle;
   }
 
   if (fixup.description !== undefined) {
-    console.log(`  • Description updated`);
+    log.info({ field: "description" }, "Fixup applied");
     fixedBook.description = fixup.description;
   }
 
   if (fixup.publisher !== undefined) {
-    console.log(`  • Publisher: "${book.publisher}" → "${fixup.publisher}"`);
+    log.info({ field: "publisher", from: book.publisher, to: fixup.publisher }, "Fixup applied");
     fixedBook.publisher = fixup.publisher;
   }
 
   if (fixup.year !== undefined) {
-    console.log(`  • Year: ${book.year} → ${fixup.year}`);
+    log.info({ field: "year", from: book.year, to: fixup.year }, "Fixup applied");
     fixedBook.year = fixup.year;
   }
 
@@ -101,7 +104,7 @@ export function applyBookFixupsToArray(books: Book[]): Book[] {
   });
 
   if (fixupsApplied > 0) {
-    console.log(`✅ Applied ${fixupsApplied} book fixup(s).`);
+    log.info({ count: fixupsApplied }, "Book fixups applied");
   }
 
   return fixedBooks;

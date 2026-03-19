@@ -1,4 +1,5 @@
 import { fetchJson } from "#@/lib/server/utils/fetch-utils.ts";
+import { createLogger } from "#@/lib/server/utils/logger.ts";
 import {
   MLP_API_URL,
   MLP_BASE_URL,
@@ -7,6 +8,8 @@ import {
 } from "#@/lib/shared/config/scraper-config.ts";
 import type { MlpBookDetails, MlpBookListing } from "#@/lib/shared/types/book-types.ts";
 import { cleanAuthorName, cleanTitle } from "#@/lib/shared/utils/text-utils.ts";
+
+const log = createLogger("mlp-scraper");
 
 // --- Elasticsearch API response types ---
 
@@ -239,7 +242,7 @@ export async function fetchMlpBookDetails(titulKey: number): Promise<MlpBookDeta
   const data = await fetchJson<MlpApiDetailResponse>(url);
 
   if (!data.hits.hits.length) {
-    console.warn(`No detail data found for titulKey ${titulKey}`);
+    log.warn({ titulKey }, "No detail data found");
     return {
       subtitle: null,
       partTitle: null,
@@ -261,14 +264,14 @@ export async function fetchMlpBookDetails(titulKey: number): Promise<MlpBookDeta
  * fetched separately via fetchMlpBookDetails().
  */
 export async function scrapeMlpListingPages(): Promise<MlpBookListing[]> {
-  console.log("Starting MLP API scraping...");
+  log.info("Starting MLP API scraping");
   const books: MlpBookListing[] = [];
   let from = 0;
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
     const url = `${MLP_API_URL}titul/search?filter%5Bformat%5D%5Beq%5D=e-kniha&size=${MLP_PAGE_SIZE}&from=${from}`;
-    console.log(`Fetching MLP API page (from=${from})...`);
+    log.info({ from }, "Fetching MLP API page");
 
     const data = await fetchJson<MlpApiSearchResponse>(url);
     const hits = data.hits.hits;
@@ -289,6 +292,6 @@ export async function scrapeMlpListingPages(): Promise<MlpBookListing[]> {
     if (from >= data.hits.total.value) break;
   }
 
-  console.log(`Found ${books.length} downloadable e-books from MLP API.`);
+  log.info({ count: books.length }, "Found downloadable e-books from MLP API");
   return books;
 }

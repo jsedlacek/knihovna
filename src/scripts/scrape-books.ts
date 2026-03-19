@@ -7,6 +7,7 @@ import { fetchMlpBookDetails, scrapeMlpListingPages } from "#@/lib/server/scrape
 import { applyBookFixupsToArray } from "#@/lib/server/utils/book-fixup-utils.ts";
 import { processBatch } from "#@/lib/server/utils/concurrency-utils.ts";
 import { loadExistingBooks, saveBooks } from "#@/lib/server/utils/file-utils.ts";
+import { createLogger } from "#@/lib/server/utils/logger.ts";
 import { withRetry } from "#@/lib/server/utils/retry-utils.ts";
 import { saveScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
 import {
@@ -17,6 +18,8 @@ import {
   RETRY_MAX_DELAY,
 } from "#@/lib/shared/config/scraper-config.ts";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
+
+const log = createLogger("scraper");
 
 /**
  * Main scraping function.
@@ -68,22 +71,22 @@ async function main() {
     .help()
     .alias("help", "h").argv;
 
-  console.log("🚀 Starting the scraping process...");
+  log.info("Starting the scraping process");
 
   // Show enabled stages
   const enabledStages = [];
   if (argv.mlp) enabledStages.push("MLP");
   if (argv.goodreads) enabledStages.push("Goodreads");
-  console.log(`📋 Enabled stages: ${enabledStages.join(", ")}`);
+  log.info({ stages: enabledStages }, "Enabled stages");
 
   if (argv.force) {
-    console.log("🔄 Force mode: Will re-scrape all enabled stages regardless of existing data.");
+    log.info("Force mode: will re-scrape all enabled stages regardless of existing data");
   }
   if (argv.bookName) {
-    console.log(`🔍 Selective mode: Only processing books with "${argv.bookName}" in title.`);
+    log.info({ bookName: argv.bookName }, "Selective mode: filtering by book title");
   }
   if (argv.author) {
-    console.log(`👤 Selective mode: Only processing books by author "${argv.author}".`);
+    log.info({ author: argv.author }, "Selective mode: filtering by author");
   }
 
   // 2. Initialization: Load existing books into a Map keyed by titulKey.
@@ -102,7 +105,7 @@ async function main() {
       }
     }
   }
-  console.log(`📚 Found ${booksMap.size} existing books.`);
+  log.info({ count: booksMap.size }, "Found existing books");
 
   const oneMonthAgo = new Date();
   oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
@@ -123,15 +126,16 @@ async function main() {
   // Log selective criteria summary
   if (argv.bookName || argv.author) {
     const matchingBooks = Array.from(booksMap.values()).filter(matchesSelectiveCriteria);
-    console.log(
-      `🎯 Selective criteria matches: ${matchingBooks.length}/${booksMap.size} books qualify for processing.`,
+    log.info(
+      { matching: matchingBooks.length, total: booksMap.size },
+      "Selective criteria matches",
     );
   }
 
   // 3. MLP Scraping Phase (listing + details combined)
   if (argv.mlp) {
     // Stage 1: Discover books via API listing
-    console.log("📚 Scraping MLP listings via API...");
+    log.info("Scraping MLP listings via API");
     const mlpListings = await scrapeMlpListingPages();
 
     let newBooksCount = 0;
@@ -158,27 +162,25 @@ async function main() {
     }
 
     if (newBooksCount > 0) {
-      console.log(`+ Discovered ${newBooksCount} new books from MLP.`);
+      log.info({ count: newBooksCount }, "Discovered new books from MLP");
     }
 
     // Stage 2: Fetch details for books needing updates
-    console.log("📝 Fetching MLP book details...");
+    log.info("Fetching MLP book details");
     const booksNeedingDetails = Array.from(booksMap.values()).filter((book) => {
       if (!matchesSelectiveCriteria(book)) return false;
       if (argv.force) return true;
       return !book.mlpScrapedAt || new Date(book.mlpScrapedAt) < oneMonthAgo;
     });
 
-    console.log(
-      `[MLP] ${booksNeedingDetails.length} books need detail scraping (new, or outdated).`,
-    );
+    log.info({ count: booksNeedingDetails.length }, "Books need detail scraping (new or outdated)");
 
     if (booksNeedingDetails.length > 0) {
       await processBatch({
         items: booksNeedingDetails,
         concurrency: CONCURRENCY,
         onProgress: (progress, total, item) => {
-          console.log(`[MLP ${progress}/${total}] Fetching details: ${item.title}`);
+          log.info({ progress, total, title: item.title }, "Fetching MLP details");
         },
         processItem: async (book) => {
           try {
@@ -188,8 +190,9 @@ async function main() {
               factor: RETRY_FACTOR,
               maxDelay: RETRY_MAX_DELAY,
               onRetry: (error, attempt) => {
-                console.warn(
-                  `[RETRY ${attempt}/${RETRY_COUNT}] Failed MLP details for "${book.title}": ${error.message}`,
+                log.warn(
+                  { attempt, maxRetries: RETRY_COUNT, title: book.title, err: error },
+                  "Retrying MLP details fetch",
                 );
               },
             });
@@ -201,19 +204,20 @@ async function main() {
               ...details,
               mlpScrapedAt: new Date().toISOString(),
             });
-          } catch {
-            console.error(
-              `[ERROR] Failed MLP details for "${book.title}" after all retries. Skipping.`,
+          } catch (error) {
+            log.error(
+              { title: book.title, err: error },
+              "Failed MLP details after all retries, skipping",
             );
           }
         },
       });
     }
-    console.log(`✅ MLP scraping complete.`);
+    log.info("MLP scraping complete");
   }
 
   // 4. Apply fixups to correct known data issues (before Goodreads scraping)
-  console.log("🔧 Applying book fixups...");
+  log.info("Applying book fixups");
   const booksBeforeFixups = Array.from(booksMap.values());
   const booksWithFixups = applyBookFixupsToArray(booksBeforeFixups);
 
@@ -225,7 +229,7 @@ async function main() {
 
   // 5. Goodreads Scraping Phase
   if (argv.goodreads) {
-    console.log("⭐ Scraping Goodreads...");
+    log.info("Scraping Goodreads");
     const booksForGoodreads = Array.from(booksMap.values()).filter((book) => {
       // First check if book matches selective criteria
       if (!matchesSelectiveCriteria(book)) return false;
@@ -236,14 +240,14 @@ async function main() {
       return isOutOfDate;
     });
 
-    console.log(`[Goodreads] ${booksForGoodreads.length} books need processing (outdated).`);
+    log.info({ count: booksForGoodreads.length }, "Books need Goodreads processing (outdated)");
 
     if (booksForGoodreads.length > 0) {
       await processBatch({
         items: booksForGoodreads,
         concurrency: CONCURRENCY,
         onProgress: (progress, total, item) => {
-          console.log(`[Goodreads ${progress}/${total}] Processing: ${item.title}`);
+          log.info({ progress, total, title: item.title }, "Processing Goodreads");
         },
         processItem: async (book) => {
           try {
@@ -253,8 +257,9 @@ async function main() {
               factor: RETRY_FACTOR,
               maxDelay: RETRY_MAX_DELAY,
               onRetry: (error, attempt) => {
-                console.warn(
-                  `[RETRY ${attempt}/${RETRY_COUNT}] Failed Goodreads for "${book.title}": ${error.message}`,
+                log.warn(
+                  { attempt, maxRetries: RETRY_COUNT, title: book.title, err: error },
+                  "Retrying Goodreads fetch",
                 );
               },
             });
@@ -266,20 +271,21 @@ async function main() {
               ...goodreadsData,
               goodreadsScrapedAt: new Date().toISOString(),
             });
-          } catch {
-            console.error(
-              `[ERROR] Failed to fetch Goodreads data for "${book.title}" after all retries. Skipping.`,
+          } catch (error) {
+            log.error(
+              { title: book.title, err: error },
+              "Failed Goodreads fetch after all retries, skipping",
             );
           }
         },
       });
     }
-    console.log("✅ Goodreads scraping complete.");
+    log.info("Goodreads scraping complete");
   }
 
   // 6. Finalization
   const allBooks = Array.from(booksMap.values());
-  console.log(`📚 Total books to save: ${allBooks.length}`);
+  log.info({ count: allBooks.length }, "Total books to save");
 
   // Save the results to a JSON file
   await saveBooks(allBooks);
@@ -287,10 +293,10 @@ async function main() {
   // Save the timestamp of successful completion
   await saveScrapingTimestamp();
 
-  console.log(`🎉 Scraping complete! Saved ${allBooks.length} total books to file.`);
+  log.info({ count: allBooks.length }, "Scraping complete, books saved to file");
 }
 
 main().catch((error) => {
-  console.error("An unexpected error occurred:", error);
+  log.fatal({ err: error }, "An unexpected error occurred");
   process.exit(1);
 });
