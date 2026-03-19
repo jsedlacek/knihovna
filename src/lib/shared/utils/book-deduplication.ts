@@ -97,7 +97,8 @@ export function deduplicateBooks(books: Book[]): Book[] {
           const firstBook = newestBooks[0];
           if (!firstBook) continue;
           logger.warn(
-            `Conflict: Multiple books for "${firstBook.author} - ${firstBook.title}" from year ${maxYear}. Keeping all.`,
+            { author: firstBook.author, title: firstBook.title, year: maxYear },
+            `Conflict: Multiple books from same year. Keeping all.`,
           );
         }
 
