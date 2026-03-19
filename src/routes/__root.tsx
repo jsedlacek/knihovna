@@ -29,9 +29,7 @@ function RootErrorComponent() {
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
       <div className="text-center">
         <h1 className="text-6xl font-bold mb-4">Chyba</h1>
-        <p className="text-muted-foreground mb-8">
-          Omlouváme se, něco se pokazilo.
-        </p>
+        <p className="text-muted-foreground mb-8">Omlouváme se, něco se pokazilo.</p>
         <a
           href="/"
           className="inline-block bg-accent text-accent-foreground px-6 py-3 rounded hover:bg-accent/80 transition-colors"

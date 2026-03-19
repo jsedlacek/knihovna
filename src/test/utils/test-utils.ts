@@ -15,6 +15,7 @@ export function loadFixture(filename: string): string {
  */
 export function createMockBook(overrides: Partial<Book> = {}): Book {
   return {
+    titulKey: 12345,
     title: "Test Book Title",
     author: "Test Author",
     publisher: "Test Publisher",

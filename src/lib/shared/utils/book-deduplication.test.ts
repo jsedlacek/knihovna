@@ -8,6 +8,7 @@ import { deduplicateBooks } from "./book-deduplication.ts";
  */
 function createTestBook(overrides: Partial<Book> = {}): Book {
   return {
+    titulKey: 99999,
     title: "Test Book",
     partTitle: null,
     author: "Test Author",

@@ -4,6 +4,7 @@ import { HomePage } from "./home-page";
 
 const sampleBooks: Book[] = [
   {
+    titulKey: 3001,
     title: "Krakatit",
     author: "Karel Čapek",
     publisher: "Československý spisovatel",
@@ -25,6 +26,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 3002,
     title: "Válka s mloky",
     author: "Karel Čapek",
     publisher: "Československý spisovatel",
@@ -46,6 +48,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 3003,
     title: "Babička",
     author: "Božena Němcová",
     publisher: null,
@@ -67,6 +70,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 3004,
     title: "Malý princ",
     author: "Antoine de Saint-Exupéry",
     publisher: "Gallimard",
@@ -88,6 +92,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 3005,
     title: "Kytice",
     author: "Karel Jaromír Erben",
     publisher: null,
@@ -109,6 +114,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 3006,
     title: "R.U.R.",
     author: "Karel Čapek",
     publisher: "Aventinum",
@@ -130,6 +136,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 3007,
     title: "Máj",
     author: "Karel Hynek Mácha",
     publisher: null,
@@ -151,6 +158,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 3008,
     title: "Osudy dobrého vojáka Švejka",
     author: "Jaroslav Hašek",
     publisher: "Adolf Synek",

@@ -4,6 +4,7 @@ import { GenreSection } from "./genre-section";
 
 const sampleBooks: Book[] = [
   {
+    titulKey: 2001,
     title: "Krakatit",
     author: "Karel Čapek",
     publisher: "Československý spisovatel",
@@ -24,6 +25,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 2002,
     title: "Válka s mloky",
     author: "Karel Čapek",
     publisher: "Československý spisovatel",
@@ -44,6 +46,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 2003,
     title: "R.U.R.",
     author: "Karel Čapek",
     publisher: "Aventinum",
@@ -64,6 +67,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 2004,
     title: "Babička",
     author: "Božena Němcová",
     publisher: null,
@@ -84,6 +88,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 2005,
     title: "Kytice",
     author: "Karel Jaromír Erben",
     publisher: null,

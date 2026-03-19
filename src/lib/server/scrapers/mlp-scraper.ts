@@ -5,7 +5,7 @@ import {
   MLP_KOWEB_URL,
   MLP_PAGE_SIZE,
 } from "#@/lib/shared/config/scraper-config.ts";
-import type { MlpBook, MlpBookDetails, MlpBookListing } from "#@/lib/shared/types/book-types.ts";
+import type { MlpBookDetails, MlpBookListing } from "#@/lib/shared/types/book-types.ts";
 import { cleanAuthorName, cleanTitle } from "#@/lib/shared/utils/text-utils.ts";
 
 // --- Elasticsearch API response types ---
@@ -99,11 +99,7 @@ export function buildImageUrl(titulKey: number): string {
 /**
  * Build a download URL for a specific file format.
  */
-export function buildDownloadUrl(
-  titulKey: number,
-  filename: string,
-  format: string,
-): string {
+export function buildDownloadUrl(titulKey: number, filename: string, format: string): string {
   return `${MLP_KOWEB_URL}${buildKowebDownloadPath(titulKey)}${filename}.${format}`;
 }
 
@@ -157,10 +153,10 @@ function extractAuthor(source: MlpApiHitSource): string {
   if (!source.osoba?.length) return "Unknown Author";
 
   const authors = source.osoba.filter((o) => o.role_kod === "aut");
-  if (authors.length === 0) return cleanAuthorName(source.osoba[0].jmeno) || "Unknown Author";
+  if (authors.length === 0) return cleanAuthorName(source.osoba[0]!.jmeno) || "Unknown Author";
 
   const primary = authors.find((a) => a.prozahlavi === "1");
-  const author = primary || authors[0];
+  const author = primary ?? authors[0]!;
   return cleanAuthorName(author.jmeno) || "Unknown Author";
 }
 
@@ -197,8 +193,8 @@ export function parseApiBookDetails(source: MlpApiHitSource): MlpBookDetails {
   let genreId: string | null = null;
   let genre: string | null = null;
   if (source.och?.length) {
-    genreId = source.och[0].txoch_och_full || null;
-    genre = source.och[0].tema || null;
+    genreId = source.och[0]!.txoch_och_full || null;
+    genre = source.och[0]!.tema || null;
   }
 
   // Image URL from titul_key (uses has_img_small/has_img flags)
@@ -256,7 +252,7 @@ export async function fetchMlpBookDetails(titulKey: number): Promise<MlpBookDeta
     };
   }
 
-  return parseApiBookDetails(data.hits.hits[0]._source);
+  return parseApiBookDetails(data.hits.hits[0]!._source);
 }
 
 /**

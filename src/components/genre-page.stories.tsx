@@ -4,6 +4,7 @@ import { GenrePage } from "./genre-page";
 
 const sampleBooks: Book[] = [
   {
+    titulKey: 1001,
     title: "Krakatit",
     author: "Karel Čapek",
     publisher: "Československý spisovatel",
@@ -25,6 +26,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 1002,
     title: "Válka s mloky",
     author: "Karel Čapek",
     publisher: "Československý spisovatel",
@@ -46,6 +48,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 1003,
     title: "Babička",
     author: "Božena Němcová",
     publisher: null,
@@ -67,6 +70,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 1004,
     title: "Malý princ",
     author: "Antoine de Saint-Exupéry",
     publisher: "Gallimard",
@@ -88,6 +92,7 @@ const sampleBooks: Book[] = [
     goodreadsScrapedAt: "2024-01-15T10:30:00Z",
   },
   {
+    titulKey: 1005,
     title: "Kytice",
     author: "Karel Jaromír Erben",
     publisher: null,
