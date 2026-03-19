@@ -19,7 +19,7 @@ export function GenrePage({ books, genreKey, showScores = false }: GenrePageProp
   const sortedBooks = sortBooksByScore(books);
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-mono">
+    <div className="min-h-screen bg-background text-foreground">
       <Header showBackLink />
 
       <main className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">

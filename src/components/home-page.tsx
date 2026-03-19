@@ -22,7 +22,7 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
   const formattedLastUpdated = lastUpdated ? formatDateCzech(lastUpdated.lastUpdated) : null;
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-mono">
+    <div className="min-h-screen bg-background text-foreground">
       <Header
         {...(lastUpdated &&
           formattedLastUpdated && {
