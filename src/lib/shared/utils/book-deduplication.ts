@@ -1,5 +1,8 @@
 import type { Book } from "#@/lib/shared/types/book-types.ts";
+import { createLogger } from "#@/lib/server/utils/logger.ts";
 import { romanToArabic } from "#@/lib/shared/utils/text-utils.ts";
+
+const logger = createLogger("book-deduplication");
 
 /**
  * Normalizes Roman numerals to Arabic numerals for deduplication.
@@ -78,7 +81,7 @@ export function deduplicateBooks(books: Book[]): Book[] {
         // This might indicate a data issue, so a log is useful.
         const firstBook = groupBooks[0];
         if (!firstBook) continue;
-        console.log(
+        logger.warn(
           `Deduplication skipped for "${firstBook.author} - ${firstBook.title}": No year found.`,
         );
         result.push(...groupBooks);
@@ -93,7 +96,7 @@ export function deduplicateBooks(books: Book[]): Book[] {
           // We'll log it and keep all of them.
           const firstBook = newestBooks[0];
           if (!firstBook) continue;
-          console.log(
+          logger.warn(
             `Conflict: Multiple books for "${firstBook.author} - ${firstBook.title}" from year ${maxYear}. Keeping all.`,
           );
         }

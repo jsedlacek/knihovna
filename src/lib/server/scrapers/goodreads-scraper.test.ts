@@ -105,9 +105,6 @@ describe("Goodreads Scraper HTML Parsing", () => {
         author: "Karel Čapek",
       });
 
-      // With smart selection: should now pick the standalone Krakatit book
-      console.log("Smart selection result:", result);
-
       // The improved implementation should pick the best matching book
       assert.strictEqual(
         result,
@@ -123,18 +120,11 @@ describe("Goodreads Scraper HTML Parsing", () => {
       const $ = cheerio.load(searchHtml);
 
       const bookLinks = $("a.bookTitle[href*='/book/show/']");
-      console.log(`Found ${bookLinks.length} book results in search`);
-
-      // First result (currently selected): Wikipedia compilation
-      const firstTitle = $(bookLinks[0]).text().trim();
-      const firstHref = $(bookLinks[0]).attr("href");
-      console.log(`1st result: "${firstTitle}" -> ${firstHref}`);
 
       // Second result (should be selected): Standalone Krakatit
       if (bookLinks.length > 1) {
         const secondTitle = $(bookLinks[1]).text().trim();
         const secondHref = $(bookLinks[1]).attr("href");
-        console.log(`2nd result: "${secondTitle}" -> ${secondHref}`);
 
         assert.strictEqual(secondTitle, "Krakatit");
         assert.ok(secondHref?.includes("/book/show/428287.Krakatit"));
@@ -159,8 +149,6 @@ describe("Goodreads Scraper HTML Parsing", () => {
         "/book/show/428287.Krakatit?from_search=true&from_srp=true&qid=Y4sHHLfIIx&rank=2",
         "Should pick standalone 'Krakatit' by Karel Čapek, not Wikipedia compilation",
       );
-
-      console.log("✅ Smart book selection working correctly");
     });
   });
 
@@ -349,8 +337,6 @@ describe("Goodreads Scraper HTML Parsing", () => {
 
       assert.ok(result.rating !== null, "Rating should be extracted");
       assert.ok(result.ratingsCount !== null, "Ratings count should be extracted");
-
-      console.log("Extracted Goodreads data:", result);
     });
 
     test("should extract data from HTML elements", () => {
@@ -522,8 +508,6 @@ describe("Goodreads Scraper HTML Parsing", () => {
 
       const result = parseGoodreadsBookData(goodreadsHtml);
 
-      console.log("Real fixture extraction result:", result);
-
       // Basic checks - at least some meaningful data should be extracted
       const hasRatingData = result.rating !== null || result.ratingsCount !== null;
 
@@ -562,14 +546,11 @@ describe("Goodreads Scraper HTML Parsing", () => {
           author: "Test Author",
         });
 
-        console.log("Search fixture result:", result);
-
         if (result !== null) {
           assert.ok(result.includes("/book/show/"), "Should extract valid book link pattern");
         }
       } catch {
         // If fixture doesn't exist, test with synthetic data
-        console.log("No search fixture found, using synthetic test data");
 
         const syntheticSearchHtml = `
           <html>

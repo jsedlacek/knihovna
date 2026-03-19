@@ -1,4 +1,7 @@
 import type { Book } from "#@/lib/shared/types/book-types.ts";
+import { createLogger } from "#@/lib/server/utils/logger.ts";
+
+const logger = createLogger("book-scoring");
 
 /**
  * Calculate a composite score for a book based on its rating and number of reviews.
@@ -71,10 +74,10 @@ export function testBookScoring(): void {
     } as Book,
   ];
 
-  console.log("Book Scoring Test Results:");
+  logger.debug("Book Scoring Test Results:");
   testBooks.forEach((book) => {
     const score = calculateBookScore(book);
-    console.log(
+    logger.debug(
       `${book.title}: ${book.rating}/5 (${book.ratingsCount} reviews) = Score: ${score.toFixed(2)}`,
     );
   });
