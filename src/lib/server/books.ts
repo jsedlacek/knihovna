@@ -1,8 +1,8 @@
 import booksJson from "../../../data/books.json";
 import lastUpdatedJson from "../../../data/last-updated.json";
-import { filterBlockedBooks } from "../shared/config/book-block-list";
-import { deduplicateBooks } from "../shared/utils/book-deduplication";
-import { sortBooksByScore } from "../shared/utils/book-scoring";
+import { filterBlockedBooks } from "../shared/config/book-block-list.ts";
+import { deduplicateBooks } from "../shared/utils/book-deduplication.ts";
+import { sortBooksByScore } from "../shared/utils/book-scoring.ts";
 
 const unblockedBooks = filterBlockedBooks(booksJson);
 

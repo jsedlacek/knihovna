@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Link } from "./link";
+import { Link } from "./link.tsx";
 
 const meta: Meta<typeof Link> = {
   title: "UI/Link",

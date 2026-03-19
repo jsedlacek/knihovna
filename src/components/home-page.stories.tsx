@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
-import { HomePage } from "./home-page";
+import { HomePage } from "./home-page.tsx";
 
 const sampleBooks: Book[] = [
   {

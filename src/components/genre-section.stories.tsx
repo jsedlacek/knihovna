@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
-import { GenreSection } from "./genre-section";
+import { GenreSection } from "./genre-section.tsx";
 
 const sampleBooks: Book[] = [
   {
