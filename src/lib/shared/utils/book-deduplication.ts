@@ -82,7 +82,8 @@ export function deduplicateBooks(books: Book[]): Book[] {
         const firstBook = groupBooks[0];
         if (!firstBook) continue;
         logger.warn(
-          `Deduplication skipped for "${firstBook.author} - ${firstBook.title}": No year found.`,
+          { author: firstBook.author, title: firstBook.title },
+          "Deduplication skipped: No year found.",
         );
         result.push(...groupBooks);
       } else {
@@ -98,7 +99,7 @@ export function deduplicateBooks(books: Book[]): Book[] {
           if (!firstBook) continue;
           logger.warn(
             { author: firstBook.author, title: firstBook.title, year: maxYear },
-            `Conflict: Multiple books from same year. Keeping all.`,
+            "Conflict: Multiple books from same year. Keeping all.",
           );
         }
 
