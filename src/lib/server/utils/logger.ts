@@ -27,7 +27,7 @@ export async function configureLogging() {
     sinks: {
       console: getConsoleSink({
         formatter: usePrettyLogs
-          ? getPrettyFormatter({ colorize: process.env["CI"] !== "true" })
+          ? getPrettyFormatter({ colorize: !("NO_COLOR" in process.env) })
           : jsonFormatter,
       }),
     },
