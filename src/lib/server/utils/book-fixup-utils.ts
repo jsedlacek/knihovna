@@ -53,32 +53,32 @@ export function applyBookFixups(book: Book): Book {
   // Create a new book object with fixups applied
   const fixedBook: Book = { ...book };
 
-  if (fixup.title !== undefined) {
+  if (fixup.title !== undefined && book.title !== fixup.title) {
     log.info("Fixup applied", { field: "title", from: book.title, to: fixup.title });
     fixedBook.title = fixup.title;
   }
 
-  if (fixup.author !== undefined) {
+  if (fixup.author !== undefined && book.author !== fixup.author) {
     log.info("Fixup applied", { field: "author", from: book.author, to: fixup.author });
     fixedBook.author = fixup.author;
   }
 
-  if (fixup.subtitle !== undefined) {
+  if (fixup.subtitle !== undefined && book.subtitle !== fixup.subtitle) {
     log.info("Fixup applied", { field: "subtitle", from: book.subtitle, to: fixup.subtitle });
     fixedBook.subtitle = fixup.subtitle;
   }
 
-  if (fixup.description !== undefined) {
+  if (fixup.description !== undefined && book.description !== fixup.description) {
     log.info("Fixup applied", { field: "description" });
     fixedBook.description = fixup.description;
   }
 
-  if (fixup.publisher !== undefined) {
+  if (fixup.publisher !== undefined && book.publisher !== fixup.publisher) {
     log.info("Fixup applied", { field: "publisher", from: book.publisher, to: fixup.publisher });
     fixedBook.publisher = fixup.publisher;
   }
 
-  if (fixup.year !== undefined) {
+  if (fixup.year !== undefined && book.year !== fixup.year) {
     log.info("Fixup applied", { field: "year", from: book.year, to: fixup.year });
     fixedBook.year = fixup.year;
   }
