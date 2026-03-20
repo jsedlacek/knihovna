@@ -5,7 +5,7 @@ import {
   getLogger,
   type LogLevel,
 } from "@logtape/logtape";
-import { getPrettyFormatter } from "@logtape/pretty";
+import { prettyFormatter } from "@jsedlacek/logtape-pretty";
 
 const levelEnv = process.env["LOG_LEVEL"] ?? "info";
 
@@ -19,35 +19,7 @@ const mode = (import.meta.env?.MODE ?? process.env?.["NODE_ENV"] ?? "production"
   | "development"
   | "production";
 
-const isCI = process.env["CI"] === "true";
-
 export async function configureLogging() {
-  const prettyFormatter = getPrettyFormatter({
-    colors: !isCI,
-    align: false,
-    timestamp: "time",
-    level: "ABBR",
-    properties: true,
-    inspectOptions: {
-      compact: true,
-    },
-    icons: false,
-    timestampColor: null,
-    timestampStyle: "dim",
-    categoryColor: null,
-    categoryStyle: "dim",
-    messageColor: null,
-    messageStyle: null,
-    levelStyle: "bold",
-    levelColors: {
-      debug: "blue",
-      info: "green",
-      warning: "yellow",
-      error: "red",
-      fatal: "magenta",
-    },
-  });
-
   const jsonFormatter = getJsonLinesFormatter({ properties: "flatten" });
 
   await configure({
