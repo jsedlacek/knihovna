@@ -5,7 +5,7 @@ import {
   getLogger,
   type LogLevel,
 } from "@logtape/logtape";
-import { prettyFormatter } from "@jsedlacek/logtape-pretty";
+import { getPrettyFormatter } from "@jsedlacek/logtape-pretty";
 
 const levelEnv = process.env["LOG_LEVEL"] ?? "info";
 
@@ -26,7 +26,7 @@ export async function configureLogging() {
   await configure({
     sinks: {
       console: getConsoleSink({
-        formatter: usePrettyLogs ? prettyFormatter : jsonFormatter,
+        formatter: usePrettyLogs ? getPrettyFormatter({ colorize: true }) : jsonFormatter,
       }),
     },
     loggers: [
