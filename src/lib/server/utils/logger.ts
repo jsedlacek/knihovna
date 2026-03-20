@@ -15,9 +15,9 @@ function parseLevel(level: string): LogLevel | null {
   return level as LogLevel;
 }
 
-const mode = (import.meta.env?.MODE ?? process.env?.["NODE_ENV"] ?? "production") as
-  | "development"
-  | "production";
+const usePrettyLogs =
+  process.env["CI"] === "true" ||
+  (import.meta.env?.MODE ?? process.env?.["NODE_ENV"] ?? "production") !== "production";
 
 export async function configureLogging() {
   const jsonFormatter = getJsonLinesFormatter({ properties: "flatten" });
@@ -25,7 +25,7 @@ export async function configureLogging() {
   await configure({
     sinks: {
       console: getConsoleSink({
-        formatter: mode === "production" ? jsonFormatter : prettyFormatter,
+        formatter: usePrettyLogs ? prettyFormatter : jsonFormatter,
       }),
     },
     loggers: [
