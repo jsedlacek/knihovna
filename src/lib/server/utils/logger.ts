@@ -26,9 +26,9 @@ export async function configureLogging() {
   await configure({
     sinks: {
       console: getConsoleSink({
+        // Force colors in dev — Vite pipes stdout so TTY auto-detection fails
         formatter: usePrettyLogs
-          ? // Force colors in dev — Vite pipes stdout so TTY auto-detection fails
-            getPrettyFormatter(import.meta.env?.DEV === true ? { colorize: true } : {})
+          ? getPrettyFormatter({ colorize: import.meta.env?.DEV === true || undefined })
           : jsonFormatter,
       }),
     },
