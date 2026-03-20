@@ -26,7 +26,9 @@ export async function configureLogging() {
   await configure({
     sinks: {
       console: getConsoleSink({
-        formatter: usePrettyLogs ? getPrettyFormatter({ colorize: true }) : jsonFormatter,
+        formatter: usePrettyLogs
+          ? getPrettyFormatter({ colorize: process.env["CI"] !== "true" })
+          : jsonFormatter,
       }),
     },
     loggers: [
