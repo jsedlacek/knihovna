@@ -19,6 +19,8 @@ import {
 } from "#@/lib/shared/config/scraper-config.ts";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 
+await configureLogging();
+
 const log = createLogger("scraper");
 
 /**
@@ -300,9 +302,4 @@ async function main() {
   log.info("Scraping complete, books saved to file", { count: allBooks.length });
 }
 
-configureLogging().then(() =>
-  main().catch((error) => {
-    log.fatal("An unexpected error occurred", { err: error });
-    process.exit(1);
-  }),
-);
+await main();

@@ -30,7 +30,7 @@
     "storybook:build": "storybook build"
   },
   "dependencies": {
-    "@jsedlacek/logtape-pretty": "^0.8.0",
+    "@jsedlacek/logtape-pretty": "^0.9.0",
     "@logtape/logtape": "^2.0.4",
     "@tanstack/react-router": "^1.167.5",
     "@tanstack/react-start": "^1.166.17",

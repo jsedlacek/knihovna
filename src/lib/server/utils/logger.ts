@@ -22,14 +22,13 @@ const usePrettyLogs =
 
 export async function configureLogging() {
   const jsonFormatter = getJsonLinesFormatter({ properties: "flatten" });
+  const prettyFormatter = getPrettyFormatter({ color: import.meta.env?.DEV ? true : undefined });
 
   await configure({
     sinks: {
       console: getConsoleSink({
         // Force colors in dev — Vite pipes stdout so TTY auto-detection fails
-        formatter: usePrettyLogs
-          ? getPrettyFormatter({ color: import.meta.env?.DEV ? true : undefined })
-          : jsonFormatter,
+        formatter: usePrettyLogs ? prettyFormatter : jsonFormatter,
       }),
     },
     loggers: [
