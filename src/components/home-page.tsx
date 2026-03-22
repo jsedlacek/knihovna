@@ -67,7 +67,7 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
         {bookCount === 0 && (
           <section className="space-y-4">
             <p className="text-muted-foreground">
-              Žádné knihy nejsou momentálně k dispozici. Zkontrolujte soubor data/books.json.
+              Žádné knihy nejsou momentálně k dispozici. Zkontrolujte soubor data/books.sqlite.
             </p>
           </section>
         )}

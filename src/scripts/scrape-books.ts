@@ -293,7 +293,7 @@ async function main() {
   const allBooks = Array.from(booksMap.values());
   log.info("Total books to save", { count: allBooks.length });
 
-  // Save the results to a JSON file
+  // Save the results to the SQLite database
   await saveBooks(allBooks);
 
   // Save the timestamp of successful completion

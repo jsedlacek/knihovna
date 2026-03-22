@@ -39,8 +39,10 @@ for (const file of collectFiles(SRC_DIR)) {
   IMPORT_RE.lastIndex = 0;
   while ((match = IMPORT_RE.exec(content)) !== null) {
     const specifier = match[1];
+    // Strip query parameters (e.g., ?arraybuffer) before checking extension
+    const specifierWithoutQuery = specifier.split("?")[0]!;
     // Skip if already has a file extension
-    if (/\.\w+$/.test(specifier) && !specifier.endsWith(".")) continue;
+    if (/\.\w+$/.test(specifierWithoutQuery) && !specifierWithoutQuery.endsWith(".")) continue;
     const line = content.slice(0, match.index).split("\n").length;
     const rel = relative(process.cwd(), file);
     console.error(`${rel}:${line} - missing extension: "${specifier}"`);

@@ -28,7 +28,7 @@ export interface GoodreadsData {
 }
 
 // The canonical Book object, combining all data sources.
-// This is the format used in the final books.json file.
+// This is the format used in the SQLite database.
 export interface Book extends MlpBookListing, MlpBookDetails, GoodreadsData {
   mlpScrapedAt: string | null;
   goodreadsScrapedAt: string | null;
