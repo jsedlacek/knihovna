@@ -3,7 +3,20 @@ import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 import viteReact from "@vitejs/plugin-react";
-import arraybuffer from "vite-plugin-arraybuffer";
+import { copyFileSync, mkdirSync } from "node:fs";
+import { resolve } from "node:path";
+
+function copyDataPlugin() {
+  return {
+    name: "copy-data",
+    writeBundle() {
+      const src = resolve("data/books.sqlite");
+      const destDir = resolve("dist/client/data");
+      mkdirSync(destDir, { recursive: true });
+      copyFileSync(src, resolve(destDir, "books.sqlite"));
+    },
+  };
+}
 
 export default defineConfig({
   plugins: [
@@ -11,6 +24,6 @@ export default defineConfig({
     tailwindcss(),
     tanstackStart({}),
     viteReact(),
-    arraybuffer(),
+    copyDataPlugin(),
   ],
 });
