@@ -1,6 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { GenrePage } from "#@/components/genre-page.tsx";
-import { books } from "#@/lib/server/books.ts";
+import { getBooks } from "#@/lib/server/books.ts";
 import {
   getBooksForGenreGroup,
   GENRE_GROUPS,
@@ -17,6 +17,7 @@ export const Route = createFileRoute("/$genre")({
       throw notFound();
     }
 
+    const books = await getBooks();
     return getBooksForGenreGroup(books, params.genre);
   },
   head: ({ params }) => {

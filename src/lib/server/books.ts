@@ -1,20 +1,32 @@
-import booksJson from "../../../data/books.json";
 import lastUpdatedJson from "../../../data/last-updated.json";
+import { getWorkerDb } from "./db/worker-db.ts";
 import { filterBlockedBooks } from "../shared/config/book-block-list.ts";
+import { booksTable } from "../shared/db/schema.ts";
 import { deduplicateBooks } from "../shared/utils/book-deduplication.ts";
 import { sortBooksByScore } from "../shared/utils/book-scoring.ts";
+import type { Book } from "../shared/types/book-types.ts";
 
-const unblockedBooks = filterBlockedBooks(booksJson);
+let cachedBooks: Book[] | undefined;
 
-// Remove duplicate books, keeping only the newer version
-const deduplicatedBooks = deduplicateBooks(unblockedBooks);
+export async function getBooks(): Promise<Book[]> {
+  if (cachedBooks) return cachedBooks;
 
-// Then filter books with a rating of 4.0 or higher and have EPUB download links
-const filteredBooks = deduplicatedBooks.filter(
-  (book) => book.rating !== null && book.rating >= 4.0 && book.epubUrl,
-);
+  const db = await getWorkerDb();
+  const allBooks = db.select().from(booksTable).all();
 
-// Sort all books by score
-export const books = sortBooksByScore(filteredBooks);
+  const unblockedBooks = filterBlockedBooks(allBooks);
+
+  // Remove duplicate books, keeping only the newer version
+  const deduplicatedBooks = deduplicateBooks(unblockedBooks);
+
+  // Then filter books with a rating of 4.0 or higher and have EPUB download links
+  const filteredBooks = deduplicatedBooks.filter(
+    (book) => book.rating !== null && book.rating >= 4.0 && book.epubUrl,
+  );
+
+  // Sort all books by score
+  cachedBooks = sortBooksByScore(filteredBooks);
+  return cachedBooks;
+}
 
 export const lastUpdated = lastUpdatedJson;
