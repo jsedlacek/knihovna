@@ -23,21 +23,25 @@ function ErrorPage({ code, title, message }: { code: string; title: string; mess
 
 function NotFound() {
   return (
-    <ErrorPage
-      code="404"
-      title="Stránka nenalezena"
-      message="Omlouváme se, ale stránka kterou hledáte neexistuje."
-    />
+    <RootDocument>
+      <ErrorPage
+        code="404"
+        title="Stránka nenalezena"
+        message="Omlouváme se, ale stránka kterou hledáte neexistuje."
+      />
+    </RootDocument>
   );
 }
 
 function RootErrorComponent() {
   return (
-    <ErrorPage
-      code="Chyba"
-      title="Něco se pokazilo"
-      message="Omlouváme se, při načítání stránky došlo k chybě."
-    />
+    <RootDocument>
+      <ErrorPage
+        code="Chyba"
+        title="Něco se pokazilo"
+        message="Omlouváme se, při načítání stránky došlo k chybě."
+      />
+    </RootDocument>
   );
 }
 
