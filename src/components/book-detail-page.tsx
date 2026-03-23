@@ -124,16 +124,6 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
               >
                 MĚSTSKÁ KNIHOVNA <ExternalLinkIcon className="ml-1 size-3" />
               </Button>
-              {book.url && (
-                <Button
-                  href={book.url}
-                  variant="secondary"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  GOODREADS <ExternalLinkIcon className="ml-1 size-3" />
-                </Button>
-              )}
             </div>
           </div>
         </Card>
