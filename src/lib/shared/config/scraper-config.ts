@@ -10,12 +10,6 @@ export const GOODREADS_BASE_URL = "https://www.goodreads.com";
 export const MLP_PAGE_SIZE = 100; // Results per API page
 export const CONCURRENCY = 20; // Number of concurrent requests
 
-// --- Retry Configuration ---
-export const RETRY_COUNT = 10; // Number of retry attempts
-export const RETRY_DELAY = 1000; // Initial delay in milliseconds
-export const RETRY_FACTOR = 2; // Exponential backoff multiplier
-export const RETRY_MAX_DELAY = 30000; // Maximum delay in milliseconds
-
 // --- HTTP Configuration ---
 export const USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";

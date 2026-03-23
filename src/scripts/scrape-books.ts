@@ -2,21 +2,15 @@
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import pMap from "p-map";
+import pRetry from "p-retry";
 import { scrapeGoodreads } from "#@/lib/server/scrapers/goodreads-scraper.ts";
 import { fetchMlpBookDetails, scrapeMlpListingPages } from "#@/lib/server/scrapers/mlp-scraper.ts";
 import { applyBookFixupsToArray } from "#@/lib/server/utils/book-fixup-utils.ts";
-import { processBatch } from "#@/lib/server/utils/concurrency-utils.ts";
 import { loadExistingBooks, saveBooks } from "#@/lib/server/utils/file-utils.ts";
 import { configureLogging, createLogger } from "#@/lib/server/utils/logger.ts";
-import { withRetry } from "#@/lib/server/utils/retry-utils.ts";
 import { saveScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
-import {
-  CONCURRENCY,
-  RETRY_COUNT,
-  RETRY_DELAY,
-  RETRY_FACTOR,
-  RETRY_MAX_DELAY,
-} from "#@/lib/shared/config/scraper-config.ts";
+import { CONCURRENCY } from "#@/lib/shared/config/scraper-config.ts";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 
 await configureLogging();
@@ -178,25 +172,26 @@ async function main() {
     log.info("Books need detail scraping (new or outdated)", { count: booksNeedingDetails.length });
 
     if (booksNeedingDetails.length > 0) {
-      await processBatch({
-        items: booksNeedingDetails,
-        concurrency: CONCURRENCY,
-        onProgress: (progress, total, item) => {
-          log.info("Fetching MLP details", { progress, total, title: item.title });
-        },
-        processItem: async (book) => {
+      let progress = 0;
+      await pMap(
+        booksNeedingDetails,
+        async (book) => {
+          progress++;
+          log.info("Fetching MLP details", {
+            progress,
+            total: booksNeedingDetails.length,
+            title: book.title,
+          });
           try {
-            const details = await withRetry(() => fetchMlpBookDetails(book.titulKey), {
-              retries: RETRY_COUNT,
-              delay: RETRY_DELAY,
-              factor: RETRY_FACTOR,
-              maxDelay: RETRY_MAX_DELAY,
-              onRetry: (error, attempt) => {
+            const details = await pRetry(() => fetchMlpBookDetails(book.titulKey), {
+              retries: 10,
+              minTimeout: 1000,
+              maxTimeout: 30000,
+              onFailedAttempt: ({ attemptNumber, retriesLeft }) => {
                 log.warn("Retrying MLP details fetch", {
-                  attempt,
-                  maxRetries: RETRY_COUNT,
+                  attempt: attemptNumber,
+                  retriesLeft,
                   title: book.title,
-                  err: error,
                 });
               },
             });
@@ -215,7 +210,8 @@ async function main() {
             });
           }
         },
-      });
+        { concurrency: CONCURRENCY, stopOnError: false },
+      );
     }
     log.info("MLP scraping complete");
   }
@@ -247,25 +243,26 @@ async function main() {
     log.info("Books need Goodreads processing (outdated)", { count: booksForGoodreads.length });
 
     if (booksForGoodreads.length > 0) {
-      await processBatch({
-        items: booksForGoodreads,
-        concurrency: CONCURRENCY,
-        onProgress: (progress, total, item) => {
-          log.info("Processing Goodreads", { progress, total, title: item.title });
-        },
-        processItem: async (book) => {
+      let progress = 0;
+      await pMap(
+        booksForGoodreads,
+        async (book) => {
+          progress++;
+          log.info("Processing Goodreads", {
+            progress,
+            total: booksForGoodreads.length,
+            title: book.title,
+          });
           try {
-            const goodreadsData = await withRetry(() => scrapeGoodreads(book), {
-              retries: RETRY_COUNT,
-              delay: RETRY_DELAY,
-              factor: RETRY_FACTOR,
-              maxDelay: RETRY_MAX_DELAY,
-              onRetry: (error, attempt) => {
+            const goodreadsData = await pRetry(() => scrapeGoodreads(book), {
+              retries: 10,
+              minTimeout: 1000,
+              maxTimeout: 30000,
+              onFailedAttempt: ({ attemptNumber, retriesLeft }) => {
                 log.warn("Retrying Goodreads fetch", {
-                  attempt,
-                  maxRetries: RETRY_COUNT,
+                  attempt: attemptNumber,
+                  retriesLeft,
                   title: book.title,
-                  err: error,
                 });
               },
             });
@@ -284,7 +281,8 @@ async function main() {
             });
           }
         },
-      });
+        { concurrency: CONCURRENCY, stopOnError: false },
+      );
     }
     log.info("Goodreads scraping complete");
   }
