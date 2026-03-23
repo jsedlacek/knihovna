@@ -1,5 +1,6 @@
 import { fetchJson } from "#@/lib/server/utils/fetch-utils.ts";
 import { createLogger } from "#@/lib/server/utils/logger.ts";
+import { getBestImageUrl } from "#@/lib/shared/utils/text-utils.ts";
 import {
   MLP_API_URL,
   MLP_BASE_URL,
@@ -244,7 +245,9 @@ export async function fetchMlpBookDetails(titulKey: number): Promise<MlpBookDeta
     };
   }
 
-  return parseApiBookDetails(data.hits.hits[0]!._source);
+  const details = parseApiBookDetails(data.hits.hits[0]!._source);
+  details.imageUrl = await getBestImageUrl(details.imageUrl);
+  return details;
 }
 
 /**
