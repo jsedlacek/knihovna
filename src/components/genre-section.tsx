@@ -70,7 +70,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
 
       <div className="pt-2">
         <Button href={`/${genreKey}`} variant="primary">
-          Zobrazit všechny knihy →
+          {genreConfig.name} →
         </Button>
       </div>
     </section>
