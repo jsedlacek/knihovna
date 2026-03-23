@@ -88,7 +88,9 @@ export function GenrePage({
           {nextCursor !== null && (
             <div className="flex justify-center pt-4">
               <Button onClick={loadMore} disabled={loading}>
-                {loading ? "Načítání…" : "Načíst další"}
+                {loading
+                  ? "Načítání…"
+                  : `Načíst další (${formatNumberCzech(totalCount - books.length)} zbývá)`}
               </Button>
             </div>
           )}
