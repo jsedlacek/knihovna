@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 const baseClasses =
-  "px-4 py-2 sm:px-3 sm:py-1 text-xs border-1 transition-all duration-200 min-h-[44px] sm:min-h-0 uppercase tracking-wide inline-flex items-center";
+  "px-4 py-2 sm:px-3 sm:py-1 text-xs border-1 transition-all duration-200 min-h-[44px] sm:min-h-0 uppercase tracking-wide inline-flex items-center cursor-pointer";
 
 const variantClasses = {
   primary:
