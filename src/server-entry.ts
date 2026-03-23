@@ -64,21 +64,30 @@ export default createServerEntry({
       try {
         response = addSecurityHeaders(await handler(...args));
       } catch (error) {
-        log.error("Request failed", {
+        log.error("Unhandled request error", {
           method: request.method,
           path: url.pathname,
-          err: error,
+          error: error instanceof Error ? { message: error.message, stack: error.stack } : error,
         });
         throw error;
       }
     }
 
-    log.info("Request handled", {
-      method: request.method,
-      path: url.pathname,
-      status: response.status,
-      duration: Date.now() - start,
-    });
+    if (response.status >= 500) {
+      log.error("Request returned server error", {
+        method: request.method,
+        path: url.pathname,
+        status: response.status,
+        duration: Date.now() - start,
+      });
+    } else {
+      log.info("Request handled", {
+        method: request.method,
+        path: url.pathname,
+        status: response.status,
+        duration: Date.now() - start,
+      });
+    }
 
     return response;
   },
