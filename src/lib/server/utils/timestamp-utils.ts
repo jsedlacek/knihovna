@@ -5,7 +5,7 @@ import { createLogger } from "#@/lib/server/utils/logger.ts";
 
 const log = createLogger("timestamp");
 
-const TIMESTAMP_FILE = join(process.cwd(), "data", "last-updated.json");
+const TIMESTAMP_FILE = join(process.cwd(), "public", "data", "last-updated.json");
 
 export interface TimestampData {
   lastUpdated: string;

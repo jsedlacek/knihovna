@@ -9,7 +9,7 @@ import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 
-const DATA_DIR = "data";
+const DATA_DIR = "public/data";
 const BOOKS_FILE = `${DATA_DIR}/books.json`;
 const LAST_UPDATED_FILE = `${DATA_DIR}/last-updated.json`;
 
