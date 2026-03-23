@@ -15,7 +15,12 @@ function isValidGenre(genre: string): genre is GenreGroup {
 const getGenreBooks = createServerFn({
   method: "GET",
 })
-  .inputValidator((d: string) => d as GenreGroup)
+  .inputValidator((d: string): GenreGroup => {
+    if (!(d in GENRE_GROUPS)) {
+      throw new Error(`Invalid genre: ${d}`);
+    }
+    return d as GenreGroup;
+  })
   .handler(async ({ data: genre }) => {
     const books = await getBooks();
     return getBooksForGenreGroup(books, genre);
