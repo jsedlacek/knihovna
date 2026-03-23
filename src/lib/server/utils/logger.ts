@@ -15,10 +15,10 @@ function parseLevel(level: string): LogLevel | null {
   return level as LogLevel;
 }
 
-const usePrettyLogs =
-  import.meta.env?.DEV === true ||
-  process.env["CI"] === "true" ||
-  process.env["NODE_ENV"] === "development";
+const isDev = import.meta.env?.DEV === true || process.env["NODE_ENV"] === "development";
+const isCI = process.env["CI"] === "true";
+
+const usePrettyLogs = isDev || isCI;
 
 export async function configureLogging() {
   const jsonFormatter = getJsonLinesFormatter({ properties: "flatten" });
@@ -42,6 +42,7 @@ export async function configureLogging() {
         lowestLevel: parseLevel(levelEnv),
       },
     ],
+    reset: isDev,
   });
 }
 
