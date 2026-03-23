@@ -7,6 +7,15 @@ import { join } from "node:path";
  */
 
 // --- File Configuration ---
+export const RAW_OUTPUT_FILE = join(
+  import.meta.dirname,
+  "..",
+  "..",
+  "..",
+  "data",
+  "books-raw.json",
+);
+
 export const OUTPUT_FILE = join(
   import.meta.dirname,
   "..",

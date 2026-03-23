@@ -7,11 +7,18 @@ import pRetry from "p-retry";
 import { scrapeGoodreads } from "#@/lib/server/scrapers/goodreads-scraper.ts";
 import { fetchMlpBookDetails, scrapeMlpListingPages } from "#@/lib/server/scrapers/mlp-scraper.ts";
 import { applyBookFixupsToArray } from "#@/lib/server/utils/book-fixup-utils.ts";
-import { loadExistingBooks, saveBooks } from "#@/lib/server/utils/file-utils.ts";
+import {
+  loadExistingBooks,
+  saveBooks,
+  saveProcessedBooks,
+} from "#@/lib/server/utils/file-utils.ts";
 import { configureLogging, createLogger } from "#@/lib/server/utils/logger.ts";
 import { saveScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
 import { CONCURRENCY } from "#@/lib/shared/config/scraper-config.ts";
+import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
+import { deduplicateBooks } from "#@/lib/shared/utils/book-deduplication.ts";
+import { sortBooksByScore } from "#@/lib/shared/utils/book-scoring.ts";
 
 await configureLogging();
 
@@ -296,13 +303,23 @@ async function main() {
   const allBooks = Array.from(booksMap.values());
   log.info("Total books to save", { count: allBooks.length });
 
-  // Save the results to a JSON file
+  // Save the raw results to a JSON file
   await saveBooks(allBooks);
+
+  // Pre-process books for serving: filter, deduplicate, score, sort
+  const unblockedBooks = filterBlockedBooks(allBooks);
+  const deduplicatedBooks = deduplicateBooks(unblockedBooks);
+  const filteredBooks = deduplicatedBooks.filter(
+    (book) => book.rating !== null && book.rating >= 4.0 && book.epubUrl,
+  );
+  const processedBooks = sortBooksByScore(filteredBooks);
+  await saveProcessedBooks(processedBooks);
+  log.info("Pre-processed books", { raw: allBooks.length, processed: processedBooks.length });
 
   // Save the timestamp of successful completion
   await saveScrapingTimestamp();
 
-  log.info("Scraping complete, books saved to file", { count: allBooks.length });
+  log.info("Scraping complete", { raw: allBooks.length, processed: processedBooks.length });
 }
 
 await main();
