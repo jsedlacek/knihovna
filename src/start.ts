@@ -1,9 +1,8 @@
 import { createMiddleware, createStart } from "@tanstack/react-start";
-import { createLogger } from "#@/lib/server/utils/logger.ts";
-
-const log = createLogger("route");
 
 const errorLoggingMiddleware = createMiddleware({ type: "function" }).server(async ({ next }) => {
+  const { createLogger } = await import("#@/lib/server/utils/logger.ts");
+  const log = createLogger("route");
   try {
     return await next();
   } catch (error) {
