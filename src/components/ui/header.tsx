@@ -63,7 +63,7 @@ export function Header({ title = "Nejlepší e-knihy zdarma", subtitle, breadcru
                     {item.label}
                   </a>
                 ) : (
-                  <span className="text-foreground">{item.label}</span>
+                  <span>{item.label}</span>
                 )}
               </span>
             ))}
