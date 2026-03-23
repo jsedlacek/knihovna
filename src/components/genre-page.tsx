@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { BookCard } from "#@/components/book-card.tsx";
+import { Button } from "#@/components/ui/button.tsx";
 import { Footer } from "#@/components/ui/footer.tsx";
 import { Header } from "#@/components/ui/header.tsx";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
@@ -86,14 +87,9 @@ export function GenrePage({
           </div>
           {nextCursor !== null && (
             <div className="flex justify-center pt-4">
-              <button
-                type="button"
-                onClick={loadMore}
-                disabled={loading}
-                className="px-4 py-2 sm:px-3 sm:py-1 text-xs border-1 transition-all duration-200 min-h-[44px] sm:min-h-0 uppercase tracking-wide inline-flex items-center bg-black text-white border-black hover:bg-gray-800 shadow-[1px_1px_0px_0px_rgb(75,85,99)] disabled:opacity-50"
-              >
+              <Button onClick={loadMore} disabled={loading}>
                 {loading ? "Načítání…" : "Načíst další"}
-              </button>
+              </Button>
             </div>
           )}
         </section>

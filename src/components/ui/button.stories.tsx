@@ -1,36 +1,46 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button } from "./button.tsx";
+import { Button, type ButtonProps } from "./button.tsx";
 
-const meta: Meta<typeof Button> = {
+const meta: Meta<ButtonProps> = {
   title: "UI/Button",
   component: Button,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    variant: {
-      control: { type: "radio" },
-      options: ["primary", "secondary"],
-    },
-  },
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<ButtonProps>;
 
-export const Primary: Story = {
-  args: {
-    children: "STÁHNOUT EPUB",
-    href: "#",
-    variant: "primary",
-  },
+export const PrimaryLink: Story = {
+  render: () => (
+    <Button href="#" variant="primary">
+      STÁHNOUT EPUB
+    </Button>
+  ),
 };
 
-export const Secondary: Story = {
-  args: {
-    children: "ZOBRAZIT PDF",
-    href: "#",
-    variant: "secondary",
-  },
+export const SecondaryLink: Story = {
+  render: () => (
+    <Button href="#" variant="secondary">
+      ZOBRAZIT PDF
+    </Button>
+  ),
+};
+
+export const ActionButton: Story = {
+  render: () => (
+    <Button onClick={() => {}} variant="primary">
+      NAČÍST DALŠÍ
+    </Button>
+  ),
+};
+
+export const DisabledButton: Story = {
+  render: () => (
+    <Button onClick={() => {}} variant="primary" disabled>
+      NAČÍTÁNÍ…
+    </Button>
+  ),
 };
