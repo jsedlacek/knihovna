@@ -1,20 +1,27 @@
-import booksJson from "../../../data/books.json";
-import lastUpdatedJson from "../../../data/last-updated.json";
+import { env } from "cloudflare:workers";
+import type { Book, TimestampData } from "../shared/types/book-types.ts";
 import { filterBlockedBooks } from "../shared/config/book-block-list.ts";
 import { deduplicateBooks } from "../shared/utils/book-deduplication.ts";
 import { sortBooksByScore } from "../shared/utils/book-scoring.ts";
 
-const unblockedBooks = filterBlockedBooks(booksJson);
+async function fetchAsset<T>(path: string): Promise<T> {
+  const response = await env.ASSETS.fetch(new URL(path, "https://assets.local"));
+  return response.json() as Promise<T>;
+}
 
-// Remove duplicate books, keeping only the newer version
-const deduplicatedBooks = deduplicateBooks(unblockedBooks);
+export async function getBooks(): Promise<Book[]> {
+  const booksJson = await fetchAsset<Book[]>("data/books.json");
 
-// Then filter books with a rating of 4.0 or higher and have EPUB download links
-const filteredBooks = deduplicatedBooks.filter(
-  (book) => book.rating !== null && book.rating >= 4.0 && book.epubUrl,
-);
+  const unblockedBooks = filterBlockedBooks(booksJson);
+  const deduplicatedBooks = deduplicateBooks(unblockedBooks);
 
-// Sort all books by score
-export const books = sortBooksByScore(filteredBooks);
+  const filteredBooks = deduplicatedBooks.filter(
+    (book) => book.rating !== null && book.rating >= 4.0 && book.epubUrl,
+  );
 
-export const lastUpdated = lastUpdatedJson;
+  return sortBooksByScore(filteredBooks);
+}
+
+export async function getLastUpdated(): Promise<TimestampData> {
+  return fetchAsset<TimestampData>("data/last-updated.json");
+}
