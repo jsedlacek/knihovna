@@ -17,8 +17,8 @@ export function BookCover({
   href,
   external = true,
   className = "",
-  width = 80,
-  height = 120,
+  width,
+  height,
 }: BookCoverProps) {
   const baseClasses = "w-16 h-24 sm:w-20 sm:h-30 object-cover border border-border";
   const imageClasses = href
@@ -35,7 +35,7 @@ export function BookCover({
 
   const imgSrc = src ? getImageUrl(src, { width, height }) : placeholderCover;
   const imgSrcSet = src
-    ? `${getImageUrl(src, { width, height })} 1x, ${getImageUrl(src, { width: width * 2, height: height * 2 })} 2x`
+    ? `${getImageUrl(src, { width, height })} 1x, ${getImageUrl(src, { width: width && width * 2, height: height && height * 2 })} 2x`
     : undefined;
 
   const image = (
