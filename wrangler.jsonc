@@ -14,4 +14,7 @@
       "invocation_logs": true,
     },
   },
+  "assets": {
+    "binding": "ASSETS",
+  },
 }

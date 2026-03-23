@@ -23,7 +23,8 @@ function NotFound() {
   );
 }
 
-function RootErrorComponent() {
+function RootErrorComponent({ error }: { error: unknown }) {
+  console.error(error);
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
       <div className="text-center">

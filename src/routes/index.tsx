@@ -4,6 +4,7 @@ import { HomePage, type BookGenre } from "#@/components/home-page.tsx";
 import { books, lastUpdated } from "#@/lib/server/books.ts";
 import type { TimestampData } from "#@/lib/shared/types/book-types.ts";
 import { groupBooksByGenre, type GenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
+import { env } from "cloudflare:workers";
 
 export type Data = {
   bookCount: number;
@@ -14,6 +15,12 @@ export type Data = {
 const getHomeData = createServerFn({
   method: "GET",
 }).handler(async (): Promise<Data> => {
+  const hello = await env.ASSETS.fetch(new URL("hello.txt", "https://assets.local"));
+
+  const message = await hello.text();
+
+  console.log(message);
+
   const booksByGenre = groupBooksByGenre(books);
 
   const genres: BookGenre[] = Object.entries(booksByGenre).map(([genre, books]) => ({
