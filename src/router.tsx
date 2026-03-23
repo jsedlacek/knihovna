@@ -6,6 +6,9 @@ export function getRouter() {
   const router = createRouter({
     routeTree,
     scrollRestoration: true,
+    defaultOnCatch: (error) => {
+      console.error("Unhandled render error", error);
+    },
   });
 
   return router;
