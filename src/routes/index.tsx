@@ -2,9 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { HomePage, type BookGenre } from "#@/components/home-page.tsx";
 import { getBooks, getLastUpdated } from "#@/lib/server/books.ts";
+import { createLogger } from "#@/lib/server/utils/logger.ts";
 import { errorLogging } from "#@/lib/server/utils/server-fn.ts";
 import type { TimestampData } from "#@/lib/shared/types/book-types.ts";
 import { groupBooksByGenre, type GenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
+
+const log = createLogger("route.home");
 
 export type Data = {
   bookCount: number;
@@ -17,14 +20,23 @@ const getHomeData = createServerFn({
 })
   .middleware([errorLogging])
   .handler(async (): Promise<Data> => {
+    const totalStart = performance.now();
+
+    const fetchStart = performance.now();
     const [books, lastUpdated] = await Promise.all([getBooks(), getLastUpdated()]);
+    log.info("Home handler", { step: "fetch", duration: performance.now() - fetchStart });
+
+    const groupStart = performance.now();
     const booksByGenre = groupBooksByGenre(books);
+    log.info("Home handler", { step: "groupByGenre", duration: performance.now() - groupStart });
 
     const genres: BookGenre[] = Object.entries(booksByGenre).map(([genre, books]) => ({
       genre: genre as GenreGroup,
       books: books.slice(0, 20),
       bookCount: books.length,
     }));
+
+    log.info("Home handler", { step: "total", duration: performance.now() - totalStart });
 
     return {
       bookCount: books.length,

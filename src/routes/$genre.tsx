@@ -2,12 +2,15 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { GenrePage } from "#@/components/genre-page.tsx";
 import { getBooks } from "#@/lib/server/books.ts";
+import { createLogger } from "#@/lib/server/utils/logger.ts";
 import { errorLogging } from "#@/lib/server/utils/server-fn.ts";
 import {
   getBooksForGenreGroup,
   GENRE_GROUPS,
   type GenreGroup,
 } from "#@/lib/shared/utils/genre-utils.ts";
+
+const log = createLogger("route.genre");
 
 const PAGE_SIZE = 20;
 
@@ -34,10 +37,26 @@ export const getGenreBooks = createServerFn({
     },
   )
   .handler(async ({ data: { genre, cursor } }): Promise<GenreBooksResult> => {
+    const totalStart = performance.now();
+
+    const fetchStart = performance.now();
     const books = await getBooks();
+    log.info("Genre handler", { step: "fetch", duration: performance.now() - fetchStart });
+
+    const filterStart = performance.now();
     const genreBooks = getBooksForGenreGroup(books, genre);
+    log.info("Genre handler", {
+      step: "filterGenre",
+      genre,
+      duration: performance.now() - filterStart,
+      count: genreBooks.length,
+    });
+
     const page = genreBooks.slice(cursor, cursor + PAGE_SIZE);
     const nextCursor = cursor + PAGE_SIZE < genreBooks.length ? cursor + PAGE_SIZE : null;
+
+    log.info("Genre handler", { step: "total", duration: performance.now() - totalStart });
+
     return { books: page, totalCount: genreBooks.length, nextCursor };
   });
 
