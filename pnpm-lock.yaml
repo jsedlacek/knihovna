@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@fontsource/lilex':
+        specifier: ^5.2.1
+        version: 5.2.1
       '@jsedlacek/logtape-pretty':
         specifier: ^1.0.4
         version: 1.0.4
@@ -563,6 +566,9 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fontsource/lilex@5.2.1':
+    resolution: {integrity: sha512-KnfU2zYPB8JWvxbB4SOn3dR3vivBGVPUGHvOIi176b8Uus4iOL2lbF6lrKf8BZlNSM/qeAxYmaMmqnhwZ/KMzQ==}
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -2992,6 +2998,8 @@ snapshots:
 
   '@esbuild/win32-x64@0.27.4':
     optional: true
+
+  '@fontsource/lilex@5.2.1': {}
 
   '@img/colour@1.1.0': {}
 

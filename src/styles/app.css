@@ -1,3 +1,5 @@
+@import "@fontsource/lilex/latin.css";
+@import "@fontsource/lilex/latin-700.css";
 @import "tailwindcss";
 
 :root {
@@ -29,6 +31,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --font-mono: "Lilex", ui-monospace, monospace;
 }
 
 @layer base {
