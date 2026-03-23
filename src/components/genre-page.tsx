@@ -1,22 +1,43 @@
+import { useCallback, useState } from "react";
 import { BookCard } from "#@/components/book-card.tsx";
 import { Footer } from "#@/components/ui/footer.tsx";
 import { Header } from "#@/components/ui/header.tsx";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
-import { sortBooksByScore } from "#@/lib/shared/utils/book-scoring.ts";
 import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
+import { getGenreBooks } from "#@/routes/$genre.tsx";
 
 interface GenrePageProps {
-  books: Book[];
+  initialBooks: Book[];
+  totalCount: number;
+  initialNextCursor: number | null;
   genreKey: keyof typeof GENRE_GROUPS;
   showScores?: boolean;
 }
 
-export function GenrePage({ books, genreKey, showScores = false }: GenrePageProps) {
+export function GenrePage({
+  initialBooks,
+  totalCount,
+  initialNextCursor,
+  genreKey,
+  showScores = false,
+}: GenrePageProps) {
   const genreConfig = GENRE_GROUPS[genreKey];
+  const [books, setBooks] = useState(initialBooks);
+  const [nextCursor, setNextCursor] = useState(initialNextCursor);
+  const [loading, setLoading] = useState(false);
 
-  // Sort books by score within this genre
-  const sortedBooks = sortBooksByScore(books);
+  const loadMore = useCallback(async () => {
+    if (nextCursor === null || loading) return;
+    setLoading(true);
+    try {
+      const result = await getGenreBooks({ data: { genre: genreKey, cursor: nextCursor } });
+      setBooks((prev) => [...prev, ...result.books]);
+      setNextCursor(result.nextCursor);
+    } finally {
+      setLoading(false);
+    }
+  }, [nextCursor, loading, genreKey]);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -25,7 +46,7 @@ export function GenrePage({ books, genreKey, showScores = false }: GenrePageProp
     description: genreConfig.metaDescription,
     url: `https://knihovna.jakub.contact/${genreKey}`,
     inLanguage: "cs",
-    numberOfItems: sortedBooks.length,
+    numberOfItems: totalCount,
   };
 
   return (
@@ -41,17 +62,17 @@ export function GenrePage({ books, genreKey, showScores = false }: GenrePageProp
           <div>
             <h2 className="text-lg font-bold">{genreConfig.name}</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              {genreConfig.description} ({formatNumberCzech(sortedBooks.length)}{" "}
-              {sortedBooks.length === 1 ? "kniha" : sortedBooks.length < 5 ? "knihy" : "knih"})
+              {genreConfig.description} ({formatNumberCzech(totalCount)}{" "}
+              {totalCount === 1 ? "kniha" : totalCount < 5 ? "knihy" : "knih"})
             </p>
           </div>
         </section>
         <section className="space-y-4">
           <div className="space-y-8">
-            {sortedBooks.length > 0 ? (
-              sortedBooks.map((book, index) => (
+            {books.length > 0 ? (
+              books.map((book, index) => (
                 <BookCard
-                  key={`${genreKey}-${book.title}-${book.author}-${index}`}
+                  key={`${genreKey}-${book.titulKey}`}
                   book={book}
                   index={index}
                   showScores={showScores}
@@ -63,6 +84,18 @@ export function GenrePage({ books, genreKey, showScores = false }: GenrePageProp
               </p>
             )}
           </div>
+          {nextCursor !== null && (
+            <div className="flex justify-center pt-4">
+              <button
+                type="button"
+                onClick={loadMore}
+                disabled={loading}
+                className="px-4 py-2 sm:px-3 sm:py-1 text-xs border-1 transition-all duration-200 min-h-[44px] sm:min-h-0 uppercase tracking-wide inline-flex items-center bg-black text-white border-black hover:bg-gray-800 shadow-[1px_1px_0px_0px_rgb(75,85,99)] disabled:opacity-50"
+              >
+                {loading ? "Načítání…" : "Načíst další"}
+              </button>
+            </div>
+          )}
         </section>
       </main>
 

@@ -9,23 +9,36 @@ import {
   type GenreGroup,
 } from "#@/lib/shared/utils/genre-utils.ts";
 
+const PAGE_SIZE = 20;
+
 function isValidGenre(genre: string): genre is GenreGroup {
   return genre in GENRE_GROUPS;
 }
 
-const getGenreBooks = createServerFn({
+export type GenreBooksResult = {
+  books: Awaited<ReturnType<typeof getBooks>>;
+  totalCount: number;
+  nextCursor: number | null;
+};
+
+export const getGenreBooks = createServerFn({
   method: "GET",
 })
   .middleware([errorLogging])
-  .inputValidator((d: string): GenreGroup => {
-    if (!(d in GENRE_GROUPS)) {
-      throw new Error(`Invalid genre: ${d}`);
-    }
-    return d as GenreGroup;
-  })
-  .handler(async ({ data: genre }) => {
+  .inputValidator(
+    (d: { genre: string; cursor?: number }): { genre: GenreGroup; cursor: number } => {
+      if (!(d.genre in GENRE_GROUPS)) {
+        throw new Error(`Invalid genre: ${d.genre}`);
+      }
+      return { genre: d.genre as GenreGroup, cursor: d.cursor ?? 0 };
+    },
+  )
+  .handler(async ({ data: { genre, cursor } }): Promise<GenreBooksResult> => {
     const books = await getBooks();
-    return getBooksForGenreGroup(books, genre);
+    const genreBooks = getBooksForGenreGroup(books, genre);
+    const page = genreBooks.slice(cursor, cursor + PAGE_SIZE);
+    const nextCursor = cursor + PAGE_SIZE < genreBooks.length ? cursor + PAGE_SIZE : null;
+    return { books: page, totalCount: genreBooks.length, nextCursor };
   });
 
 export const Route = createFileRoute("/$genre")({
@@ -34,7 +47,7 @@ export const Route = createFileRoute("/$genre")({
       throw notFound();
     }
 
-    return getGenreBooks({ data: params.genre });
+    return getGenreBooks({ data: { genre: params.genre, cursor: 0 } });
   },
   head: ({ params }) => {
     if (!isValidGenre(params.genre)) {
@@ -71,12 +84,19 @@ export const Route = createFileRoute("/$genre")({
 });
 
 function GenreComponent() {
-  const books = Route.useLoaderData();
+  const { books, totalCount, nextCursor } = Route.useLoaderData();
   const { genre } = Route.useParams();
 
   if (!isValidGenre(genre)) {
     return null;
   }
 
-  return <GenrePage books={books} genreKey={genre} />;
+  return (
+    <GenrePage
+      initialBooks={books}
+      totalCount={totalCount}
+      initialNextCursor={nextCursor}
+      genreKey={genre}
+    />
+  );
 }

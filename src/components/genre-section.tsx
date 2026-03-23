@@ -1,7 +1,6 @@
 import { StarIcon } from "lucide-react";
 
 import type { Book } from "#@/lib/shared/types/book-types.ts";
-import { sortBooksByScore } from "#@/lib/shared/utils/book-scoring.ts";
 import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
@@ -17,11 +16,8 @@ interface GenreSectionProps {
 export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) {
   const genreConfig = GENRE_GROUPS[genreKey];
 
-  // Sort books by score within this genre
-  const sortedBooks = sortBooksByScore(books);
-
   // Don't render empty sections
-  if (sortedBooks.length === 0) {
+  if (books.length === 0) {
     return null;
   }
 

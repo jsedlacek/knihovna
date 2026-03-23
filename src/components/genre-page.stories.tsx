@@ -139,7 +139,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Beletrie: Story = {
   args: {
-    books: sampleBooks.filter((book) => book.genre === "beletrie"),
+    initialBooks: sampleBooks.filter((book) => book.genre === "beletrie"),
+    totalCount: 3,
+    initialNextCursor: null,
     genreKey: "beletrie",
     showScores: false,
   },
@@ -147,7 +149,9 @@ export const Beletrie: Story = {
 
 export const Poezie: Story = {
   args: {
-    books: sampleBooks.filter((book) => book.genre === "poezie"),
+    initialBooks: sampleBooks.filter((book) => book.genre === "poezie"),
+    totalCount: 1,
+    initialNextCursor: null,
     genreKey: "poezie",
     showScores: false,
   },
@@ -155,7 +159,9 @@ export const Poezie: Story = {
 
 export const Divadlo: Story = {
   args: {
-    books: [],
+    initialBooks: [],
+    totalCount: 0,
+    initialNextCursor: null,
     genreKey: "divadlo",
     showScores: false,
   },
@@ -163,7 +169,9 @@ export const Divadlo: Story = {
 
 export const Deti: Story = {
   args: {
-    books: sampleBooks.filter((book) => book.genre === "deti"),
+    initialBooks: sampleBooks.filter((book) => book.genre === "deti"),
+    totalCount: 1,
+    initialNextCursor: null,
     genreKey: "deti",
     showScores: false,
   },
@@ -171,7 +179,9 @@ export const Deti: Story = {
 
 export const WithScores: Story = {
   args: {
-    books: sampleBooks.filter((book) => book.genre === "beletrie"),
+    initialBooks: sampleBooks.filter((book) => book.genre === "beletrie"),
+    totalCount: 3,
+    initialNextCursor: null,
     genreKey: "beletrie",
     showScores: true,
   },
@@ -179,11 +189,13 @@ export const WithScores: Story = {
 
 export const WithManyBooks: Story = {
   args: {
-    books: [
+    initialBooks: [
       ...sampleBooks.filter((book) => book.genre === "beletrie"),
       ...sampleBooks.filter((book) => book.genre === "beletrie"),
       ...sampleBooks.filter((book) => book.genre === "beletrie"),
     ],
+    totalCount: 30,
+    initialNextCursor: 9,
     genreKey: "beletrie",
     showScores: false,
   },
@@ -191,7 +203,9 @@ export const WithManyBooks: Story = {
 
 export const EmptyGenre: Story = {
   args: {
-    books: [],
+    initialBooks: [],
+    totalCount: 0,
+    initialNextCursor: null,
     genreKey: "ostatni",
     showScores: false,
   },
