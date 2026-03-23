@@ -36,6 +36,11 @@ async function main() {
       description: "Force re-scraping for all enabled stages (ignore existing data)",
       default: false,
     })
+    .option("force-mlp", {
+      type: "boolean",
+      description: "Force re-scraping MLP details only (ignore existing MLP data)",
+      default: false,
+    })
     .option("mlp", {
       type: "boolean",
       description: "Scrape MLP book listings and details",
@@ -165,7 +170,7 @@ async function main() {
     log.info("Fetching MLP book details");
     const booksNeedingDetails = Array.from(booksMap.values()).filter((book) => {
       if (!matchesSelectiveCriteria(book)) return false;
-      if (argv.force) return true;
+      if (argv.force || argv.forceMlp) return true;
       return !book.mlpScrapedAt || new Date(book.mlpScrapedAt) < oneMonthAgo;
     });
 

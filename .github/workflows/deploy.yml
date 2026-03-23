@@ -15,6 +15,10 @@ on:
         description: "Force fresh scraping of all data (ignore existing cache)"
         type: boolean
         default: false
+      force-mlp-scrape:
+        description: "Force re-scraping MLP details only (images, downloads, genres)"
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -55,11 +59,15 @@ jobs:
 
       - name: Run scraper
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.force-fresh-scrape }}" = "true" ]; then
-            pnpm run scrape -- --force
-          else
-            pnpm run scrape
+          SCRAPE_ARGS=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "${{ inputs.force-fresh-scrape }}" = "true" ]; then
+              SCRAPE_ARGS="--force"
+            elif [ "${{ inputs.force-mlp-scrape }}" = "true" ]; then
+              SCRAPE_ARGS="--force-mlp"
+            fi
           fi
+          pnpm run scrape -- $SCRAPE_ARGS
 
       - name: Build site
         run: pnpm run build
