@@ -1,4 +1,5 @@
 import { createStartHandler, defaultStreamHandler } from "@tanstack/react-start/server";
+import { createServerEntry } from "@tanstack/react-start/server-entry";
 import { configureLogging, createLogger } from "#@/lib/server/utils/logger.ts";
 
 await configureLogging();
@@ -47,8 +48,8 @@ function addSecurityHeaders(response: Response): Response {
   return response;
 }
 
-export default {
-  async fetch(...args: Parameters<typeof handler>): Promise<Response> {
+export default createServerEntry({
+  async fetch(...args) {
     const request = args[0];
     const url = new URL(request.url);
     const start = Date.now();
@@ -81,4 +82,4 @@ export default {
 
     return response;
   },
-};
+});

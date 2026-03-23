@@ -5,14 +5,8 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 import viteReact from "@vitejs/plugin-react";
 
 export default defineConfig({
-  environments: {
-    client: {
-      build: {
-        rollupOptions: {
-          external: ["cloudflare:workers"],
-        },
-      },
-    },
+  server: {
+    allowedHosts: ["assets.local"],
   },
   plugins: [
     tailwindcss(),
