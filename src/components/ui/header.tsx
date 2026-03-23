@@ -1,9 +1,14 @@
 import type { ReactNode } from "react";
 
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
 export interface HeaderProps {
   title?: string;
   subtitle?: ReactNode;
-  showBackLink?: boolean;
+  breadcrumbs?: BreadcrumbItem[];
 }
 
 function BookIcon() {
@@ -39,11 +44,7 @@ function BookIcon() {
   );
 }
 
-export function Header({
-  title = "Nejlepší e-knihy zdarma",
-  subtitle,
-  showBackLink = false,
-}: HeaderProps) {
+export function Header({ title = "Nejlepší e-knihy zdarma", subtitle, breadcrumbs }: HeaderProps) {
   return (
     <header className="border-b border-border">
       <div className="max-w-4xl mx-auto p-4 sm:p-6">
@@ -52,12 +53,21 @@ export function Header({
           <BookIcon />
         </div>
         {subtitle && <div className="text-sm text-muted-foreground">{subtitle}</div>}
-        {showBackLink && (
-          <div className="text-sm text-muted-foreground">
-            <a href="/" className="underline hover:opacity-70">
-              ← Zpět na hlavní stránku
-            </a>
-          </div>
+        {breadcrumbs && breadcrumbs.length > 0 && (
+          <nav className="text-sm text-muted-foreground">
+            {breadcrumbs.map((item, i) => (
+              <span key={item.label}>
+                {i > 0 && <span className="mx-1">/</span>}
+                {item.href ? (
+                  <a href={item.href} className="hover:underline">
+                    {item.label}
+                  </a>
+                ) : (
+                  <span>{item.label}</span>
+                )}
+              </span>
+            ))}
+          </nav>
         )}
       </div>
     </header>

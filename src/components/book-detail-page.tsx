@@ -5,7 +5,7 @@ import {
   formatNumberCompact,
   formatNumberCzech,
 } from "#@/lib/shared/utils/text-utils.ts";
-import { getGenreName } from "#@/lib/shared/utils/genre-utils.ts";
+import { getGenreGroupKey, getGenreName, GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
 import { BookCover } from "./ui/book-cover.tsx";
 import { Button } from "./ui/button.tsx";
 import { Footer } from "./ui/footer.tsx";
@@ -49,7 +49,16 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Header showBackLink />
+      <Header
+        breadcrumbs={[
+          { label: "Domů", href: "/" },
+          {
+            label: GENRE_GROUPS[getGenreGroupKey(book.genreId)].name,
+            href: `/${getGenreGroupKey(book.genreId)}`,
+          },
+          { label: book.title },
+        ]}
+      />
 
       <main className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <article className="flex flex-col sm:flex-row gap-4 sm:gap-6">

@@ -61,6 +61,17 @@ export type BooksByGenre = {
   [K in GenreGroup]: Book[];
 };
 
+export function getGenreGroupKey(genreId: string | null): GenreGroup {
+  if (!genreId) return "ostatni";
+  for (const [groupKey, groupConfig] of Object.entries(GENRE_GROUPS)) {
+    if (groupKey === "ostatni") continue;
+    if (groupConfig.genreIds.includes(genreId as GenreId)) {
+      return groupKey as GenreGroup;
+    }
+  }
+  return "ostatni";
+}
+
 export function groupBooksByGenre(books: Book[]): BooksByGenre {
   const groups: BooksByGenre = {
     beletrie: [],

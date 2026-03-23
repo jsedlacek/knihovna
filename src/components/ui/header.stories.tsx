@@ -23,14 +23,18 @@ export const WithSubtitle: Story = {
   },
 };
 
-export const WithBackLink: Story = {
+export const WithBreadcrumbs: Story = {
   args: {
-    showBackLink: true,
+    breadcrumbs: [{ label: "Domů", href: "/" }, { label: "Beletrie" }],
   },
 };
 
-export const GenrePage: Story = {
+export const BookDetailBreadcrumbs: Story = {
   args: {
-    showBackLink: true,
+    breadcrumbs: [
+      { label: "Domů", href: "/" },
+      { label: "Beletrie", href: "/beletrie" },
+      { label: "Hrabě Monte Cristo (II)" },
+    ],
   },
 };
