@@ -4,6 +4,7 @@ import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { sortBooksByScore } from "#@/lib/shared/utils/book-scoring.ts";
 import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
+import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
 import { BookCover } from "./ui/book-cover.tsx";
 import { Button } from "./ui/button.tsx";
 import { Card } from "./ui/card.tsx";
@@ -50,7 +51,8 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
             <BookCover
               src={book.imageUrl}
               alt={`${book.title} cover`}
-              href={book.detailUrl}
+              href={getBookDetailPath(book)}
+              external={false}
               className="h-25 mb-1"
             />
             <div className="text-xs text-muted-foreground flex items-center justify-center">

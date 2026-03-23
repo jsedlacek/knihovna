@@ -7,6 +7,7 @@ import {
   MLP_PAGE_SIZE,
 } from "#@/lib/shared/config/scraper-config.ts";
 import type { MlpBookDetails, MlpBookListing } from "#@/lib/shared/types/book-types.ts";
+import { createSlug } from "#@/lib/shared/utils/book-url-utils.ts";
 import { cleanAuthorName, cleanTitle } from "#@/lib/shared/utils/text-utils.ts";
 
 const log = createLogger("mlp-scraper");
@@ -104,18 +105,6 @@ export function buildImageUrl(titulKey: number): string {
  */
 export function buildDownloadUrl(titulKey: number, filename: string, format: string): string {
   return `${MLP_KOWEB_URL}${buildKowebDownloadPath(titulKey)}${filename}.${format}`;
-}
-
-/**
- * Create a slug from a title for use in URLs.
- */
-function createSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 }
 
 // --- Data parsing helpers ---

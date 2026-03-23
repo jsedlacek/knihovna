@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as GenreRouteImport } from './routes/$genre'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as KnihaBookSlugRouteImport } from './routes/kniha/$bookSlug'
 
 const GenreRoute = GenreRouteImport.update({
   id: '/$genre',
@@ -22,31 +23,40 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KnihaBookSlugRoute = KnihaBookSlugRouteImport.update({
+  id: '/kniha/$bookSlug',
+  path: '/kniha/$bookSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$genre': typeof GenreRoute
+  '/kniha/$bookSlug': typeof KnihaBookSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$genre': typeof GenreRoute
+  '/kniha/$bookSlug': typeof KnihaBookSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$genre': typeof GenreRoute
+  '/kniha/$bookSlug': typeof KnihaBookSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$genre'
+  fullPaths: '/' | '/$genre' | '/kniha/$bookSlug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$genre'
-  id: '__root__' | '/' | '/$genre'
+  to: '/' | '/$genre' | '/kniha/$bookSlug'
+  id: '__root__' | '/' | '/$genre' | '/kniha/$bookSlug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GenreRoute: typeof GenreRoute
+  KnihaBookSlugRoute: typeof KnihaBookSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kniha/$bookSlug': {
+      id: '/kniha/$bookSlug'
+      path: '/kniha/$bookSlug'
+      fullPath: '/kniha/$bookSlug'
+      preLoaderRoute: typeof KnihaBookSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GenreRoute: GenreRoute,
+  KnihaBookSlugRoute: KnihaBookSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

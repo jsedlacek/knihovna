@@ -6,6 +6,7 @@ import {
   formatNumberCompact,
   formatNumberCzech,
 } from "#@/lib/shared/utils/text-utils.ts";
+import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
 import { BookCover } from "./ui/book-cover.tsx";
 import { Button } from "./ui/button.tsx";
 import { Card } from "./ui/card.tsx";
@@ -23,13 +24,18 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
       key={`${book.title}-${book.author}-${index}`}
       className="flex flex-col sm:flex-row gap-3 sm:gap-4"
     >
-      <BookCover src={book.imageUrl} alt={`${book.title} book cover`} href={book.detailUrl} />
+      <BookCover
+        src={book.imageUrl}
+        alt={`${book.title} book cover`}
+        href={getBookDetailPath(book)}
+        external={false}
+      />
       <div className="flex-1 text-center sm:text-left">
         <h3 className="font-bold text-sm mb-2">
-          <Link href={book.detailUrl}>
+          <a href={getBookDetailPath(book)} className="hover:underline">
             {formatAuthorName(book.author)} – {book.title}
             {(book.partTitle || book.subtitle) && ` (${book.partTitle || book.subtitle})`}
-          </Link>
+          </a>
         </h3>
         <p className="text-sm text-card-foreground mb-2 line-clamp-3">{book.description}</p>
         <div className="text-xs text-muted-foreground mb-3">
