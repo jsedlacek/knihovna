@@ -34,10 +34,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
               {genreConfig.name}
             </a>
           </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground mb-3">{genreConfig.description}</p>
-          <div className="text-xs text-muted-foreground">
-            {formatNumberCzech(bookCount)} knih ke stažení
-          </div>
+          <p className="text-xs sm:text-sm text-muted-foreground">{genreConfig.description}</p>
         </div>
       </div>
 
@@ -68,9 +65,9 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
         ))}
       </div>
 
-      <div className="pt-2">
+      <div className="flex items-center gap-4 pt-2">
         <Button href={`/${genreKey}`} variant="primary">
-          {genreConfig.name} →
+          Všech {formatNumberCzech(bookCount)} knih →
         </Button>
       </div>
     </section>
