@@ -69,10 +69,13 @@ export function GenrePage({
           </div>
         </section>
         <section className="space-y-4">
-          <div className="divide-y divide-border">
+          <div className="divide-y divide-border sm:divide-y-0 sm:space-y-8">
             {books.length > 0 ? (
               books.map((book, index) => (
-                <div key={`${genreKey}-${book.titulKey}`} className="py-6 first:pt-0 last:pb-0">
+                <div
+                  key={`${genreKey}-${book.titulKey}`}
+                  className="py-6 first:pt-0 last:pb-0 sm:py-0"
+                >
                   <BookCard book={book} index={index} showScores={showScores} />
                 </div>
               ))
