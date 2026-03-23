@@ -1,4 +1,5 @@
 import placeholderCover from "#@/images/book-placeholder.svg";
+import { getImageUrl } from "#@/lib/shared/utils/image-utils.ts";
 
 export interface BookCoverProps {
   src?: string | null;
@@ -6,9 +7,19 @@ export interface BookCoverProps {
   href?: string;
   external?: boolean;
   className?: string;
+  width?: number;
+  height?: number;
 }
 
-export function BookCover({ src, alt, href, external = true, className = "" }: BookCoverProps) {
+export function BookCover({
+  src,
+  alt,
+  href,
+  external = true,
+  className = "",
+  width = 80,
+  height = 120,
+}: BookCoverProps) {
   const baseClasses = "w-16 h-24 sm:w-20 sm:h-30 object-cover border border-border";
   const imageClasses = href
     ? `${baseClasses} hover:opacity-80 transition-opacity mx-auto sm:mx-0 ${className}`
@@ -18,11 +29,17 @@ export function BookCover({ src, alt, href, external = true, className = "" }: B
     const img = e.currentTarget;
     if (img.src !== placeholderCover) {
       img.src = placeholderCover;
+      img.srcset = "";
     }
   };
 
+  const imgSrc = src ? getImageUrl(src, { width, height }) : placeholderCover;
+  const imgSrcSet = src
+    ? `${getImageUrl(src, { width, height })} 1x, ${getImageUrl(src, { width: width * 2, height: height * 2 })} 2x`
+    : undefined;
+
   const image = (
-    <img src={src || placeholderCover} onError={handleError} alt={alt} className={imageClasses} />
+    <img src={imgSrc} srcSet={imgSrcSet} onError={handleError} alt={alt} className={imageClasses} />
   );
 
   if (href) {
