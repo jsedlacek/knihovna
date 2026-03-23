@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { HomePage, type BookGenre } from "#@/components/home-page.tsx";
 import { getBooks, getLastUpdated } from "#@/lib/server/books.ts";
-import { withErrorLogging } from "#@/lib/server/utils/server-fn.ts";
+import { errorLogging } from "#@/lib/server/utils/server-fn.ts";
 import type { TimestampData } from "#@/lib/shared/types/book-types.ts";
 import { groupBooksByGenre, type GenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 
@@ -14,8 +14,9 @@ export type Data = {
 
 const getHomeData = createServerFn({
   method: "GET",
-}).handler(
-  withErrorLogging(async (): Promise<Data> => {
+})
+  .middleware([errorLogging])
+  .handler(async (): Promise<Data> => {
     const [books, lastUpdated] = await Promise.all([getBooks(), getLastUpdated()]);
     const booksByGenre = groupBooksByGenre(books);
 
@@ -30,8 +31,7 @@ const getHomeData = createServerFn({
       genres,
       lastUpdated,
     };
-  }),
-);
+  });
 
 export const Route = createFileRoute("/")({
   head: () => ({
