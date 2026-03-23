@@ -47,7 +47,7 @@ export function GenrePage({ books, genreKey, showScores = false }: GenrePageProp
           </div>
         </section>
         <section className="space-y-4">
-          <div className="space-y-4">
+          <div className="space-y-8">
             {sortedBooks.length > 0 ? (
               sortedBooks.map((book, index) => (
                 <BookCard

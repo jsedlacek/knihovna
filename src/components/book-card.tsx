@@ -21,7 +21,7 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
   return (
     <article
       key={`${book.title}-${book.author}-${index}`}
-      className="flex flex-col sm:flex-row gap-3 sm:gap-4 pb-6 border-b border-border last:border-b-0"
+      className="flex flex-col sm:flex-row gap-3 sm:gap-4"
     >
       <BookCover
         src={book.imageUrl}
