@@ -47,6 +47,7 @@ export const Route = createFileRoute("/kniha/$bookSlug")({
         { name: "description", content: description },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
+        { name: "twitter:card", content: "summary" },
         ...(book.imageUrl ? [{ property: "og:image", content: book.imageUrl }] : []),
         {
           property: "og:url",
