@@ -11,4 +11,3 @@ storybook-static
 .output
 /.wrangler
 .env.local
-worker-configuration.d.ts
