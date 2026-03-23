@@ -31,7 +31,7 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
       />
       <div className="flex-1 text-center sm:text-left">
         <h3 className="font-bold text-sm mb-2">
-          <a href={getBookDetailPath(book)} className="hover:underline">
+          <a href={getBookDetailPath(book)} className="text-link hover:underline">
             {formatAuthorName(book.author)} – {book.title}
             {(book.partTitle || book.subtitle) && ` (${book.partTitle || book.subtitle})`}
           </a>

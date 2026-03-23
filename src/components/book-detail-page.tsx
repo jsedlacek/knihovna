@@ -112,7 +112,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
               href={book.detailUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center sm:justify-start text-xs text-muted-foreground underline"
+              className="inline-flex items-center justify-center sm:justify-start text-xs text-link underline"
             >
               Zobrazit v Městské knihovně
               <ExternalLinkIcon className="ml-1 size-3" />

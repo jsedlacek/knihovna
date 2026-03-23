@@ -30,7 +30,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
       <div className="flex justify-between items-start">
         <div>
           <h2 className="text-lg font-bold mb-2">
-            <a href={`/${genreKey}`} className="hover:underline">
+            <a href={`/${genreKey}`} className="text-link hover:underline">
               {genreConfig.name}
             </a>
           </h2>

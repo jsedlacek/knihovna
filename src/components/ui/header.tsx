@@ -59,7 +59,7 @@ export function Header({ title = "Nejlepší e-knihy zdarma", subtitle, breadcru
               <span key={item.label}>
                 {i > 0 && <span className="mx-1">/</span>}
                 {item.href ? (
-                  <a href={item.href} className="underline">
+                  <a href={item.href} className="text-link underline">
                     {item.label}
                   </a>
                 ) : (

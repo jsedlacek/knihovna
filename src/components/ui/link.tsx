@@ -16,7 +16,7 @@ export function Link({
   className = "",
 }: LinkProps) {
   return (
-    <a href={href} target={target} rel={rel} className={`hover:underline ${className}`}>
+    <a href={href} target={target} rel={rel} className={`text-link hover:underline ${className}`}>
       {children}
     </a>
   );
