@@ -67,7 +67,7 @@ export default createServerEntry({
         log.error("Unhandled request error", {
           method: request.method,
           path: url.pathname,
-          error: error instanceof Error ? { message: error.message, stack: error.stack } : error,
+          error,
         });
         throw error;
       }

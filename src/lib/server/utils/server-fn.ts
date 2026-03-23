@@ -20,7 +20,7 @@ export const errorLogging = createMiddleware({ type: "function" }).server(async 
     return await next();
   } catch (error) {
     log.error("Unhandled route error", {
-      error: error instanceof Error ? { message: error.message, stack: error.stack } : error,
+      error,
     });
     throw error;
   }

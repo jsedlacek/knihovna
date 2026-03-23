@@ -11,7 +11,7 @@ export function getRouter() {
     scrollRestoration: true,
     defaultOnCatch: (error) => {
       log.error("Unhandled render error", {
-        error: error instanceof Error ? { message: error.message, stack: error.stack } : error,
+        error,
       });
     },
   });
