@@ -8,7 +8,6 @@ import {
 import { getGenreName } from "#@/lib/shared/utils/genre-utils.ts";
 import { BookCover } from "./ui/book-cover.tsx";
 import { Button } from "./ui/button.tsx";
-import { Card } from "./ui/card.tsx";
 import { Footer } from "./ui/footer.tsx";
 import { Header } from "./ui/header.tsx";
 import { Link } from "./ui/link.tsx";
@@ -53,7 +52,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
       <Header showBackLink />
 
       <main className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
-        <Card className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+        <article className="flex flex-col sm:flex-row gap-4 sm:gap-6">
           <BookCover
             src={book.imageUrl}
             alt={`${book.title} book cover`}
@@ -126,7 +125,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
               </Button>
             </div>
           </div>
-        </Card>
+        </article>
       </main>
 
       <Footer />

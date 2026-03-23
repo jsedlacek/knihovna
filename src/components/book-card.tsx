@@ -9,7 +9,6 @@ import {
 import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
 import { BookCover } from "./ui/book-cover.tsx";
 import { Button } from "./ui/button.tsx";
-import { Card } from "./ui/card.tsx";
 import { Link } from "./ui/link.tsx";
 
 interface BookCardProps {
@@ -20,9 +19,9 @@ interface BookCardProps {
 
 export function BookCard({ book, index, showScores = false }: BookCardProps) {
   return (
-    <Card
+    <article
       key={`${book.title}-${book.author}-${index}`}
-      className="flex flex-col sm:flex-row gap-3 sm:gap-4"
+      className="flex flex-col sm:flex-row gap-3 sm:gap-4 pb-6 border-b border-border last:border-b-0"
     >
       <BookCover
         src={book.imageUrl}
@@ -92,6 +91,6 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
           )}
         </div>
       </div>
-    </Card>
+    </article>
   );
 }

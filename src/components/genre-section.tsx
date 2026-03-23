@@ -7,7 +7,6 @@ import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
 import { BookCover } from "./ui/book-cover.tsx";
 import { Button } from "./ui/button.tsx";
-import { Card } from "./ui/card.tsx";
 
 interface GenreSectionProps {
   books: Book[];
@@ -27,7 +26,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
   }
 
   return (
-    <Card className="space-y-4">
+    <section className="space-y-4 pb-8 border-b border-border last:border-b-0">
       <div className="flex justify-between items-start">
         <div>
           <h2 className="text-lg font-bold mb-2">
@@ -74,6 +73,6 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
           Zobrazit všechny knihy →
         </Button>
       </div>
-    </Card>
+    </section>
   );
 }
