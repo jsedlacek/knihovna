@@ -6,17 +6,17 @@ export function Footer() {
       <div className="max-w-4xl mx-auto text-center text-sm text-muted-foreground">
         <div>
           Zdroje:{" "}
-          <Link href="https://mlp.cz" className="text-blue-600">
+          <Link href="https://mlp.cz" className="underline">
             Městská knihovna v Praze
           </Link>
           ,{" "}
-          <Link href="https://goodreads.com" className="text-blue-600">
+          <Link href="https://goodreads.com" className="underline">
             Goodreads
           </Link>
         </div>
         <div className="mt-2">
           Autor:{" "}
-          <Link href="https://jakub.contact/" className="text-blue-600">
+          <Link href="https://jakub.contact/" className="underline">
             Jakub Sedláček
           </Link>
         </div>

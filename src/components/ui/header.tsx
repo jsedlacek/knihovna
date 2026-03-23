@@ -17,10 +17,10 @@ function BookIcon() {
       className="h-6 shrink-0"
     >
       <path
-        fill="#fde047"
+        fill="#000000"
         d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"
       />
-      <g fill="none" stroke="#1f2937" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <g fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 7v14" />
         <path d="M16 12h2" />
         <path d="M16 8h2" />
@@ -47,7 +47,7 @@ export function Header({
         {subtitle && <div className="text-sm text-muted-foreground">{subtitle}</div>}
         {showBackLink && (
           <div className="text-sm text-muted-foreground">
-            <a href="/" className="text-blue-600 hover:text-blue-800 hover:underline">
+            <a href="/" className="underline hover:opacity-70">
               ← Zpět na hlavní stránku
             </a>
           </div>

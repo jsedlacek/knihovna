@@ -52,7 +52,7 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
                 (
                 {book.ratingsCount &&
                   (book.url ? (
-                    <Link href={book.url} className="text-blue-600">
+                    <Link href={book.url} className="underline">
                       {formatNumberCompact(book.ratingsCount)}
                       &nbsp;hodnocení
                     </Link>
@@ -69,7 +69,7 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
             "Bez hodnocení"
           )}
           {showScores && book.rating && (
-            <span className="text-orange-600 font-bold">
+            <span className="font-bold">
               <span className="mx-2">|</span>Skóre: {formatBookScore(book)}
             </span>
           )}

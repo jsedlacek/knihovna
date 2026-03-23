@@ -22,9 +22,9 @@ export function Button({
 
   const variantClasses = {
     primary:
-      "bg-gray-200 text-gray-900 border-gray-400 hover:bg-gray-300 hover:border-gray-500 shadow-[1px_1px_0px_0px_rgb(107,114,128)]",
+      "bg-black text-white border-black hover:bg-gray-800 shadow-[1px_1px_0px_0px_rgb(0,0,0)]",
     secondary:
-      "bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200 hover:border-gray-400 shadow-[1px_1px_0px_0px_rgb(156,163,175)]",
+      "bg-white text-black border-black hover:bg-gray-100 shadow-[1px_1px_0px_0px_rgb(107,114,128)]",
   };
 
   return (

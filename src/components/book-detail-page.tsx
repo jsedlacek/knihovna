@@ -86,7 +86,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
                   <span className="text-muted-foreground">
                     (
                     {book.url ? (
-                      <Link href={book.url} className="text-blue-600">
+                      <Link href={book.url} className="underline">
                         {formatNumberCompact(book.ratingsCount)} hodnocení
                       </Link>
                     ) : (
