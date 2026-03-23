@@ -25,8 +25,6 @@ const getHomeData = createServerFn({
       bookCount: books.length,
     }));
 
-    // throw new Error("Not implemented");
-
     return {
       bookCount: books.length,
       genres,
