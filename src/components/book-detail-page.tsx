@@ -1,4 +1,4 @@
-import { StarIcon } from "lucide-react";
+import { ExternalLinkIcon, StarIcon } from "lucide-react";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import {
   formatAuthorName,
@@ -122,7 +122,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                KATALOG MKP
+                MĚSTSKÁ KNIHOVNA <ExternalLinkIcon className="ml-1 size-3" />
               </Button>
               {book.url && (
                 <Button
@@ -131,7 +131,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  GOODREADS
+                  GOODREADS <ExternalLinkIcon className="ml-1 size-3" />
                 </Button>
               )}
             </div>
