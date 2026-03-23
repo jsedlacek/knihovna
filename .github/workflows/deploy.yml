@@ -67,7 +67,7 @@ jobs:
               SCRAPE_ARGS="--force-mlp"
             fi
           fi
-          pnpm run scrape -- $SCRAPE_ARGS
+          pnpm run scrape $SCRAPE_ARGS
 
       - name: Build site
         run: pnpm run build
