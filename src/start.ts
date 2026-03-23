@@ -13,6 +13,6 @@ const errorLoggingMiddleware = createMiddleware({ type: "function" }).server(asy
   }
 });
 
-export default createStart(() => ({
+export const startInstance = createStart(() => ({
   functionMiddleware: [errorLoggingMiddleware],
 }));
