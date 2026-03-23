@@ -124,14 +124,14 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
                   ZOBRAZIT PDF
                 </Button>
               )}
-              <Button
+              <Link
                 href={book.detailUrl}
-                variant="secondary"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="inline-flex items-center text-xs text-muted-foreground underline"
               >
-                MĚSTSKÁ KNIHOVNA <ExternalLinkIcon className="ml-1 size-3" />
-              </Button>
+                Městská knihovna <ExternalLinkIcon className="ml-1 size-3" />
+              </Link>
             </div>
           </div>
         </article>
