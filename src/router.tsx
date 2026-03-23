@@ -7,7 +7,16 @@ export function getRouter() {
     routeTree,
     scrollRestoration: true,
     defaultOnCatch: (error) => {
-      console.error("Unhandled render error", error);
+      if (typeof window === "undefined") {
+        import("#@/lib/server/utils/logger.ts").then(({ createLogger }) => {
+          const log = createLogger("render");
+          log.error("Unhandled render error", {
+            error: error instanceof Error ? { message: error.message, stack: error.stack } : error,
+          });
+        });
+      } else {
+        console.error("Unhandled render error", error);
+      }
     },
   });
 
