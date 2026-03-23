@@ -260,7 +260,6 @@ export async function scrapeMlpListingPages(): Promise<MlpBookListing[]> {
   const books: MlpBookListing[] = [];
   let from = 0;
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const url = `${MLP_API_URL}titul/search?filter%5Bformat%5D%5Beq%5D=e-kniha&size=${MLP_PAGE_SIZE}&from=${from}`;
     log.info("Fetching MLP API page", { from });
