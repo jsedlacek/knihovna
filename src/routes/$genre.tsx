@@ -1,4 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { GenrePage } from "#@/components/genre-page.tsx";
 import { getBooks } from "#@/lib/server/books.ts";
 import {
@@ -11,14 +12,22 @@ function isValidGenre(genre: string): genre is GenreGroup {
   return genre in GENRE_GROUPS;
 }
 
+const getGenreBooks = createServerFn({
+  method: "GET",
+})
+  .inputValidator((d: string) => d as GenreGroup)
+  .handler(async ({ data: genre }) => {
+    const books = await getBooks();
+    return getBooksForGenreGroup(books, genre);
+  });
+
 export const Route = createFileRoute("/$genre")({
   loader: async ({ params }) => {
     if (!isValidGenre(params.genre)) {
       throw notFound();
     }
 
-    const books = await getBooks();
-    return getBooksForGenreGroup(books, params.genre);
+    return getGenreBooks({ data: params.genre });
   },
   head: ({ params }) => {
     if (!isValidGenre(params.genre)) {
