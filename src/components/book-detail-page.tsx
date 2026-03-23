@@ -108,6 +108,16 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
 
             {book.description && <p className="text-sm text-card-foreground">{book.description}</p>}
 
+            <Link
+              href={book.detailUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center sm:justify-start text-xs text-muted-foreground underline"
+            >
+              Zobrazit v Městské knihovně
+              <ExternalLinkIcon className="ml-1 size-3" />
+            </Link>
+
             <div className="flex justify-center sm:justify-start gap-2 flex-wrap pt-2">
               {book.epubUrl && (
                 <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
@@ -125,14 +135,6 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
                 </Button>
               )}
             </div>
-            <Link
-              href={book.detailUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center sm:justify-start text-xs text-muted-foreground underline"
-            >
-              Městská knihovna <ExternalLinkIcon className="ml-1 size-3" />
-            </Link>
           </div>
         </article>
       </main>
