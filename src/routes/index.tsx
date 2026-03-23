@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { HomePage, type BookGenre } from "#@/components/home-page.tsx";
 import { getBooks, getLastUpdated } from "#@/lib/server/books.ts";
+import { withErrorLogging } from "#@/lib/server/utils/server-fn.ts";
 import type { TimestampData } from "#@/lib/shared/types/book-types.ts";
 import { groupBooksByGenre, type GenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 
@@ -13,22 +14,26 @@ export type Data = {
 
 const getHomeData = createServerFn({
   method: "GET",
-}).handler(async (): Promise<Data> => {
-  const [books, lastUpdated] = await Promise.all([getBooks(), getLastUpdated()]);
-  const booksByGenre = groupBooksByGenre(books);
+}).handler(
+  withErrorLogging(async (): Promise<Data> => {
+    const [books, lastUpdated] = await Promise.all([getBooks(), getLastUpdated()]);
+    const booksByGenre = groupBooksByGenre(books);
 
-  const genres: BookGenre[] = Object.entries(booksByGenre).map(([genre, books]) => ({
-    genre: genre as GenreGroup,
-    books: books.slice(0, 100),
-    bookCount: books.length,
-  }));
+    const genres: BookGenre[] = Object.entries(booksByGenre).map(([genre, books]) => ({
+      genre: genre as GenreGroup,
+      books: books.slice(0, 100),
+      bookCount: books.length,
+    }));
 
-  return {
-    bookCount: books.length,
-    genres,
-    lastUpdated,
-  };
-});
+    // throw new Error("Not implemented");
+
+    return {
+      bookCount: books.length,
+      genres,
+      lastUpdated,
+    };
+  }),
+);
 
 export const Route = createFileRoute("/")({
   head: () => ({

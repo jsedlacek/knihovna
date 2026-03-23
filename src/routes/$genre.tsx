@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { GenrePage } from "#@/components/genre-page.tsx";
 import { getBooks } from "#@/lib/server/books.ts";
+import { withErrorLogging } from "#@/lib/server/utils/server-fn.ts";
 import {
   getBooksForGenreGroup,
   GENRE_GROUPS,
@@ -21,10 +22,12 @@ const getGenreBooks = createServerFn({
     }
     return d as GenreGroup;
   })
-  .handler(async ({ data: genre }) => {
-    const books = await getBooks();
-    return getBooksForGenreGroup(books, genre);
-  });
+  .handler(
+    withErrorLogging(async ({ data: genre }) => {
+      const books = await getBooks();
+      return getBooksForGenreGroup(books, genre);
+    }),
+  );
 
 export const Route = createFileRoute("/$genre")({
   loader: async ({ params }) => {
