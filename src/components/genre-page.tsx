@@ -58,7 +58,7 @@ export function GenrePage({
       />
       <Header breadcrumbs={[{ label: "Domů", href: "/" }, { label: genreConfig.name }]} />
 
-      <main className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
+      <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <section className="space-y-4">
           <div>
             <h2 className="text-lg font-bold">{genreConfig.name}</h2>

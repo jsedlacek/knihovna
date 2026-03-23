@@ -60,7 +60,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
         ]}
       />
 
-      <main className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
+      <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <article className="flex flex-col sm:flex-row gap-4 sm:gap-6">
           <BookCover
             src={book.imageUrl}
