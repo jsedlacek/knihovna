@@ -64,12 +64,14 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
         </div>
 
         {/* Fallback if no books */}
-        {bookCount === 0 && (
+        {bookCount === 0 ? (
           <section className="space-y-4">
             <p className="text-muted-foreground">
               Žádné knihy nejsou momentálně k dispozici. Zkontrolujte soubor data/books.json.
             </p>
           </section>
+        ) : (
+          <p className="text-center text-muted-foreground pt-8 text-2xl">❧</p>
         )}
       </main>
 
