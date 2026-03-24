@@ -24,6 +24,7 @@ export const Beletrie: Story = {
   args: {
     books: sampleBooksByGenre("beletrie"),
     genreKey: "beletrie",
+    bookCount: 42,
   },
 };
 
@@ -31,6 +32,7 @@ export const WithOneBook: Story = {
   args: {
     books: sampleBooks.slice(0, 1),
     genreKey: "beletrie",
+    bookCount: 15,
   },
 };
 
@@ -38,5 +40,6 @@ export const EmptySection: Story = {
   args: {
     books: [],
     genreKey: "beletrie",
+    bookCount: 0,
   },
 };
