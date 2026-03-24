@@ -69,7 +69,7 @@ export function GenrePage({
           </div>
         </section>
         <section className="space-y-4">
-          <div className="divide-y divide-border sm:divide-y-0 sm:space-y-8">
+          <div className="divide-y-4 divide-double divide-border sm:divide-y-0 sm:space-y-8">
             {books.length > 0 ? (
               books.map((book, index) => (
                 <div
