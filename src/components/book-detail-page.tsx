@@ -178,6 +178,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
             </div>
           </div>
         </article>
+        <p className="text-center text-muted-foreground pt-8 text-2xl">❧</p>
       </main>
 
       <Footer />

@@ -82,7 +82,7 @@ export function GenrePage({
               </p>
             )}
           </div>
-          {nextCursor !== null && (
+          {nextCursor !== null ? (
             <div className="flex justify-center pt-8">
               <Button onClick={loadMore} disabled={loading}>
                 {loading
@@ -90,6 +90,8 @@ export function GenrePage({
                   : `Načíst další (${formatNumberCzech(totalCount - books.length)} zbývá)`}
               </Button>
             </div>
+          ) : (
+            books.length > 0 && <p className="text-center text-muted-foreground pt-8 text-2xl">❧</p>
           )}
         </section>
       </main>
