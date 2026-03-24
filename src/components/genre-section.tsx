@@ -1,4 +1,4 @@
-import { ArrowRightIcon, StarIcon } from "lucide-react";
+import { StarIcon } from "lucide-react";
 
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
@@ -15,8 +15,6 @@ interface GenreSectionProps {
 
 export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) {
   const genreConfig = GENRE_GROUPS[genreKey];
-  const remaining = bookCount - books.length;
-
   // Don't render empty sections
   if (books.length === 0) {
     return null;
@@ -76,20 +74,6 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
             </div>
           </div>
         ))}
-        {bookCount > books.length && (
-          <div>
-            <a
-              href={`/${genreKey}`}
-              className="flex flex-col items-center justify-center gap-2 h-40 w-28 border border-border bg-muted/50 text-center text-sm text-muted-foreground hover:bg-muted transition-colors px-2"
-            >
-              <span>
-                A {remaining < 5 ? "další" : "dalších"} {formatNumberCzech(remaining)}{" "}
-                {remaining === 1 ? "kniha" : remaining < 5 ? "knihy" : "knih"}
-              </span>
-              <ArrowRightIcon className="size-5" />
-            </a>
-          </div>
-        )}
       </div>
 
       <div className="flex items-center gap-4 pt-2">
