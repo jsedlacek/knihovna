@@ -37,7 +37,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
 
       <div className="flex flex-wrap gap-2">
         {books.map((book, index) => (
-          <div key={`${genreKey}-${book.title}-${book.author}-${index}`} className="max-w-48">
+          <div key={`${genreKey}-${book.title}-${book.author}-${index}`} className="w-min max-w-48">
             <BookCover
               src={book.imageUrl}
               alt={`${book.title} cover`}
