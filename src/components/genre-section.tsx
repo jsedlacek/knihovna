@@ -1,4 +1,4 @@
-import { StarIcon } from "lucide-react";
+import { ArrowRightIcon, StarIcon } from "lucide-react";
 
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
@@ -64,9 +64,10 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
           <div className="shrink-0 snap-start">
             <a
               href={`/${genreKey}`}
-              className="flex items-center justify-center h-36 sm:h-42 w-24 rounded-md border border-border bg-muted/50 text-center text-sm text-muted-foreground hover:bg-muted transition-colors"
+              className="flex flex-col items-center justify-center gap-2 h-36 sm:h-42 w-28 rounded-md border border-border bg-muted/50 text-center text-sm text-muted-foreground hover:bg-muted transition-colors px-2"
             >
-              A dalších {formatNumberCzech(bookCount - books.length)} knih&nbsp;→
+              <span>A dalších {formatNumberCzech(bookCount - books.length)} knih</span>
+              <ArrowRightIcon className="size-5" />
             </a>
           </div>
         )}
