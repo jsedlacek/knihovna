@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { Link } from "./link.tsx";
 
 export interface BreadcrumbItem {
   label: string;
@@ -50,9 +49,9 @@ export function Header({ title = "Nejlepší e-knihy zdarma", subtitle, breadcru
     <header className="border-b border-border">
       <div className="w-full max-w-4xl mx-auto p-4 sm:p-6">
         <div className="flex items-start gap-3 min-w-0">
-          <Link href="/" aria-label="Domů">
+          <a href="/" aria-label="Domů">
             <BookIcon />
-          </Link>
+          </a>
           <div className="min-w-0 flex-1">
             <h1 className="text-base font-bold truncate">{title}</h1>
             {subtitle && <div className="text-sm text-muted-foreground truncate">{subtitle}</div>}
