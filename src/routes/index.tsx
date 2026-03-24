@@ -16,10 +16,9 @@ const log = createLogger("route.home");
 function pickFeaturedBooks(books: Book[], count: number): Book[] {
   if (books.length <= count) return books;
 
-  const sorted = [...books].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
-  const top10PctSize = Math.ceil(books.length * 0.1);
-  const poolSize = Math.max(top10PctSize, count);
-  const pool = sorted.slice(0, poolSize);
+  const topPctSize = Math.ceil(books.length * 0.2);
+  const poolSize = Math.max(topPctSize, count);
+  const pool = books.slice(0, poolSize);
 
   // Fisher-Yates shuffle on the pool, then take first `count`
   for (let i = pool.length - 1; i > 0; i--) {
