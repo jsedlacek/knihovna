@@ -38,7 +38,7 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
           </a>
         </h3>
         <p
-          className="text-sm text-card-foreground mb-2 line-clamp-3"
+          className="text-sm text-card-foreground mb-2 leading-relaxed line-clamp-3"
           title={book.description ?? undefined}
         >
           {book.description}

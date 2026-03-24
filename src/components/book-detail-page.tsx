@@ -111,7 +111,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
 
               <div className="hidden sm:block space-y-3">
                 {book.description && (
-                  <p className="text-sm text-card-foreground">{book.description}</p>
+                  <p className="text-sm text-card-foreground leading-relaxed">{book.description}</p>
                 )}
 
                 <Link
@@ -146,7 +146,9 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
           </div>
 
           <div className="sm:hidden space-y-3">
-            {book.description && <p className="text-sm text-card-foreground">{book.description}</p>}
+            {book.description && (
+              <p className="text-sm text-card-foreground leading-relaxed">{book.description}</p>
+            )}
 
             <Link
               href={book.detailUrl}

@@ -69,7 +69,7 @@ export function GenrePage({
           </div>
         </section>
         <section className="space-y-4">
-          <div className="space-y-12">
+          <div className="space-y-8">
             {books.length > 0 ? (
               books.map((book, index) => (
                 <div key={`${genreKey}-${book.titulKey}`}>
@@ -83,7 +83,7 @@ export function GenrePage({
             )}
           </div>
           {nextCursor !== null && (
-            <div className="flex pt-8">
+            <div className="flex justify-center pt-8">
               <Button onClick={loadMore} disabled={loading}>
                 {loading
                   ? "Načítání…"
