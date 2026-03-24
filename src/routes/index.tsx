@@ -1,10 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, getRouteApi } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { HomePage, type BookGenre } from "#@/components/home-page.tsx";
-import { getBooks, getLastUpdated } from "#@/lib/server/books.ts";
+import { getBooks } from "#@/lib/server/books.ts";
 import { createLogger } from "#@/lib/server/utils/logger.ts";
 import { errorLogging } from "#@/lib/server/utils/server-fn.ts";
-import type { Book, TimestampData } from "#@/lib/shared/types/book-types.ts";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { groupBooksByGenre, type GenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 
 const log = createLogger("route.home");
@@ -33,7 +33,6 @@ function pickFeaturedBooks(books: Book[], count: number): Book[] {
 export type Data = {
   bookCount: number;
   genres: BookGenre[];
-  lastUpdated: TimestampData | null;
 };
 
 const getHomeData = createServerFn({
@@ -44,7 +43,7 @@ const getHomeData = createServerFn({
     const totalStart = performance.now();
 
     const fetchStart = performance.now();
-    const [books, lastUpdated] = await Promise.all([getBooks(), getLastUpdated()]);
+    const books = await getBooks();
     log.info("Home handler", { step: "fetch", duration: performance.now() - fetchStart });
 
     const groupStart = performance.now();
@@ -62,7 +61,6 @@ const getHomeData = createServerFn({
     return {
       bookCount: books.length,
       genres,
-      lastUpdated,
     };
   });
 
@@ -96,8 +94,11 @@ export const Route = createFileRoute("/")({
   component: HomeComponent,
 });
 
+const rootRouteApi = getRouteApi("__root__");
+
 function HomeComponent() {
-  const { bookCount, genres, lastUpdated } = Route.useLoaderData();
+  const { bookCount, genres } = Route.useLoaderData();
+  const { lastUpdated } = rootRouteApi.useLoaderData();
 
   return <HomePage bookCount={bookCount} genres={genres} lastUpdated={lastUpdated} />;
 }

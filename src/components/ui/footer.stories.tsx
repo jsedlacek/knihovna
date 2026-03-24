@@ -16,3 +16,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {},
 };
+
+export const WithLastUpdated: Story = {
+  args: {
+    lastUpdated: "23. března 2026",
+  },
+};

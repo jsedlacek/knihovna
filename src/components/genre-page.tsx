@@ -17,6 +17,7 @@ interface GenrePageProps {
   totalCount: number;
   initialNextCursor: number | null;
   genreKey: keyof typeof GENRE_GROUPS;
+  lastUpdated?: string;
   onLoadMore?: (genre: string, cursor: number) => Promise<LoadMoreResult>;
 }
 
@@ -25,6 +26,7 @@ export function GenrePage({
   totalCount,
   initialNextCursor,
   genreKey,
+  lastUpdated,
   onLoadMore,
 }: GenrePageProps) {
   const genreConfig = GENRE_GROUPS[genreKey];
@@ -60,7 +62,7 @@ export function GenrePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Header breadcrumbs={[{ label: "Domů", href: "/" }, { label: genreConfig.name }]} />
+      <Header breadcrumbs={[{ label: genreConfig.name }]} />
 
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <section className="space-y-4">
@@ -100,7 +102,7 @@ export function GenrePage({
         </section>
       </main>
 
-      <Footer />
+      <Footer lastUpdated={lastUpdated} />
     </div>
   );
 }

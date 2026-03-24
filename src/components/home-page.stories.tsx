@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { createGenresFromBooks, mockTimestamp, sampleBooks } from "./stories/sample-books.ts";
+import { createGenresFromBooks, sampleBooks } from "./stories/sample-books.ts";
 import { HomePage } from "./home-page.tsx";
 
 const meta: Meta<typeof HomePage> = {
@@ -9,20 +9,6 @@ const meta: Meta<typeof HomePage> = {
     layout: "fullscreen",
   },
   tags: ["autodocs"],
-  argTypes: {
-    lastUpdated: {
-      control: { type: "object" },
-      description: "Last update timestamp information",
-    },
-    bookCount: {
-      control: { type: "number" },
-      description: "Total number of books",
-    },
-    genres: {
-      control: { type: "object" },
-      description: "Array of genre objects with books",
-    },
-  },
 };
 
 export default meta;
@@ -32,7 +18,7 @@ export const Default: Story = {
   args: {
     bookCount: sampleBooks.length,
     genres: createGenresFromBooks(sampleBooks),
-    lastUpdated: mockTimestamp,
+    lastUpdated: "23. března 2026",
   },
 };
 
@@ -40,6 +26,6 @@ export const Empty: Story = {
   args: {
     bookCount: 0,
     genres: [],
-    lastUpdated: mockTimestamp,
+    lastUpdated: "23. března 2026",
   },
 };

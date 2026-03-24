@@ -14,9 +14,10 @@ import { Link } from "./ui/link.tsx";
 
 interface BookDetailPageProps {
   book: Book;
+  lastUpdated?: string;
 }
 
-export function BookDetailPage({ book }: BookDetailPageProps) {
+export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
   const authorName = formatAuthorName(book.author);
   const fullTitle =
     book.partTitle || book.subtitle
@@ -51,7 +52,6 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
       />
       <Header
         breadcrumbs={[
-          { label: "Domů", href: "/" },
           {
             label: GENRE_GROUPS[getGenreGroupKey(book.genreId)].name,
             href: `/${getGenreGroupKey(book.genreId)}`,
@@ -185,7 +185,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
         <p className="text-center text-muted-foreground pt-8 text-2xl">❧</p>
       </main>
 
-      <Footer />
+      <Footer lastUpdated={lastUpdated} />
     </div>
   );
 }

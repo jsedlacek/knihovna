@@ -8,17 +8,15 @@ import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 interface SearchPageProps {
   query: string;
   books: Book[];
+  lastUpdated?: string;
 }
 
-export function SearchPage({ query, books }: SearchPageProps) {
+export function SearchPage({ query, books, lastUpdated }: SearchPageProps) {
   const isShortQuery = query.length > 0 && query.length < MIN_SEARCH_LENGTH;
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <Header
-        searchQuery={query}
-        breadcrumbs={[{ label: "Domů", href: "/" }, { label: "Hledání" }]}
-      />
+      <Header searchQuery={query} breadcrumbs={[{ label: "Hledání" }]} />
 
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <section className="space-y-4">
@@ -45,7 +43,7 @@ export function SearchPage({ query, books }: SearchPageProps) {
         </section>
       </main>
 
-      <Footer />
+      <Footer lastUpdated={lastUpdated} />
     </div>
   );
 }

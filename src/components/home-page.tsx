@@ -1,8 +1,7 @@
 import { GenreSection } from "#@/components/genre-section.tsx";
 import { Footer } from "#@/components/ui/footer.tsx";
 import { Header } from "#@/components/ui/header.tsx";
-import type { Book, TimestampData } from "#@/lib/shared/types/book-types.ts";
-import { formatDateCzech } from "#@/lib/shared/utils/date-utils.ts";
+import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { type GenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 
@@ -15,12 +14,10 @@ export interface BookGenre {
 interface HomePageProps {
   bookCount: number;
   genres: BookGenre[];
-  lastUpdated?: TimestampData | null;
+  lastUpdated?: string;
 }
 
 export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
-  const formattedLastUpdated = lastUpdated ? formatDateCzech(lastUpdated.lastUpdated) : null;
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -37,12 +34,7 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Header
-        {...(lastUpdated &&
-          formattedLastUpdated && {
-            subtitle: `Aktualizováno ${formattedLastUpdated}`,
-          })}
-      />
+      <Header />
 
       {/* Main content */}
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6 sm:space-y-8">
@@ -76,7 +68,7 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
         )}
       </main>
 
-      <Footer />
+      <Footer lastUpdated={lastUpdated} />
     </div>
   );
 }

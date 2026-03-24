@@ -1,7 +1,20 @@
 /// <reference types="vite/client" />
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import type { ReactNode } from "react";
+import { getLastUpdated } from "#@/lib/server/books.ts";
+import { errorLogging } from "#@/lib/server/utils/server-fn.ts";
+import { formatDateCzech } from "#@/lib/shared/utils/date-utils.ts";
 import appCss from "#@/styles/app.css?url";
+
+const getRootData = createServerFn({
+  method: "GET",
+})
+  .middleware([errorLogging])
+  .handler(async () => {
+    const timestamp = await getLastUpdated();
+    return { lastUpdated: formatDateCzech(timestamp.lastUpdated) };
+  });
 
 function ErrorPage({ code, title, message }: { code: string; title: string; message: string }) {
   return (
@@ -42,6 +55,7 @@ function RootErrorComponent() {
 }
 
 export const Route = createRootRoute({
+  loader: async () => await getRootData(),
   head: () => ({
     meta: [
       {

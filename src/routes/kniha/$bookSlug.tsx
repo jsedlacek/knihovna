@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, getRouteApi, notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { BookDetailPage } from "#@/components/book-detail-page.tsx";
 import { getBooks } from "#@/lib/server/books.ts";
@@ -59,7 +59,10 @@ export const Route = createFileRoute("/kniha/$bookSlug")({
   component: BookDetailComponent,
 });
 
+const rootRouteApi = getRouteApi("__root__");
+
 function BookDetailComponent() {
   const book = Route.useLoaderData();
-  return <BookDetailPage book={book} />;
+  const { lastUpdated } = rootRouteApi.useLoaderData();
+  return <BookDetailPage book={book} lastUpdated={lastUpdated} />;
 }

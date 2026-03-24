@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, getRouteApi } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { SearchPage } from "#@/components/search-page.tsx";
 import { getBooks } from "#@/lib/server/books.ts";
@@ -42,8 +42,11 @@ export const Route = createFileRoute("/hledat")({
   component: SearchComponent,
 });
 
+const rootRouteApi = getRouteApi("__root__");
+
 function SearchComponent() {
   const { books, query } = Route.useLoaderData();
+  const { lastUpdated } = rootRouteApi.useLoaderData();
 
-  return <SearchPage query={query} books={books} />;
+  return <SearchPage query={query} books={books} lastUpdated={lastUpdated} />;
 }

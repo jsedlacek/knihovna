@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, getRouteApi, notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { GenrePage } from "#@/components/genre-page.tsx";
 import { getBooks } from "#@/lib/server/books.ts";
@@ -102,9 +102,12 @@ export const Route = createFileRoute("/$genre")({
   component: GenreComponent,
 });
 
+const rootRouteApi = getRouteApi("__root__");
+
 function GenreComponent() {
   const { books, totalCount, nextCursor } = Route.useLoaderData();
   const { genre } = Route.useParams();
+  const { lastUpdated } = rootRouteApi.useLoaderData();
 
   if (!isValidGenre(genre)) {
     return null;
@@ -116,6 +119,7 @@ function GenreComponent() {
       totalCount={totalCount}
       initialNextCursor={nextCursor}
       genreKey={genre}
+      lastUpdated={lastUpdated}
       onLoadMore={async (g, cursor) => {
         return getGenreBooks({ data: { genre: g, cursor } });
       }}

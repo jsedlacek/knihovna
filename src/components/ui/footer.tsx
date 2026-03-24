@@ -1,12 +1,17 @@
 import { Divider } from "./divider.tsx";
 import { Link } from "./link.tsx";
 
-export function Footer() {
+interface FooterProps {
+  lastUpdated?: string | undefined;
+}
+
+export function Footer({ lastUpdated }: FooterProps) {
   return (
     <footer className="mt-auto pt-12">
       <Divider inverse />
       <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 text-sm text-muted-foreground">
-        <div>
+        {lastUpdated && <div>Aktualizováno {lastUpdated}</div>}
+        <div className={lastUpdated ? "mt-2" : ""}>
           Zdroje:{" "}
           <Link href="https://mlp.cz" className="underline">
             Městská knihovna v Praze
