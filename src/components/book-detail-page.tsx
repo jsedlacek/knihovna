@@ -61,7 +61,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
       />
 
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
-        <article className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+        <article className="flex flex-col items-center sm:flex-row sm:items-start gap-4 sm:gap-6">
           <BookCover
             src={book.imageUrl}
             alt={`${book.title} book cover`}
@@ -69,8 +69,8 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
             width={160}
             height={240}
           />
-          <div className="flex-1 text-center sm:text-left space-y-3">
-            <div>
+          <div className="flex-1 space-y-3">
+            <div className="text-center sm:text-left">
               <h2 className="text-lg font-bold">
                 {authorName} – {fullTitle}
               </h2>
@@ -114,13 +114,13 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
               href={book.detailUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center sm:justify-start text-xs text-link underline"
+              className="inline-flex items-center text-xs text-link underline"
             >
               Zobrazit v Městské knihovně
               <ExternalLinkIcon className="ml-1 size-3" />
             </Link>
 
-            <div className="flex justify-center sm:justify-start gap-2 flex-wrap pt-2">
+            <div className="flex gap-2 flex-wrap pt-2">
               {book.epubUrl && (
                 <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
                   STÁHNOUT EPUB
