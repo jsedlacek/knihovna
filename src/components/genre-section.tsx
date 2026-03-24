@@ -35,12 +35,9 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
         </div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory">
+      <div className="flex flex-wrap gap-2">
         {books.map((book, index) => (
-          <div
-            key={`${genreKey}-${book.title}-${book.author}-${index}`}
-            className="shrink-0 text-center snap-start"
-          >
+          <div key={`${genreKey}-${book.title}-${book.author}-${index}`} className="text-center">
             <BookCover
               src={book.imageUrl}
               alt={`${book.title} cover`}
@@ -62,7 +59,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
           </div>
         ))}
         {bookCount > books.length && (
-          <div className="shrink-0 snap-start">
+          <div>
             <a
               href={`/${genreKey}`}
               className="flex flex-col items-center justify-center gap-2 h-36 sm:h-42 w-28 rounded-md border border-border bg-muted/50 text-center text-sm text-muted-foreground hover:bg-muted transition-colors px-2"
