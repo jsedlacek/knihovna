@@ -28,3 +28,10 @@ export const WithBreadcrumbs: Story = {
     breadcrumbs: [{ label: "Domů", href: "/" }, { label: "Beletrie" }],
   },
 };
+
+export const WithSearchQuery: Story = {
+  args: {
+    searchQuery: "Čapek",
+    breadcrumbs: [{ label: "Domů", href: "/" }, { label: "Hledání" }],
+  },
+};

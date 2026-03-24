@@ -33,6 +33,7 @@
     "@fontsource/libre-baskerville": "^5.2.10",
     "@jsedlacek/logtape-pretty": "^1.0.4",
     "@logtape/logtape": "^2.0.5",
+    "@orama/orama": "^3.1.18",
     "@tanstack/react-router": "^1.168.3",
     "@tanstack/react-start": "^1.167.5",
     "@tanstack/start-static-server-functions": "^1.166.19",

@@ -11,6 +11,7 @@ export interface HeaderProps {
   title?: string;
   subtitle?: ReactNode;
   breadcrumbs?: BreadcrumbItem[];
+  searchQuery?: string;
 }
 
 function BookIcon() {
@@ -46,7 +47,32 @@ function BookIcon() {
   );
 }
 
-export function Header({ title = "Nejlepší e-knihy zdarma", subtitle, breadcrumbs }: HeaderProps) {
+function SearchIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  );
+}
+
+export function Header({
+  title = "Nejlepší e-knihy zdarma",
+  subtitle,
+  breadcrumbs,
+  searchQuery,
+}: HeaderProps) {
   return (
     <header>
       <div className="w-full max-w-4xl mx-auto p-4 sm:p-6">
@@ -78,6 +104,22 @@ export function Header({ title = "Nejlepší e-knihy zdarma", subtitle, breadcru
             )}
           </div>
         </div>
+        <form action="/hledat" method="get" className="mt-3 flex gap-2">
+          <input
+            type="search"
+            name="q"
+            placeholder="Hledat knihy…"
+            defaultValue={searchQuery}
+            className="flex-1 min-w-0 rounded border border-border bg-background px-3 py-1.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+          />
+          <button
+            type="submit"
+            className="shrink-0 rounded border border-border bg-background px-3 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+            aria-label="Hledat"
+          >
+            <SearchIcon />
+          </button>
+        </form>
       </div>
 
       <Divider />

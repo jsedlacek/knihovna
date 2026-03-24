@@ -17,6 +17,9 @@ importers:
       '@logtape/logtape':
         specifier: ^2.0.5
         version: 2.0.5
+      '@orama/orama':
+        specifier: ^3.1.18
+        version: 3.1.18
       '@tanstack/react-router':
         specifier: ^1.168.3
         version: 1.168.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -784,6 +787,10 @@ packages:
   '@oozcitak/util@10.0.0':
     resolution: {integrity: sha512-hAX0pT/73190NLqBPPWSdBVGtbY6VOhWYK3qqHqtXQ1gK7kS2yz4+ivsN07hpJ6I3aeMtKP6J6npsEKOAzuTLA==}
     engines: {node: '>=20.0'}
+
+  '@orama/orama@3.1.18':
+    resolution: {integrity: sha512-a61ljmRVVyG5MC/698C8/FfFDw5a8LOIvyOLW5fztgUXqUpc1jOfQzOitSCbge657OgXXThmY3Tk8fpiDb4UcA==}
+    engines: {node: '>= 20.0.0'}
 
   '@oxc-project/types@0.122.0':
     resolution: {integrity: sha512-oLAl5kBpV4w69UtFZ9xqcmTi+GENWOcPF7FCrczTiBbmC0ibXxCwyvZGbO39rCVEuLGAZM84DH0pUIyyv/YJzA==}
@@ -3180,6 +3187,8 @@ snapshots:
       '@oozcitak/util': 10.0.0
 
   '@oozcitak/util@10.0.0': {}
+
+  '@orama/orama@3.1.18': {}
 
   '@oxc-project/types@0.122.0': {}
 
