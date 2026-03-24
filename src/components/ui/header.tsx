@@ -91,14 +91,14 @@ export function Header({
             name="q"
             placeholder="Hledat knihy…"
             defaultValue={searchQuery}
-            className="flex-1 min-w-0 rounded border border-border bg-background px-3 py-1.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+            className="flex-1 min-w-0 border-1 border-black bg-white px-3 py-1.5 text-xs tracking-wide placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-black"
           />
           <button
             type="submit"
-            className="shrink-0 rounded border border-border bg-background px-3 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+            className="shrink-0 border-1 border-black bg-white px-3 py-1.5 text-xs text-black shadow-[1px_1px_0px_0px_rgb(0,0,0)] hover:bg-gray-100 transition-all duration-200 cursor-pointer"
             aria-label="Hledat"
           >
-            <SearchIcon size={16} aria-hidden="true" />
+            <SearchIcon size={14} aria-hidden="true" />
           </button>
         </form>
       </div>
