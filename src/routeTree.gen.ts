@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as HledatRouteImport } from './routes/hledat'
 import { Route as GenreRouteImport } from './routes/$genre'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as KnihaBookSlugRouteImport } from './routes/kniha/$bookSlug'
 
+const HledatRoute = HledatRouteImport.update({
+  id: '/hledat',
+  path: '/hledat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GenreRoute = GenreRouteImport.update({
   id: '/$genre',
   path: '/$genre',
@@ -32,35 +38,46 @@ const KnihaBookSlugRoute = KnihaBookSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$genre': typeof GenreRoute
+  '/hledat': typeof HledatRoute
   '/kniha/$bookSlug': typeof KnihaBookSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$genre': typeof GenreRoute
+  '/hledat': typeof HledatRoute
   '/kniha/$bookSlug': typeof KnihaBookSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$genre': typeof GenreRoute
+  '/hledat': typeof HledatRoute
   '/kniha/$bookSlug': typeof KnihaBookSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$genre' | '/kniha/$bookSlug'
+  fullPaths: '/' | '/$genre' | '/hledat' | '/kniha/$bookSlug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$genre' | '/kniha/$bookSlug'
-  id: '__root__' | '/' | '/$genre' | '/kniha/$bookSlug'
+  to: '/' | '/$genre' | '/hledat' | '/kniha/$bookSlug'
+  id: '__root__' | '/' | '/$genre' | '/hledat' | '/kniha/$bookSlug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GenreRoute: typeof GenreRoute
+  HledatRoute: typeof HledatRoute
   KnihaBookSlugRoute: typeof KnihaBookSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/hledat': {
+      id: '/hledat'
+      path: '/hledat'
+      fullPath: '/hledat'
+      preLoaderRoute: typeof HledatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$genre': {
       id: '/$genre'
       path: '/$genre'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GenreRoute: GenreRoute,
+  HledatRoute: HledatRoute,
   KnihaBookSlugRoute: KnihaBookSlugRoute,
 }
 export const routeTree = rootRouteImport
