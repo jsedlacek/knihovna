@@ -47,12 +47,6 @@ const bookWithoutImage: Book = {
   imageUrl: null,
 };
 
-const bookWithoutDownloads: Book = {
-  ...sampleBook,
-  epubUrl: null,
-  pdfUrl: null,
-};
-
 const bookWithPartTitle: Book = {
   ...sampleBook,
   title: "Kronika o Narni",
@@ -100,32 +94,10 @@ export const WithoutImage: Story = {
   },
 };
 
-export const WithoutDownloads: Story = {
-  args: {
-    book: bookWithoutDownloads,
-    index: 0,
-    showScores: false,
-  },
-};
-
 export const WithPartTitle: Story = {
   args: {
     book: bookWithPartTitle,
     index: 0,
     showScores: false,
-  },
-};
-
-export const MultipleCards: Story = {
-  render: () => (
-    <div className="space-y-4 max-w-4xl">
-      <BookCard book={sampleBook} index={0} showScores={true} />
-      <BookCard book={bookWithoutRating} index={1} showScores={true} />
-      <BookCard book={bookWithLongTitle} index={2} showScores={false} />
-      <BookCard book={bookWithPartTitle} index={3} showScores={false} />
-    </div>
-  ),
-  parameters: {
-    layout: "centered",
   },
 };

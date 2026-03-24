@@ -20,23 +20,8 @@ export const WithImage: Story = {
   },
 };
 
-export const WithLink: Story = {
-  args: {
-    src: "https://covers.openlibrary.org/b/id/240726-M.jpg",
-    alt: "Sample book cover with link",
-    href: "#",
-  },
-};
-
 export const WithPlaceholder: Story = {
   args: {
     alt: "Book with placeholder cover",
-  },
-};
-
-export const WithBrokenImage: Story = {
-  args: {
-    src: "https://invalid-url.com/broken-image.jpg",
-    alt: "Book with broken image (fallback to placeholder)",
   },
 };

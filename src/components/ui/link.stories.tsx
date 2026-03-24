@@ -19,19 +19,3 @@ export const Default: Story = {
     href: "#",
   },
 };
-
-export const RatingsLink: Story = {
-  args: {
-    children: "1.2k hodnocení",
-    href: "#",
-    className: "text-blue-600",
-  },
-};
-
-export const InternalLink: Story = {
-  args: {
-    children: "Internal link",
-    href: "/beletrie",
-    target: "_self",
-  },
-};

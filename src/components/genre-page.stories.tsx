@@ -32,7 +32,7 @@ const meta: Meta<typeof GenrePage> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Beletrie: Story = {
+export const Default: Story = {
   args: {
     initialBooks: sampleBooksByGenre("beletrie"),
     totalCount: 4,
@@ -43,51 +43,7 @@ export const Beletrie: Story = {
   },
 };
 
-export const Poezie: Story = {
-  args: {
-    initialBooks: sampleBooksByGenre("poezie"),
-    totalCount: 2,
-    initialNextCursor: null,
-    genreKey: "poezie",
-    showScores: false,
-    onLoadMore: mockLoadMore,
-  },
-};
-
-export const Divadlo: Story = {
-  args: {
-    initialBooks: [],
-    totalCount: 0,
-    initialNextCursor: null,
-    genreKey: "divadlo",
-    showScores: false,
-    onLoadMore: mockLoadMore,
-  },
-};
-
-export const Deti: Story = {
-  args: {
-    initialBooks: sampleBooksByGenre("deti"),
-    totalCount: 1,
-    initialNextCursor: null,
-    genreKey: "deti",
-    showScores: false,
-    onLoadMore: mockLoadMore,
-  },
-};
-
-export const WithScores: Story = {
-  args: {
-    initialBooks: sampleBooksByGenre("beletrie"),
-    totalCount: 4,
-    initialNextCursor: null,
-    genreKey: "beletrie",
-    showScores: true,
-    onLoadMore: mockLoadMore,
-  },
-};
-
-export const WithManyBooks: Story = {
+export const WithLoadMore: Story = {
   args: {
     initialBooks: sampleBooks.slice(0, 4),
     totalCount: 30,
@@ -98,7 +54,7 @@ export const WithManyBooks: Story = {
   },
 };
 
-export const EmptyGenre: Story = {
+export const Empty: Story = {
   args: {
     initialBooks: [],
     totalCount: 0,

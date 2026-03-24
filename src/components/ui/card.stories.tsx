@@ -25,22 +25,3 @@ export const Default: Story = {
     ),
   },
 };
-
-export const WithFlexLayout: Story = {
-  args: {
-    className: "flex flex-col sm:flex-row gap-3 sm:gap-4",
-    children: (
-      <>
-        <div className="flex-shrink-0">
-          <div className="w-16 h-24 sm:w-20 sm:h-30 bg-gray-200 border border-border"></div>
-        </div>
-        <div className="flex-1">
-          <h3 className="font-bold text-sm mb-2">Card with Flex Layout</h3>
-          <p className="text-sm text-card-foreground">
-            This card uses className to add flex layout behavior.
-          </p>
-        </div>
-      </>
-    ),
-  },
-};

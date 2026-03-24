@@ -28,13 +28,3 @@ export const WithBreadcrumbs: Story = {
     breadcrumbs: [{ label: "Domů", href: "/" }, { label: "Beletrie" }],
   },
 };
-
-export const BookDetailBreadcrumbs: Story = {
-  args: {
-    breadcrumbs: [
-      { label: "Domů", href: "/" },
-      { label: "Beletrie", href: "/beletrie" },
-      { label: "Hrabě Monte Cristo (II)" },
-    ],
-  },
-};

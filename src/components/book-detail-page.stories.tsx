@@ -20,16 +20,6 @@ export const Default: Story = {
   },
 };
 
-export const WithSubtitle: Story = {
-  args: {
-    book: {
-      ...sampleBook,
-      title: "Krakatit",
-      subtitle: "Román o vynálezci výbušniny",
-    },
-  },
-};
-
 export const WithPartTitle: Story = {
   args: {
     book: {
@@ -54,34 +44,8 @@ export const MinimalBook: Story = {
       rating: null,
       ratingsCount: null,
       url: null,
-    },
-  },
-};
-
-export const NoDownloadLinks: Story = {
-  args: {
-    book: {
-      ...sampleBook,
       epubUrl: null,
       pdfUrl: null,
-    },
-  },
-};
-
-export const EpubOnly: Story = {
-  args: {
-    book: {
-      ...sampleBook,
-      pdfUrl: null,
-    },
-  },
-};
-
-export const PdfOnly: Story = {
-  args: {
-    book: {
-      ...sampleBook,
-      epubUrl: null,
     },
   },
 };
