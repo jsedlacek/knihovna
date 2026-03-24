@@ -32,7 +32,7 @@ export function SearchPage({ query, books, lastUpdated }: SearchPageProps) {
                     : `Nalezeno ${formatNumberCzech(books.length)} ${books.length === 1 ? "kniha" : books.length < 5 ? "knihy" : "knih"} pro „${query}"`}
             </p>
           </div>
-          <div className="space-y-10">
+          <div className="space-y-12">
             {books.map((book, index) => (
               <div key={book.titulKey}>
                 <BookCard book={book} index={index} />
