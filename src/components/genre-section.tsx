@@ -15,6 +15,7 @@ interface GenreSectionProps {
 
 export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) {
   const genreConfig = GENRE_GROUPS[genreKey];
+  const remaining = bookCount - books.length;
 
   // Don't render empty sections
   if (books.length === 0) {
@@ -66,7 +67,10 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
               href={`/${genreKey}`}
               className="flex flex-col items-center justify-center gap-2 h-36 sm:h-42 w-28 rounded-md border border-border bg-muted/50 text-center text-sm text-muted-foreground hover:bg-muted transition-colors px-2"
             >
-              <span>A dalších {formatNumberCzech(bookCount - books.length)} knih</span>
+              <span>
+                A {remaining < 5 ? "další" : "dalších"} {formatNumberCzech(remaining)}{" "}
+                {remaining === 1 ? "kniha" : remaining < 5 ? "knihy" : "knih"}
+              </span>
               <ArrowRightIcon className="size-5" />
             </a>
           </div>
