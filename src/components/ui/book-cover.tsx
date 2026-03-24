@@ -21,7 +21,9 @@ export function BookCover({
   height,
 }: BookCoverProps) {
   const sizeClasses = className || "w-20 h-30 sm:w-28 sm:h-42";
-  const baseClasses = `${sizeClasses} object-cover border border-border`;
+  const hasExplicitWidth = /\bw-(?!auto)\d/.test(sizeClasses);
+  const objectFit = hasExplicitWidth ? "object-cover" : "";
+  const baseClasses = `${sizeClasses} ${objectFit} border border-border`.trim();
   const imageClasses = href ? `${baseClasses} hover:opacity-80 transition-opacity` : baseClasses;
 
   const handleError = (e: React.SyntheticEvent<HTMLImageElement>) => {

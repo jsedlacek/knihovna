@@ -37,14 +37,14 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
 
       <div className="flex flex-wrap gap-2">
         {books.map((book, index) => (
-          <div key={`${genreKey}-${book.title}-${book.author}-${index}`} className="w-28">
+          <div key={`${genreKey}-${book.title}-${book.author}-${index}`} className="max-w-48">
             <BookCover
               src={book.imageUrl}
               alt={`${book.title} cover`}
               href={getBookDetailPath(book)}
               external={false}
-              className="h-36 mb-1"
-              height={144}
+              className="h-40 w-auto mb-1"
+              height={160}
             />
             <a
               href={getBookDetailPath(book)}
@@ -72,7 +72,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
           <div>
             <a
               href={`/${genreKey}`}
-              className="flex flex-col items-center justify-center gap-2 h-36 w-28 rounded-md border border-border bg-muted/50 text-center text-sm text-muted-foreground hover:bg-muted transition-colors px-2"
+              className="flex flex-col items-center justify-center gap-2 h-40 w-28 rounded-md border border-border bg-muted/50 text-center text-sm text-muted-foreground hover:bg-muted transition-colors px-2"
             >
               <span>
                 A {remaining < 5 ? "další" : "dalších"} {formatNumberCzech(remaining)}{" "}
