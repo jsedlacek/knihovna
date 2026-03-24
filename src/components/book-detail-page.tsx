@@ -72,7 +72,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
             />
             <div className="flex-1 space-y-3">
               <div>
-                <h2 className="text-lg font-bold">{fullTitle}</h2>
+                <h2 className="text-lg font-bold mb-1">{fullTitle}</h2>
                 <p className="text-sm text-muted-foreground">{authorName}</p>
                 {book.genre && (
                   <div className="text-xs text-muted-foreground mt-1">
