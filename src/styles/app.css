@@ -43,4 +43,8 @@
   body {
     @apply bg-background text-foreground font-mono;
   }
+  hr {
+    border: none;
+    border-top: 4px double var(--border);
+  }
 }

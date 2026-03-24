@@ -2,7 +2,7 @@ import { Link } from "./link.tsx";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border mt-auto p-4 sm:p-6">
+    <footer className="border-t-4 border-double border-border mt-auto p-4 sm:p-6">
       <div className="w-full max-w-4xl mx-auto text-center text-sm text-muted-foreground">
         <div>
           Zdroje:{" "}

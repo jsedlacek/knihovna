@@ -46,7 +46,7 @@ function BookIcon() {
 
 export function Header({ title = "Nejlepší e-knihy zdarma", subtitle, breadcrumbs }: HeaderProps) {
   return (
-    <header className="border-b border-border">
+    <header className="border-b-4 border-double border-border">
       <div className="w-full max-w-4xl mx-auto p-4 sm:p-6">
         <div className="flex items-start gap-3 min-w-0">
           <a href="/" aria-label="Domů">
