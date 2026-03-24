@@ -1,4 +1,4 @@
-import { StarIcon } from "lucide-react";
+import { DownloadIcon, FileTextIcon, StarIcon } from "lucide-react";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import {
   formatAuthorName,
@@ -76,6 +76,7 @@ export function BookCard({ book, index }: BookCardProps) {
         <div className="flex gap-2 flex-wrap">
           {book.epubUrl && (
             <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
+              <DownloadIcon className="mr-1.5 size-3.5" />
               Stáhnout EPUB
             </Button>
           )}
@@ -86,6 +87,7 @@ export function BookCard({ book, index }: BookCardProps) {
               target="_blank"
               rel="noopener noreferrer"
             >
+              <FileTextIcon className="mr-1.5 size-3.5" />
               Zobrazit PDF
             </Button>
           )}
