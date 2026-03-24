@@ -15,6 +15,7 @@ type GenreId = keyof typeof GENRE_MAPPING;
 export const GENRE_GROUPS = {
   beletrie: {
     name: "Beletrie",
+    nameAccusative: "beletrii",
     genreIds: ["A1" as GenreId],
     description: "Romány, novely a povídky",
     title: "Beletrie - Nejlepší e-knihy zdarma",
@@ -23,6 +24,7 @@ export const GENRE_GROUPS = {
   },
   poezie: {
     name: "Poezie",
+    nameAccusative: "poezii",
     genreIds: ["B2" as GenreId],
     description: "Básnické sbírky a poezie",
     title: "Poezie - Nejlepší e-knihy zdarma",
@@ -31,6 +33,7 @@ export const GENRE_GROUPS = {
   },
   divadlo: {
     name: "Divadlo",
+    nameAccusative: "divadlo",
     genreIds: ["B1" as GenreId],
     description: "Divadelní hry a dramata",
     title: "Divadlo - Nejlepší e-knihy zdarma",
@@ -39,6 +42,7 @@ export const GENRE_GROUPS = {
   },
   deti: {
     name: "Knížky pro děti",
+    nameAccusative: "knížky pro děti",
     genreIds: ["A3" as GenreId, "A4" as GenreId],
     description: "Knihy pro děti a mládež",
     title: "Dětské knihy - Nejlepší e-knihy zdarma",
@@ -47,6 +51,7 @@ export const GENRE_GROUPS = {
   },
   ostatni: {
     name: "Ostatní",
+    nameAccusative: "ostatní",
     genreIds: [] as GenreId[],
     description: "Ostatní žánry a témata",
     title: "Ostatní - Nejlepší e-knihy zdarma",
