@@ -5,6 +5,10 @@ import { formatAuthorName } from "#@/lib/shared/utils/text-utils.ts";
 
 export const MIN_SEARCH_LENGTH = 2;
 
+function removeDiacritics(text: string): string {
+  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 export async function searchBooks(books: Book[], query: string): Promise<Book[]> {
   const trimmed = query.trim();
   if (trimmed.length < MIN_SEARCH_LENGTH) return [];
@@ -14,6 +18,18 @@ export async function searchBooks(books: Book[], query: string): Promise<Book[]>
       title: "string",
       author: "string",
       bookIndex: "number",
+    },
+    components: {
+      tokenizer: {
+        normalizationCache: new Map(),
+        language: "english",
+        stemmer: undefined,
+        stemmerSkipProperties: [],
+        allowDuplicates: false,
+        tokenize(text: string): string[] {
+          return removeDiacritics(text.toLowerCase()).split(/\s+/).filter(Boolean);
+        },
+      },
     },
   });
 
