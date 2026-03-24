@@ -1,3 +1,4 @@
+import { SearchIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Divider } from "./divider.tsx";
@@ -43,26 +44,6 @@ function BookIcon() {
         <path d="M6 12h2" />
         <path d="M6 8h2" />
       </g>
-    </svg>
-  );
-}
-
-function SearchIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
     </svg>
   );
 }
@@ -117,7 +98,7 @@ export function Header({
             className="shrink-0 rounded border border-border bg-background px-3 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
             aria-label="Hledat"
           >
-            <SearchIcon />
+            <SearchIcon size={16} aria-hidden="true" />
           </button>
         </form>
       </div>
