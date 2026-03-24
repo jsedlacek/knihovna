@@ -20,7 +20,7 @@ export function BookCover({
   width,
   height,
 }: BookCoverProps) {
-  const baseClasses = "w-16 h-24 sm:w-20 sm:h-30 object-cover border border-border";
+  const baseClasses = "w-20 h-30 sm:w-28 sm:h-42 object-cover border border-border";
   const imageClasses = href
     ? `${baseClasses} hover:opacity-80 transition-opacity mx-auto sm:mx-0 ${className}`
     : `${baseClasses} mx-auto sm:mx-0 ${className}`;
