@@ -22,10 +22,6 @@ const meta: Meta<typeof GenrePage> = {
       control: { type: "select" },
       options: ["beletrie", "poezie", "divadlo", "deti", "ostatni"],
     },
-    showScores: {
-      control: { type: "boolean" },
-      description: "Show book scoring information",
-    },
   },
 };
 
@@ -38,7 +34,6 @@ export const Default: Story = {
     totalCount: 4,
     initialNextCursor: null,
     genreKey: "beletrie",
-    showScores: false,
     onLoadMore: mockLoadMore,
   },
 };
@@ -49,7 +44,6 @@ export const WithLoadMore: Story = {
     totalCount: 30,
     initialNextCursor: 4,
     genreKey: "beletrie",
-    showScores: false,
     onLoadMore: mockLoadMore,
   },
 };
@@ -60,7 +54,6 @@ export const Empty: Story = {
     totalCount: 0,
     initialNextCursor: null,
     genreKey: "ostatni",
-    showScores: false,
     onLoadMore: mockLoadMore,
   },
 };

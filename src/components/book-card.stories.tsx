@@ -11,10 +11,6 @@ const meta: Meta<typeof BookCard> = {
   },
   tags: ["autodocs"],
   argTypes: {
-    showScores: {
-      control: { type: "boolean" },
-      description: "Whether to show the book score",
-    },
     index: {
       control: { type: "number" },
       description: "Index of the book card (used for unique keys)",
@@ -58,15 +54,6 @@ export const Default: Story = {
   args: {
     book: sampleBook,
     index: 0,
-    showScores: false,
-  },
-};
-
-export const WithScores: Story = {
-  args: {
-    book: sampleBook,
-    index: 0,
-    showScores: true,
   },
 };
 
@@ -74,7 +61,6 @@ export const WithoutRating: Story = {
   args: {
     book: bookWithoutRating,
     index: 0,
-    showScores: false,
   },
 };
 
@@ -82,7 +68,6 @@ export const WithLongContent: Story = {
   args: {
     book: bookWithLongTitle,
     index: 0,
-    showScores: false,
   },
 };
 
@@ -90,7 +75,6 @@ export const WithoutImage: Story = {
   args: {
     book: bookWithoutImage,
     index: 0,
-    showScores: false,
   },
 };
 
@@ -98,6 +82,5 @@ export const WithPartTitle: Story = {
   args: {
     book: bookWithPartTitle,
     index: 0,
-    showScores: false,
   },
 };

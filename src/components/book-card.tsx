@@ -1,6 +1,5 @@
 import { StarIcon } from "lucide-react";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
-import { formatBookScore } from "#@/lib/shared/utils/book-scoring.ts";
 import {
   formatAuthorName,
   formatNumberCompact,
@@ -14,10 +13,9 @@ import { Link } from "./ui/link.tsx";
 interface BookCardProps {
   book: Book;
   index: number;
-  showScores?: boolean;
 }
 
-export function BookCard({ book, index, showScores = false }: BookCardProps) {
+export function BookCard({ book, index }: BookCardProps) {
   return (
     <article
       key={`${book.title}-${book.author}-${index}`}
@@ -73,11 +71,6 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
             </div>
           ) : (
             "Bez hodnocení"
-          )}
-          {showScores && book.rating && (
-            <span className="font-bold">
-              <span className="mx-2">|</span>Skóre: {formatBookScore(book)}
-            </span>
           )}
         </div>
         <div className="flex gap-2 flex-wrap">

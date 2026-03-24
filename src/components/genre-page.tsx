@@ -17,7 +17,6 @@ interface GenrePageProps {
   totalCount: number;
   initialNextCursor: number | null;
   genreKey: keyof typeof GENRE_GROUPS;
-  showScores?: boolean;
   onLoadMore?: (genre: string, cursor: number) => Promise<LoadMoreResult>;
 }
 
@@ -26,7 +25,6 @@ export function GenrePage({
   totalCount,
   initialNextCursor,
   genreKey,
-  showScores = false,
   onLoadMore,
 }: GenrePageProps) {
   const genreConfig = GENRE_GROUPS[genreKey];
@@ -79,7 +77,7 @@ export function GenrePage({
             {books.length > 0 ? (
               books.map((book, index) => (
                 <div key={`${genreKey}-${book.titulKey}`}>
-                  <BookCard book={book} index={index} showScores={showScores} />
+                  <BookCard book={book} index={index} />
                 </div>
               ))
             ) : (
