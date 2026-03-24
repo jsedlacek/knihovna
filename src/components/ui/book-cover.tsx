@@ -20,10 +20,11 @@ export function BookCover({
   width,
   height,
 }: BookCoverProps) {
-  const baseClasses = "w-20 h-30 sm:w-28 sm:h-42 object-cover border border-border";
+  const sizeClasses = className || "w-20 h-30 sm:w-28 sm:h-42";
+  const baseClasses = `${sizeClasses} object-cover border border-border`;
   const imageClasses = href
-    ? `${baseClasses} hover:opacity-80 transition-opacity mx-auto sm:mx-0 ${className}`
-    : `${baseClasses} mx-auto sm:mx-0 ${className}`;
+    ? `${baseClasses} hover:opacity-80 transition-opacity mx-auto sm:mx-0`
+    : `${baseClasses} mx-auto sm:mx-0`;
 
   const handleError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
