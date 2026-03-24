@@ -23,7 +23,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
   }
 
   return (
-    <section className="space-y-4 pb-8 first:pt-0 pt-8">
+    <section className="space-y-4">
       <div className="flex justify-between items-start">
         <div>
           <h2 className="text-lg font-bold mb-2">

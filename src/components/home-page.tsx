@@ -57,7 +57,7 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
         </section>
 
         {/* Genre sections */}
-        <div className="divide-y-4 divide-double divide-border">
+        <div className="space-y-12">
           {genres.map(({ genre, books, bookCount }) => (
             <GenreSection key={genre} books={books} genreKey={genre} bookCount={bookCount} />
           ))}
