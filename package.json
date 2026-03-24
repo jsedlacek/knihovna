@@ -30,7 +30,7 @@
     "storybook:build": "storybook build"
   },
   "dependencies": {
-    "@fontsource/lilex": "^5.2.1",
+    "@fontsource/libre-baskerville": "^5.2.10",
     "@jsedlacek/logtape-pretty": "^1.0.4",
     "@logtape/logtape": "^2.0.5",
     "@tanstack/react-router": "^1.168.3",

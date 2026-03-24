@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@fontsource/lilex':
-        specifier: ^5.2.1
-        version: 5.2.1
+      '@fontsource/libre-baskerville':
+        specifier: ^5.2.10
+        version: 5.2.10
       '@jsedlacek/logtape-pretty':
         specifier: ^1.0.4
         version: 1.0.4
@@ -573,8 +573,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@fontsource/lilex@5.2.1':
-    resolution: {integrity: sha512-KnfU2zYPB8JWvxbB4SOn3dR3vivBGVPUGHvOIi176b8Uus4iOL2lbF6lrKf8BZlNSM/qeAxYmaMmqnhwZ/KMzQ==}
+  '@fontsource/libre-baskerville@5.2.10':
+    resolution: {integrity: sha512-Y/bGj4cOdWhAxU4+sBPen3MB5Og3t/WvezVL+05CJ7cvhDQUKpQFUuw/hm1IQKRc9u0lWs8VP2MKDOK2uQtloQ==}
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -3017,7 +3017,7 @@ snapshots:
   '@esbuild/win32-x64@0.27.4':
     optional: true
 
-  '@fontsource/lilex@5.2.1': {}
+  '@fontsource/libre-baskerville@5.2.10': {}
 
   '@img/colour@1.1.0': {}
 

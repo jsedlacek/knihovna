@@ -1,5 +1,5 @@
-@import "@fontsource/lilex/latin.css";
-@import "@fontsource/lilex/latin-700.css";
+@import "@fontsource/libre-baskerville/latin-400.css";
+@import "@fontsource/libre-baskerville/latin-700.css";
 @import "tailwindcss";
 
 :root {
@@ -33,7 +33,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-mono: "Lilex", ui-monospace, monospace;
+  --font-sans: "Libre Baskerville", ui-serif, Georgia, serif;
 }
 
 @layer base {
@@ -41,6 +41,6 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-mono;
+    @apply bg-background text-foreground font-sans;
   }
 }
