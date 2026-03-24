@@ -49,28 +49,30 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
               className="h-40 w-auto max-w-none mb-1"
               height={160}
             />
-            <a
-              href={getBookDetailPath(book)}
-              title={book.title}
-              className="min-w-0 text-xs font-medium leading-tight line-clamp-2 hover:underline"
-            >
-              {book.title}
-            </a>
-            <p
-              className="min-w-0 text-xs text-muted-foreground leading-tight truncate"
-              title={book.author}
-            >
-              {book.author}
-            </p>
-            <div className="min-w-0 text-xs text-muted-foreground flex items-center">
-              {book.rating ? (
-                <span className="inline-flex items-center">
-                  <span>{formatNumberCzech(Math.round(book.rating * 10) / 10)}</span>
-                  <StarIcon className="ml-1 size-2.5 fill-current" />
-                </span>
-              ) : (
-                "N/A"
-              )}
+            <div className="w-0 min-w-full">
+              <a
+                href={getBookDetailPath(book)}
+                title={book.title}
+                className="text-xs font-medium leading-tight line-clamp-2 hover:underline"
+              >
+                {book.title}
+              </a>
+              <p
+                className="text-xs text-muted-foreground leading-tight truncate"
+                title={book.author}
+              >
+                {book.author}
+              </p>
+              <div className="text-xs text-muted-foreground flex items-center">
+                {book.rating ? (
+                  <span className="inline-flex items-center">
+                    <span>{formatNumberCzech(Math.round(book.rating * 10) / 10)}</span>
+                    <StarIcon className="ml-1 size-2.5 fill-current" />
+                  </span>
+                ) : (
+                  "N/A"
+                )}
+              </div>
             </div>
           </div>
         ))}
