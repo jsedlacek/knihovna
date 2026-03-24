@@ -35,7 +35,7 @@ Czech e-books static site showcasing free e-books from Prague Municipal Library 
 ## Storybook
 
 - **Prefer Storybook over the dev server** for tweaking components and pages — it's faster to iterate, doesn't need real data, and lets you test edge cases easily.
-- **Run with preview tools**: Storybook is configured in `.claude/launch.json` as `storybook` (port 6006). Use `preview_start` to launch it, then screenshot stories to verify visual changes.
+- **Run with preview tools**: Storybook is configured in `.claude/launch.json` as `storybook` (port 6006). Use `preview_start` to launch it. To screenshot a specific story without Storybook's sidebar/chrome, navigate to the iframe URL: `/iframe.html?id={story-id}&viewMode=story` (e.g., `/iframe.html?id=pages-homepage--default&viewMode=story`). The story ID format is `{title}--{story-name}` in kebab-case.
 - **Stories co-located** with components (e.g., `book-card.stories.tsx` next to `book-card.tsx`)
 - **Shared sample data**: Import from `src/components/stories/sample-books.ts` — don't duplicate `Book` fixtures in individual story files
 - **Page components must be presentational**: No server function imports in components. Pass callbacks as props (e.g., `onLoadMore`) so components render in Storybook without a server.
