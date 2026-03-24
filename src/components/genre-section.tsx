@@ -61,12 +61,14 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
           </div>
         ))}
         {bookCount > books.length && (
-          <a
-            href={`/${genreKey}`}
-            className="shrink-0 snap-start flex items-center justify-center self-stretch w-24 rounded-md border border-border bg-muted/50 text-center text-sm text-muted-foreground hover:bg-muted transition-colors"
-          >
-            A dalších {formatNumberCzech(bookCount - books.length)} knih&nbsp;→
-          </a>
+          <div className="shrink-0 snap-start">
+            <a
+              href={`/${genreKey}`}
+              className="flex items-center justify-center h-36 sm:h-42 w-24 rounded-md border border-border bg-muted/50 text-center text-sm text-muted-foreground hover:bg-muted transition-colors"
+            >
+              A dalších {formatNumberCzech(bookCount - books.length)} knih&nbsp;→
+            </a>
+          </div>
         )}
       </div>
 
