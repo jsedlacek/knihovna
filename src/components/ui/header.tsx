@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { Divider } from "./divider.tsx";
+
 export interface BreadcrumbItem {
   label: string;
   href?: string;
@@ -46,7 +48,7 @@ function BookIcon() {
 
 export function Header({ title = "Nejlepší e-knihy zdarma", subtitle, breadcrumbs }: HeaderProps) {
   return (
-    <header className="border-b border-border">
+    <header>
       <div className="w-full max-w-4xl mx-auto p-4 sm:p-6">
         <div className="flex items-start gap-3 min-w-0">
           <a href="/" aria-label="Domů">
@@ -77,6 +79,8 @@ export function Header({ title = "Nejlepší e-knihy zdarma", subtitle, breadcru
           </div>
         </div>
       </div>
+
+      <Divider />
     </header>
   );
 }

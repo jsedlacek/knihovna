@@ -1,8 +1,10 @@
+import { Divider } from "./divider.tsx";
 import { Link } from "./link.tsx";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border mt-auto">
+    <footer className="mt-auto">
+      <Divider inverse />
       <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 text-sm text-muted-foreground">
         <div>
           Zdroje:{" "}
