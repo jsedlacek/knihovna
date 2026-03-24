@@ -62,7 +62,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
 
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <article className="space-y-4 sm:space-y-0">
-          <div className="flex flex-col items-center sm:flex-row sm:items-start gap-4 sm:gap-6">
+          <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
             <BookCover
               src={book.imageUrl}
               alt={`${book.title} book cover`}
@@ -71,7 +71,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
               height={240}
             />
             <div className="flex-1 space-y-3">
-              <div className="text-center sm:text-left">
+              <div>
                 <h2 className="text-lg font-bold">
                   {authorName} – {fullTitle}
                 </h2>
@@ -88,7 +88,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
               </div>
 
               {book.rating && (
-                <div className="flex items-center justify-center sm:justify-start text-sm">
+                <div className="flex items-center text-sm">
                   <span className="font-semibold">
                     {formatNumberCzech(Math.round(book.rating * 10) / 10)}
                   </span>

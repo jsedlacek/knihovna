@@ -37,10 +37,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
 
       <div className="flex flex-wrap gap-2">
         {books.map((book, index) => (
-          <div
-            key={`${genreKey}-${book.title}-${book.author}-${index}`}
-            className="w-28 text-center"
-          >
+          <div key={`${genreKey}-${book.title}-${book.author}-${index}`} className="w-28">
             <BookCover
               src={book.imageUrl}
               alt={`${book.title} cover`}
@@ -51,12 +48,12 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
             />
             <a
               href={getBookDetailPath(book)}
-              className="block text-xs font-medium leading-tight line-clamp-2 hover:underline"
+              className="block text-xs font-medium leading-tight line-clamp-3 hover:underline"
             >
               {book.title}
             </a>
             <p className="text-xs text-muted-foreground leading-tight truncate">{book.author}</p>
-            <div className="text-xs text-muted-foreground flex items-center justify-center">
+            <div className="text-xs text-muted-foreground flex items-center">
               {book.rating ? (
                 <span className="inline-flex items-center">
                   <span>{formatNumberCzech(Math.round(book.rating * 10) / 10)}</span>

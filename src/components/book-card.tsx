@@ -30,7 +30,7 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
         external={false}
         width={112}
       />
-      <div className="flex-1 text-center sm:text-left">
+      <div className="flex-1">
         <h3 className="font-bold text-sm mb-2">
           <a href={getBookDetailPath(book)} className="text-link hover:underline">
             {formatAuthorName(book.author)} – {book.title}
@@ -40,7 +40,7 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
         <p className="text-sm text-card-foreground mb-2 line-clamp-3">{book.description}</p>
         <div className="text-xs text-muted-foreground mb-3">
           {book.rating ? (
-            <div className="flex items-center justify-center sm:justify-start">
+            <div className="flex items-center">
               <span className="inline-flex items-center">
                 <span className="font-semibold">
                   {formatNumberCzech(Math.round(book.rating * 10) / 10)}
@@ -74,7 +74,7 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
             </span>
           )}
         </div>
-        <div className="flex justify-center sm:justify-start gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap">
           {book.epubUrl && (
             <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
               STÁHNOUT EPUB
