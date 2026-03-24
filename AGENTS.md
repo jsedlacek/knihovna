@@ -31,3 +31,11 @@ Czech e-books static site showcasing free e-books from Prague Municipal Library 
 - Uses `node:test` with real HTML fixtures (no external test frameworks)
 - Tests co-located with source; fixtures in `src/test/fixtures/`
 - When tests fail due to website changes: check selectors, re-download fixtures with `curl`
+
+## Storybook
+
+- **Run with preview tools**: Storybook is configured in `.claude/launch.json` as `storybook` (port 6006). Use `preview_start` to launch it, then screenshot stories to verify visual changes.
+- **Stories co-located** with components (e.g., `book-card.stories.tsx` next to `book-card.tsx`)
+- **Shared sample data**: Import from `src/components/stories/sample-books.ts` — don't duplicate `Book` fixtures in individual story files
+- **Page components must be presentational**: No server function imports in components. Pass callbacks as props (e.g., `onLoadMore`) so components render in Storybook without a server.
+- **Every page/component should have a story file** with multiple variants covering edge cases (empty state, missing optional fields, long content)
