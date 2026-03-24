@@ -53,11 +53,19 @@ export function Header({ breadcrumbs, searchQuery }: HeaderProps) {
     <header>
       <div className="w-full max-w-4xl mx-auto p-4 sm:p-6">
         <div className="flex items-center gap-1 min-w-0">
-          <a href="/" aria-label="Domů" className="shrink-0">
+          <a href="/" className="shrink-0 flex items-center gap-1">
             <BookIcon className="size-6" />
+            {!hasBreadcrumbs(breadcrumbs) && (
+              <span className="text-sm font-bold">Nejlepší e-knihy zdarma</span>
+            )}
           </a>
-          {hasBreadcrumbs(breadcrumbs) ? (
+          {hasBreadcrumbs(breadcrumbs) && (
             <nav className="flex items-center text-sm text-muted-foreground min-w-0">
+              <span className="flex items-center shrink-0">
+                <a href="/" className="text-link underline whitespace-nowrap ml-1">
+                  Domů
+                </a>
+              </span>
               {breadcrumbs.map((item, i) => (
                 <span
                   key={item.label}
@@ -74,8 +82,6 @@ export function Header({ breadcrumbs, searchQuery }: HeaderProps) {
                 </span>
               ))}
             </nav>
-          ) : (
-            <h1 className="text-sm font-bold truncate">Nejlepší e-knihy zdarma</h1>
           )}
         </div>
         <form action="/hledat" method="get" className="mt-3 relative">
