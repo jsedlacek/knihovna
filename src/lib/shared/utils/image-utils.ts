@@ -11,10 +11,11 @@ export function getImageUrl(
     return src;
   }
 
+  const fit = opts.width && opts.height ? "fit=cover" : "fit=scale-down";
   const params = [
     opts.width && `width=${opts.width}`,
     opts.height && `height=${opts.height}`,
-    "fit=cover",
+    fit,
     "format=auto",
     "quality=80",
   ]
