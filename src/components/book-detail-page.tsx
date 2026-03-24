@@ -126,7 +126,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
                 <div className="flex gap-2 flex-wrap pt-2">
                   {book.epubUrl && (
                     <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
-                      STÁHNOUT EPUB
+                      Stáhnout EPUB
                     </Button>
                   )}
                   {book.pdfUrl && (
@@ -136,7 +136,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      ZOBRAZIT PDF
+                      Zobrazit PDF
                     </Button>
                   )}
                 </div>
@@ -162,7 +162,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
             <div className="flex gap-2 flex-wrap pt-2">
               {book.epubUrl && (
                 <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
-                  STÁHNOUT EPUB
+                  Stáhnout EPUB
                 </Button>
               )}
               {book.pdfUrl && (
@@ -172,7 +172,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  ZOBRAZIT PDF
+                  Zobrazit PDF
                 </Button>
               )}
             </div>

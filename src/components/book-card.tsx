@@ -76,7 +76,7 @@ export function BookCard({ book, index }: BookCardProps) {
         <div className="flex gap-2 flex-wrap">
           {book.epubUrl && (
             <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
-              STÁHNOUT EPUB
+              Stáhnout EPUB
             </Button>
           )}
           {book.pdfUrl && (
@@ -86,7 +86,7 @@ export function BookCard({ book, index }: BookCardProps) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              ZOBRAZIT PDF
+              Zobrazit PDF
             </Button>
           )}
         </div>

@@ -16,7 +16,7 @@ type Story = StoryObj<ButtonProps>;
 export const PrimaryLink: Story = {
   render: () => (
     <Button href="#" variant="primary">
-      STÁHNOUT EPUB
+      Stáhnout EPUB
     </Button>
   ),
 };
@@ -24,7 +24,7 @@ export const PrimaryLink: Story = {
 export const SecondaryLink: Story = {
   render: () => (
     <Button href="#" variant="secondary">
-      ZOBRAZIT PDF
+      Zobrazit PDF
     </Button>
   ),
 };
@@ -32,7 +32,7 @@ export const SecondaryLink: Story = {
 export const ActionButton: Story = {
   render: () => (
     <Button onClick={() => {}} variant="primary">
-      NAČÍST DALŠÍ
+      Načíst další
     </Button>
   ),
 };
@@ -40,7 +40,7 @@ export const ActionButton: Story = {
 export const DisabledButton: Story = {
   render: () => (
     <Button onClick={() => {}} variant="primary" disabled>
-      NAČÍTÁNÍ…
+      Načítání…
     </Button>
   ),
 };
