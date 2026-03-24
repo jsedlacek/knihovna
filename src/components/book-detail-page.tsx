@@ -61,53 +61,93 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
       />
 
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
-        <article className="flex flex-col items-center sm:flex-row sm:items-start gap-4 sm:gap-6">
-          <BookCover
-            src={book.imageUrl}
-            alt={`${book.title} book cover`}
-            className="w-32 h-48 sm:w-40 sm:h-60"
-            width={160}
-            height={240}
-          />
-          <div className="flex-1 space-y-3">
-            <div className="text-center sm:text-left">
-              <h2 className="text-lg font-bold">
-                {authorName} – {fullTitle}
-              </h2>
-              {book.genre && (
-                <div className="text-xs text-muted-foreground mt-1">
-                  {getGenreName(book.genreId)}
-                </div>
-              )}
-              {(book.publisher || book.year) && (
-                <div className="text-xs text-muted-foreground mt-1">
-                  {[book.publisher, book.year].filter(Boolean).join(", ")}
-                </div>
-              )}
-            </div>
-
-            {book.rating && (
-              <div className="flex items-center justify-center sm:justify-start text-sm">
-                <span className="font-semibold">
-                  {formatNumberCzech(Math.round(book.rating * 10) / 10)}
-                </span>
-                <StarIcon className="ml-1 size-3 fill-current mr-2" />
-                {book.ratingsCount && (
-                  <span className="text-muted-foreground">
-                    (
-                    {book.url ? (
-                      <Link href={book.url} className="underline">
-                        {formatNumberCompact(book.ratingsCount)} hodnocení
-                      </Link>
-                    ) : (
-                      <span>{formatNumberCompact(book.ratingsCount)} hodnocení</span>
-                    )}
-                    )
-                  </span>
+        <article className="space-y-4 sm:space-y-0">
+          <div className="flex flex-col items-center sm:flex-row sm:items-start gap-4 sm:gap-6">
+            <BookCover
+              src={book.imageUrl}
+              alt={`${book.title} book cover`}
+              className="w-32 h-48 sm:w-40 sm:h-60"
+              width={160}
+              height={240}
+            />
+            <div className="flex-1 space-y-3">
+              <div className="text-center sm:text-left">
+                <h2 className="text-lg font-bold">
+                  {authorName} – {fullTitle}
+                </h2>
+                {book.genre && (
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {getGenreName(book.genreId)}
+                  </div>
+                )}
+                {(book.publisher || book.year) && (
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {[book.publisher, book.year].filter(Boolean).join(", ")}
+                  </div>
                 )}
               </div>
-            )}
 
+              {book.rating && (
+                <div className="flex items-center justify-center sm:justify-start text-sm">
+                  <span className="font-semibold">
+                    {formatNumberCzech(Math.round(book.rating * 10) / 10)}
+                  </span>
+                  <StarIcon className="ml-1 size-3 fill-current mr-2" />
+                  {book.ratingsCount && (
+                    <span className="text-muted-foreground">
+                      (
+                      {book.url ? (
+                        <Link href={book.url} className="underline">
+                          {formatNumberCompact(book.ratingsCount)} hodnocení
+                        </Link>
+                      ) : (
+                        <span>{formatNumberCompact(book.ratingsCount)} hodnocení</span>
+                      )}
+                      )
+                    </span>
+                  )}
+                </div>
+              )}
+
+              <div className="hidden sm:block space-y-3">
+                {book.description && (
+                  <p className="text-sm text-card-foreground">{book.description}</p>
+                )}
+
+                <Link
+                  href={book.detailUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-xs text-link underline"
+                >
+                  Zobrazit v Městské knihovně
+                  <ExternalLinkIcon className="ml-1 size-3" />
+                </Link>
+
+                <div className="flex gap-2 flex-wrap pt-2">
+                  {book.epubUrl && (
+                    <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
+                      STÁHNOUT EPUB
+                    </Button>
+                  )}
+                  {book.pdfUrl && (
+                    <Button
+                      href={book.pdfUrl}
+                      variant="secondary"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      ZOBRAZIT PDF
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr className="border-border sm:hidden" />
+
+          <div className="sm:hidden space-y-3">
             {book.description && <p className="text-sm text-card-foreground">{book.description}</p>}
 
             <Link
