@@ -3,7 +3,7 @@ import { Link } from "./link.tsx";
 
 export function Footer() {
   return (
-    <footer className="mt-auto">
+    <footer className="mt-auto pt-12">
       <Divider inverse />
       <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 text-sm text-muted-foreground">
         <div>
