@@ -51,7 +51,7 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
             <p>
               Tady najdete <span className="font-semibold">{formatNumberCzech(bookCount)}</span>{" "}
               románů, klasiky, poezie i divadla – všechno, co má od čtenářů aspoň čtyři hvězdičky. A
-              hlavně zdarma ke stažení z městské knihovny.
+              hlavně zdarma ke stažení.
             </p>
           </div>
         </section>
