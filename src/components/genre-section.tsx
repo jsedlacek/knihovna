@@ -48,11 +48,14 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
             />
             <a
               href={getBookDetailPath(book)}
+              title={book.title}
               className="text-xs font-medium leading-tight line-clamp-2 hover:underline"
             >
               {book.title}
             </a>
-            <p className="text-xs text-muted-foreground leading-tight truncate">{book.author}</p>
+            <p className="text-xs text-muted-foreground leading-tight truncate" title={book.author}>
+              {book.author}
+            </p>
             <div className="text-xs text-muted-foreground flex items-center">
               {book.rating ? (
                 <span className="inline-flex items-center">

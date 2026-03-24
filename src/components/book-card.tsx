@@ -37,7 +37,12 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
             {(book.partTitle || book.subtitle) && ` (${book.partTitle || book.subtitle})`}
           </a>
         </h3>
-        <p className="text-sm text-card-foreground mb-2 line-clamp-3">{book.description}</p>
+        <p
+          className="text-sm text-card-foreground mb-2 line-clamp-3"
+          title={book.description ?? undefined}
+        >
+          {book.description}
+        </p>
         <div className="text-xs text-muted-foreground mb-3">
           {book.rating ? (
             <div className="flex items-center">
