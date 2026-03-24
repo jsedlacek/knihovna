@@ -22,7 +22,7 @@ export async function searchBooks(books: Book[], query: string): Promise<Book[]>
     components: {
       tokenizer: {
         normalizationCache: new Map(),
-        language: "english",
+        language: "english", // unused — custom tokenize() overrides all language processing
         stemmer: undefined,
         stemmerSkipProperties: [],
         allowDuplicates: false,
