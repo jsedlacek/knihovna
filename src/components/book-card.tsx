@@ -28,6 +28,7 @@ export function BookCard({ book, index, showScores = false }: BookCardProps) {
         alt={`${book.title} book cover`}
         href={getBookDetailPath(book)}
         external={false}
+        height={120}
       />
       <div className="flex-1 text-center sm:text-left">
         <h3 className="font-bold text-sm mb-2">
