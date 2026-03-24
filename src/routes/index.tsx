@@ -4,10 +4,32 @@ import { HomePage, type BookGenre } from "#@/components/home-page.tsx";
 import { getBooks, getLastUpdated } from "#@/lib/server/books.ts";
 import { createLogger } from "#@/lib/server/utils/logger.ts";
 import { errorLogging } from "#@/lib/server/utils/server-fn.ts";
-import type { TimestampData } from "#@/lib/shared/types/book-types.ts";
+import type { Book, TimestampData } from "#@/lib/shared/types/book-types.ts";
 import { groupBooksByGenre, type GenreGroup } from "#@/lib/shared/utils/genre-utils.ts";
 
 const log = createLogger("route.home");
+
+/**
+ * Pick `count` random books from the top 10% by rating.
+ * If the top 10% has fewer than `count` books, pick the top `count` instead.
+ */
+function pickFeaturedBooks(books: Book[], count: number): Book[] {
+  if (books.length <= count) return books;
+
+  const sorted = [...books].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+  const top10PctSize = Math.ceil(books.length * 0.1);
+  const poolSize = Math.max(top10PctSize, count);
+  const pool = sorted.slice(0, poolSize);
+
+  // Fisher-Yates shuffle on the pool, then take first `count`
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = pool[i]!;
+    pool[i] = pool[j]!;
+    pool[j] = tmp;
+  }
+  return pool.slice(0, count);
+}
 
 export type Data = {
   bookCount: number;
@@ -32,7 +54,7 @@ const getHomeData = createServerFn({
 
     const genres: BookGenre[] = Object.entries(booksByGenre).map(([genre, books]) => ({
       genre: genre as GenreGroup,
-      books: books.slice(0, 20),
+      books: pickFeaturedBooks(books, 5),
       bookCount: books.length,
     }));
 
