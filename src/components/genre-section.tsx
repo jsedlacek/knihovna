@@ -43,7 +43,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
               alt={`${book.title} cover`}
               href={getBookDetailPath(book)}
               external={false}
-              className="h-36 mb-1"
+              className="!h-36 !w-auto mb-1"
               height={144}
             />
             <div className="text-xs text-muted-foreground flex items-center justify-center">
