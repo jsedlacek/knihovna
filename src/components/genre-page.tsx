@@ -75,7 +75,7 @@ export function GenrePage({
           </div>
         </section>
         <section className="space-y-4">
-          <div className="space-y-10">
+          <div className="space-y-12">
             {books.length > 0 ? (
               books.map((book, index) => (
                 <div key={`${genreKey}-${book.titulKey}`}>
