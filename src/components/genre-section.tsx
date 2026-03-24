@@ -46,19 +46,19 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
               alt={`${book.title} cover`}
               href={getBookDetailPath(book)}
               external={false}
-              className="h-40 w-auto min-w-24 max-w-none mb-1"
+              className="h-40 w-auto min-w-24 max-w-none mb-2"
               height={160}
             />
-            <div className="w-0 min-w-full">
+            <div className="w-0 min-w-full space-y-0.5">
               <a
                 href={getBookDetailPath(book)}
                 title={book.title}
-                className="text-xs font-medium leading-tight line-clamp-2 hover:underline"
+                className="text-xs font-medium leading-snug line-clamp-2 hover:underline"
               >
                 {book.title}
               </a>
               <p
-                className="text-xs text-muted-foreground leading-tight truncate"
+                className="text-xs text-muted-foreground leading-snug truncate"
                 title={book.author}
               >
                 {book.author}
