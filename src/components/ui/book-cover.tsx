@@ -16,14 +16,13 @@ export function BookCover({
   alt,
   href,
   external = true,
-  className = "",
+  className,
   width,
   height,
 }: BookCoverProps) {
-  const sizeClasses = className || "w-20 h-30 sm:w-28 sm:h-42";
-  const hasExplicitWidth = /\bw-(?!auto)\d/.test(sizeClasses);
-  const objectFit = hasExplicitWidth ? "object-cover" : "";
-  const baseClasses = `${sizeClasses} ${objectFit} border border-border`.trim();
+  const style: React.CSSProperties | undefined = className ? undefined : { width, height };
+  const sizeClasses = className || "";
+  const baseClasses = `${sizeClasses} border border-border`.trim();
   const imageClasses = href ? `${baseClasses} hover:opacity-80 transition-opacity` : baseClasses;
 
   const handleError = (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -40,7 +39,14 @@ export function BookCover({
     : undefined;
 
   const image = (
-    <img src={imgSrc} srcSet={imgSrcSet} onError={handleError} alt={alt} className={imageClasses} />
+    <img
+      src={imgSrc}
+      srcSet={imgSrcSet}
+      onError={handleError}
+      alt={alt}
+      className={imageClasses}
+      style={style}
+    />
   );
 
   if (href) {

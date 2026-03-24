@@ -66,7 +66,7 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
             <BookCover
               src={book.imageUrl}
               alt={`${book.title} book cover`}
-              className="w-32 h-48 sm:w-40 sm:h-60"
+              className="w-32 sm:w-40"
               width={160}
               height={240}
             />
