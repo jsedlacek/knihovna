@@ -62,7 +62,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
           <div>
             <a
               href={`/${genreKey}`}
-              className="flex flex-col items-center justify-center gap-2 h-36 sm:h-42 w-28 rounded-md border border-border bg-muted/50 text-center text-sm text-muted-foreground hover:bg-muted transition-colors px-2"
+              className="flex flex-col items-center justify-center gap-2 h-36 w-28 rounded-md border border-border bg-muted/50 text-center text-sm text-muted-foreground hover:bg-muted transition-colors px-2"
             >
               <span>
                 A {remaining < 5 ? "další" : "dalších"} {formatNumberCzech(remaining)}{" "}
