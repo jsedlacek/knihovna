@@ -19,7 +19,7 @@ function BookIcon() {
       height="24"
       viewBox="0 0 24 24"
       aria-hidden="true"
-      className="size-10 shrink-0"
+      className="size-11 shrink-0"
     >
       <path
         fill="#fde047"
