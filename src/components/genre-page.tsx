@@ -83,7 +83,7 @@ export function GenrePage({
             )}
           </div>
           {nextCursor !== null && (
-            <div className="flex pt-4">
+            <div className="flex pt-8">
               <Button onClick={loadMore} disabled={loading}>
                 {loading
                   ? "Načítání…"
