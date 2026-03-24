@@ -35,7 +35,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-4">
         {books.map((book, index) => (
           <div
             key={`${genreKey}-${book.title}-${book.author}-${index}`}
