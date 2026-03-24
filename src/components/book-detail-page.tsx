@@ -145,8 +145,6 @@ export function BookDetailPage({ book }: BookDetailPageProps) {
             </div>
           </div>
 
-          <hr className="border-border sm:hidden" />
-
           <div className="sm:hidden space-y-3">
             {book.description && <p className="text-sm text-card-foreground">{book.description}</p>}
 
