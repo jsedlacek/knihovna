@@ -19,7 +19,7 @@ function BookIcon() {
       height="24"
       viewBox="0 0 24 24"
       aria-hidden="true"
-      className="h-6 shrink-0"
+      className="size-10 shrink-0"
     >
       <path
         fill="#fde047"
@@ -48,27 +48,32 @@ export function Header({ title = "Nejlepší e-knihy zdarma", subtitle, breadcru
   return (
     <header className="border-b border-border">
       <div className="w-full max-w-4xl mx-auto p-4 sm:p-6">
-        <div className="flex items-center gap-3 mb-2">
-          <h1 className="text-base font-bold">{title}</h1>
+        <div className="flex items-start gap-3 min-w-0">
           <BookIcon />
+          <div className="min-w-0 flex-1">
+            <h1 className="text-base font-bold truncate">{title}</h1>
+            {subtitle && <div className="text-sm text-muted-foreground truncate">{subtitle}</div>}
+            {breadcrumbs && breadcrumbs.length > 0 && (
+              <nav className="flex items-center text-sm text-muted-foreground min-w-0">
+                {breadcrumbs.map((item, i) => (
+                  <span
+                    key={item.label}
+                    className={`flex items-center ${i === breadcrumbs.length - 1 ? "min-w-0" : "shrink-0"}`}
+                  >
+                    {i > 0 && <span className="mx-1 shrink-0">/</span>}
+                    {item.href ? (
+                      <a href={item.href} className="text-link underline whitespace-nowrap">
+                        {item.label}
+                      </a>
+                    ) : (
+                      <span className="truncate">{item.label}</span>
+                    )}
+                  </span>
+                ))}
+              </nav>
+            )}
+          </div>
         </div>
-        {subtitle && <div className="text-sm text-muted-foreground">{subtitle}</div>}
-        {breadcrumbs && breadcrumbs.length > 0 && (
-          <nav className="text-sm text-muted-foreground">
-            {breadcrumbs.map((item, i) => (
-              <span key={item.label}>
-                {i > 0 && <span className="mx-1">/</span>}
-                {item.href ? (
-                  <a href={item.href} className="text-link underline">
-                    {item.label}
-                  </a>
-                ) : (
-                  <span>{item.label}</span>
-                )}
-              </span>
-            ))}
-          </nav>
-        )}
       </div>
     </header>
   );
