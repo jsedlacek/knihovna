@@ -54,6 +54,7 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
               hlavně zdarma ke stažení.
             </p>
           </div>
+          <p className="text-center text-muted-foreground text-2xl">❦</p>
         </section>
 
         {/* Genre sections */}
