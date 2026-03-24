@@ -6,7 +6,11 @@ import { Header } from "#@/components/ui/header.tsx";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
-import { getGenreBooks } from "#@/routes/$genre.tsx";
+
+export interface LoadMoreResult {
+  books: Book[];
+  nextCursor: number | null;
+}
 
 interface GenrePageProps {
   initialBooks: Book[];
@@ -14,6 +18,7 @@ interface GenrePageProps {
   initialNextCursor: number | null;
   genreKey: keyof typeof GENRE_GROUPS;
   showScores?: boolean;
+  onLoadMore?: (genre: string, cursor: number) => Promise<LoadMoreResult>;
 }
 
 export function GenrePage({
@@ -22,6 +27,7 @@ export function GenrePage({
   initialNextCursor,
   genreKey,
   showScores = false,
+  onLoadMore,
 }: GenrePageProps) {
   const genreConfig = GENRE_GROUPS[genreKey];
   const [books, setBooks] = useState(initialBooks);
@@ -29,16 +35,16 @@ export function GenrePage({
   const [loading, setLoading] = useState(false);
 
   const loadMore = useCallback(async () => {
-    if (nextCursor === null || loading) return;
+    if (nextCursor === null || loading || !onLoadMore) return;
     setLoading(true);
     try {
-      const result = await getGenreBooks({ data: { genre: genreKey, cursor: nextCursor } });
+      const result = await onLoadMore(genreKey, nextCursor);
       setBooks((prev) => [...prev, ...result.books]);
       setNextCursor(result.nextCursor);
     } finally {
       setLoading(false);
     }
-  }, [nextCursor, loading, genreKey]);
+  }, [nextCursor, loading, genreKey, onLoadMore]);
 
   const jsonLd = {
     "@context": "https://schema.org",

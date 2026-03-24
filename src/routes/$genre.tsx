@@ -116,6 +116,9 @@ function GenreComponent() {
       totalCount={totalCount}
       initialNextCursor={nextCursor}
       genreKey={genre}
+      onLoadMore={async (g, cursor) => {
+        return getGenreBooks({ data: { genre: g, cursor } });
+      }}
     />
   );
 }

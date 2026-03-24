@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
+import { sampleBook } from "./stories/sample-books.ts";
 import { BookCard } from "./book-card.tsx";
 
 const meta: Meta<typeof BookCard> = {
@@ -23,30 +24,6 @@ const meta: Meta<typeof BookCard> = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-// Sample book data for stories
-const sampleBook: Book = {
-  titulKey: 123456,
-  title: "Válka s mloky",
-  author: "Karel Čapek",
-  publisher: "Československý spisovatel",
-  year: 1936,
-  detailUrl: "https://www.mlp.cz/katalog/titul/valka-s-mloky/123456/",
-  subtitle: null,
-  partTitle: null,
-  imageUrl: "https://covers.example.com/book-cover.jpg",
-  description:
-    "Slavný satirický román Karla Čapka o inteligentních mlokách, kteří se stávají ohrožením pro lidskou civilizaci. Mistrovské dílo české literatury s aktuálním poselstvím o nebezpečí technického pokroku bez etických zábran.",
-  pdfUrl: "https://kramerius.mlp.cz/uuid/pdf-link",
-  epubUrl: "https://kramerius.mlp.cz/uuid/epub-link",
-  genreId: "beletrie",
-  genre: "Beletrie",
-  rating: 4.2,
-  ratingsCount: 8542,
-  url: "https://www.goodreads.com/book/show/123456",
-  mlpScrapedAt: "2024-01-15T10:30:00Z",
-  goodreadsScrapedAt: "2024-01-15T10:30:00Z",
-};
 
 const bookWithoutRating: Book = {
   ...sampleBook,
