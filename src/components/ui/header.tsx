@@ -52,7 +52,7 @@ export function Header({ breadcrumbs, searchQuery }: HeaderProps) {
   return (
     <header>
       <div className="w-full max-w-4xl mx-auto p-4 sm:p-6">
-        <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center gap-1 min-w-0">
           <a href="/" aria-label="Domů" className="shrink-0">
             <BookIcon className="size-6" />
           </a>
