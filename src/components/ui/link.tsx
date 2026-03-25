@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "./cn.ts";
 
 export interface LinkProps {
   children: ReactNode;
@@ -13,10 +14,10 @@ export function Link({
   href,
   target = "_blank",
   rel = "noopener noreferrer",
-  className = "",
+  className,
 }: LinkProps) {
   return (
-    <a href={href} target={target} rel={rel} className={`text-link hover:underline ${className}`}>
+    <a href={href} target={target} rel={rel} className={cn("text-link hover:underline", className)}>
       {children}
     </a>
   );

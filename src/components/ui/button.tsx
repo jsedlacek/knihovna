@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "./cn.ts";
 
 const baseClasses =
   "px-4 py-2 sm:px-3 sm:py-1 text-sm border-1 transition-all duration-200 min-h-[44px] sm:min-h-0 tracking-wide inline-flex items-center cursor-pointer";
@@ -10,8 +11,8 @@ const variantClasses = {
     "bg-white text-black border-black hover:bg-gray-100 shadow-[1px_1px_0px_0px_rgb(0,0,0)]",
 };
 
-export function getButtonClasses(variant: "primary" | "secondary" = "primary", className = "") {
-  return `${baseClasses} ${variantClasses[variant]} ${className}`;
+export function getButtonClasses(variant: "primary" | "secondary" = "primary", className?: string) {
+  return cn(baseClasses, variantClasses[variant], className);
 }
 
 type LinkButtonProps = {
@@ -39,7 +40,7 @@ function isLinkButton(props: ButtonProps): props is LinkButtonProps {
 
 export function Button(props: ButtonProps) {
   if (isLinkButton(props)) {
-    const { children, href, variant = "primary", target, rel, className = "" } = props;
+    const { children, href, variant = "primary", target, rel, className } = props;
     return (
       <a href={href} target={target} rel={rel} className={getButtonClasses(variant, className)}>
         {children}
@@ -47,13 +48,13 @@ export function Button(props: ButtonProps) {
     );
   }
 
-  const { children, onClick, variant = "primary", disabled = false, className = "" } = props;
+  const { children, onClick, variant = "primary", disabled = false, className } = props;
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={getButtonClasses(variant, `disabled:opacity-50 ${className}`)}
+      className={getButtonClasses(variant, cn("disabled:opacity-50", className))}
     >
       {children}
     </button>
