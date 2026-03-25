@@ -33,10 +33,10 @@ export function BookCardMini({ book }: BookCardMiniProps) {
       >
         {book.title}
       </a>
-      <p className="text-base text-muted-foreground leading-snug truncate" title={book.author}>
+      <p className="text-sm text-muted-foreground leading-snug truncate" title={book.author}>
         {book.author}
       </p>
-      <div className="text-base text-muted-foreground flex items-center">
+      <div className="text-sm text-muted-foreground flex items-center">
         {book.rating ? (
           <span className="inline-flex items-center">
             <span>{formatNumberCzech(Math.round(book.rating * 10) / 10)}</span>
