@@ -30,7 +30,7 @@ export function Header({ breadcrumbs, searchQuery }: HeaderProps) {
           {hasBreadcrumbs(breadcrumbs) && (
             <nav className="flex items-center text-base text-muted-foreground min-w-0">
               <span className="flex items-center shrink-0">
-                <a href="/" className="text-link underline whitespace-nowrap ml-1">
+                <a href="/" className="text-link hover:underline whitespace-nowrap ml-1">
                   Domů
                 </a>
               </span>
@@ -44,7 +44,7 @@ export function Header({ breadcrumbs, searchQuery }: HeaderProps) {
                 >
                   <span className="mx-1 shrink-0">/</span>
                   {item.href ? (
-                    <a href={item.href} className="text-link underline whitespace-nowrap">
+                    <a href={item.href} className="text-link hover:underline whitespace-nowrap">
                       {item.label}
                     </a>
                   ) : (

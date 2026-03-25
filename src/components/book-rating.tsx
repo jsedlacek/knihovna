@@ -29,9 +29,7 @@ export function BookRating({ rating, ratingsCount, url, size = "sm" }: BookRatin
         <span className="text-muted-foreground">
           (
           {url ? (
-            <Link href={url} className="underline">
-              {formatNumberCompact(ratingsCount)} hodnocení
-            </Link>
+            <Link href={url}>{formatNumberCompact(ratingsCount)} hodnocení</Link>
           ) : (
             <span>{formatNumberCompact(ratingsCount)} hodnocení</span>
           )}

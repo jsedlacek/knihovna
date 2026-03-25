@@ -101,10 +101,7 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
                   </p>
                 )}
 
-                <Link
-                  href={book.detailUrl}
-                  className="inline-flex items-center text-base text-link underline"
-                >
+                <Link href={book.detailUrl} className="inline-flex items-center text-base">
                   Zobrazit v Městské knihovně
                   <ExternalLinkIcon className="ml-1 size-3" />
                 </Link>
@@ -137,10 +134,7 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
               <p className="text-base text-card-foreground leading-relaxed">{book.description}</p>
             )}
 
-            <Link
-              href={book.detailUrl}
-              className="inline-flex items-center text-base text-link underline"
-            >
+            <Link href={book.detailUrl} className="inline-flex items-center text-base">
               Zobrazit v Městské knihovně
               <ExternalLinkIcon className="ml-1 size-3" />
             </Link>
