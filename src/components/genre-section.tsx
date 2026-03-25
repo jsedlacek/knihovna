@@ -37,7 +37,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
         {books.map((book, index) => (
           <div
             key={`${genreKey}-${book.title}-${book.author}-${index}`}
-            className="flex-1 min-w-[calc(50%-8px)] sm:min-w-0"
+            className="flex-1 sm:flex-auto min-w-[calc(50%-8px)] sm:min-w-0"
           >
             <BookCover
               src={book.imageUrl}
