@@ -2,7 +2,7 @@ import placeholderCover from "#@/images/book-placeholder.svg";
 import { getImageUrl } from "#@/lib/shared/utils/image-utils.ts";
 import { cn } from "./cn.ts";
 
-export interface BookCoverProps {
+export interface CoverImageProps {
   src?: string | null;
   alt: string;
   href?: string;
@@ -13,7 +13,7 @@ export interface BookCoverProps {
   aspectRatio?: number;
 }
 
-export function BookCover({
+export function CoverImage({
   src,
   alt,
   href,
@@ -22,7 +22,7 @@ export function BookCover({
   width,
   height,
   aspectRatio,
-}: BookCoverProps) {
+}: CoverImageProps) {
   const style: React.CSSProperties = {
     ...(className ? {} : { width, height }),
     ...(aspectRatio ? { aspectRatio: String(aspectRatio) } : {}),

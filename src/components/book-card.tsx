@@ -6,7 +6,7 @@ import {
   formatNumberCzech,
 } from "#@/lib/shared/utils/text-utils.ts";
 import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
-import { BookCover } from "./ui/book-cover.tsx";
+import { CoverImage } from "./ui/cover-image.tsx";
 import { Button } from "./ui/button.tsx";
 import { Link } from "./ui/link.tsx";
 
@@ -21,7 +21,7 @@ export function BookCard({ book, index }: BookCardProps) {
       key={`${book.title}-${book.author}-${index}`}
       className="flex flex-col sm:flex-row gap-3 sm:gap-4"
     >
-      <BookCover
+      <CoverImage
         src={book.imageUrl}
         alt={`${book.title} book cover`}
         href={getBookDetailPath(book)}

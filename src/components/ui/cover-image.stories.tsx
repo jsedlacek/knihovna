@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { BookCover } from "./book-cover.tsx";
+import { CoverImage } from "./cover-image.tsx";
 
-const meta: Meta<typeof BookCover> = {
-  title: "UI/BookCover",
-  component: BookCover,
+const meta: Meta<typeof CoverImage> = {
+  title: "UI/CoverImage",
+  component: CoverImage,
   parameters: {
     layout: "centered",
   },

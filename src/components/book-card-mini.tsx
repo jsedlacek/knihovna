@@ -3,7 +3,7 @@ import { StarIcon } from "lucide-react";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
-import { BookCover } from "./ui/book-cover.tsx";
+import { CoverImage } from "./ui/cover-image.tsx";
 
 const DEFAULT_ASPECT_RATIO = 0.67; // typical book cover (2:3)
 
@@ -17,7 +17,7 @@ export function BookCardMini({ book }: BookCardMiniProps) {
 
   return (
     <>
-      <BookCover
+      <CoverImage
         src={book.imageUrl}
         alt={`${book.title} cover`}
         href={getBookDetailPath(book)}
