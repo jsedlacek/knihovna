@@ -26,7 +26,8 @@ export function BookCard({ book, index }: BookCardProps) {
         alt={`${book.title} book cover`}
         href={getBookDetailPath(book)}
         external={false}
-        width={112}
+        className="w-28 sm:w-36"
+        width={144}
         {...(book.imageWidth && book.imageHeight
           ? { aspectRatio: book.imageWidth / book.imageHeight }
           : {})}
