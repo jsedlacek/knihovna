@@ -1,7 +1,7 @@
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
-import { BookCardMini } from "./ui/book-card-mini.tsx";
+import { BookCardMini } from "./book-card-mini.tsx";
 import { Button } from "./ui/button.tsx";
 
 const DEFAULT_ASPECT_RATIO = 0.67; // typical book cover (2:3)

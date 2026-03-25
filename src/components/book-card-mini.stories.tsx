@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { sampleBook } from "../stories/sample-books.ts";
+import { sampleBook } from "./stories/sample-books.ts";
 import { BookCardMini } from "./book-card-mini.tsx";
 
 const meta: Meta<typeof BookCardMini> = {
-  title: "UI/BookCardMini",
+  title: "Components/BookCardMini",
   component: BookCardMini,
   parameters: {
     layout: "centered",

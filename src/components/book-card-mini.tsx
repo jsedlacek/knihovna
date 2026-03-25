@@ -3,7 +3,7 @@ import { StarIcon } from "lucide-react";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
-import { BookCover } from "./book-cover.tsx";
+import { BookCover } from "./ui/book-cover.tsx";
 
 const DEFAULT_ASPECT_RATIO = 0.67; // typical book cover (2:3)
 
