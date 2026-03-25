@@ -3,6 +3,7 @@ name: Preview Deployment
 on:
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, closed]
 
 concurrency:
   group: preview-${{ github.event.pull_request.number }}
@@ -11,6 +12,7 @@ concurrency:
 jobs:
   preview:
     runs-on: ubuntu-latest
+    if: github.event.action != 'closed'
     env:
       FORCE_COLOR: 1
       WORKER_NAME: knihovna-preview-pr-${{ github.event.pull_request.number }}
@@ -62,8 +64,10 @@ jobs:
       - name: Deploy preview to Cloudflare Workers
         id: deploy
         run: |
-          npx wrangler deploy --name "$WORKER_NAME"
-          echo "preview_url=https://${WORKER_NAME}.workers.dev" >> "$GITHUB_OUTPUT"
+          DEPLOY_OUTPUT=$(npx wrangler deploy --name "$WORKER_NAME" 2>&1)
+          echo "$DEPLOY_OUTPUT"
+          PREVIEW_URL=$(echo "$DEPLOY_OUTPUT" | grep -oP 'https://[^\s]+\.workers\.dev' | tail -1)
+          echo "preview_url=$PREVIEW_URL" >> "$GITHUB_OUTPUT"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
