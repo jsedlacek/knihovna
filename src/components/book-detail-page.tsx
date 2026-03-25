@@ -68,7 +68,6 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
               alt={`${book.title} book cover`}
               className="w-32 sm:w-40"
               width={160}
-              height={240}
               {...(book.imageWidth && book.imageHeight
                 ? { aspectRatio: book.imageWidth / book.imageHeight }
                 : {})}
