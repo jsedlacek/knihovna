@@ -1,11 +1,9 @@
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
-import { BookCardMini } from "./book-card-mini.tsx";
+import { BookGrid } from "./book-grid.tsx";
 import { Button } from "./ui/button.tsx";
 import { Link } from "./ui/link.tsx";
-
-const DEFAULT_ASPECT_RATIO = 0.67; // typical book cover (2:3)
 
 interface GenreSectionProps {
   books: Book[];
@@ -33,24 +31,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:flex gap-4 sm:gap-6">
-        {books.map((book, index) => {
-          const aspectRatio =
-            book.imageWidth && book.imageHeight
-              ? book.imageWidth / book.imageHeight
-              : DEFAULT_ASPECT_RATIO;
-
-          return (
-            <div
-              key={`${genreKey}-${book.title}-${book.author}-${index}`}
-              className="min-w-0 sm:basis-0"
-              style={{ flexGrow: aspectRatio }}
-            >
-              <BookCardMini book={book} />
-            </div>
-          );
-        })}
-      </div>
+      <BookGrid books={books} keyPrefix={`${genreKey}-`} />
 
       <div className="flex items-center gap-4 pt-2">
         <Button href={`/${genreKey}`} variant="primary">
