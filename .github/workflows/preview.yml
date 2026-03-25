@@ -16,6 +16,7 @@ jobs:
       WORKER_NAME: knihovna-preview-pr-${{ github.event.pull_request.number }}
 
     permissions:
+      contents: read
       pull-requests: write
 
     steps:
