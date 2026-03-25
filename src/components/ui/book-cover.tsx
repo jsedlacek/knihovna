@@ -1,5 +1,6 @@
 import placeholderCover from "#@/images/book-placeholder.svg";
 import { getImageUrl } from "#@/lib/shared/utils/image-utils.ts";
+import { cn } from "./cn.ts";
 
 export interface BookCoverProps {
   src?: string | null;
@@ -26,9 +27,8 @@ export function BookCover({
     ...(className ? {} : { width, height }),
     ...(aspectRatio ? { aspectRatio: String(aspectRatio) } : {}),
   };
-  const sizeClasses = className || "";
-  const baseClasses = `${sizeClasses} border border-border`.trim();
-  const imageClasses = href ? `${baseClasses} hover:opacity-80 transition-opacity` : baseClasses;
+  const baseClasses = cn(className, "border border-border");
+  const imageClasses = href ? cn(baseClasses, "hover:opacity-80 transition-opacity") : baseClasses;
 
   const handleError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;

@@ -1,5 +1,6 @@
 import { SearchIcon } from "lucide-react";
 
+import { cn } from "./cn.ts";
 import { Divider } from "./divider.tsx";
 
 export interface BreadcrumbItem {
@@ -69,7 +70,10 @@ export function Header({ breadcrumbs, searchQuery }: HeaderProps) {
               {breadcrumbs.map((item, i) => (
                 <span
                   key={item.label}
-                  className={`flex items-center ${i === breadcrumbs.length - 1 ? "min-w-0" : "shrink-0"}`}
+                  className={cn(
+                    "flex items-center",
+                    i === breadcrumbs.length - 1 ? "min-w-0" : "shrink-0",
+                  )}
                 >
                   <span className="mx-1 shrink-0">/</span>
                   {item.href ? (
