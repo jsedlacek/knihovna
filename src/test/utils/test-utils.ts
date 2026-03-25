@@ -24,6 +24,8 @@ export function createMockBook(overrides: Partial<Book> = {}): Book {
     subtitle: null,
     partTitle: null,
     imageUrl: null,
+    imageWidth: null,
+    imageHeight: null,
     description: null,
     pdfUrl: null,
     epubUrl: null,

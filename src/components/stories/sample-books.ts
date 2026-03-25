@@ -13,6 +13,8 @@ export const sampleBook: Book = {
   subtitle: null,
   partTitle: null,
   imageUrl: "https://covers.openlibrary.org/b/id/8225261-M.jpg",
+  imageWidth: 310,
+  imageHeight: 475,
   description:
     "Satirický román o konfliktu mezi lidstvem a inteligentními mloky. Čapkovo dílo je varováním před technologickým pokrokem bez etických zásad.",
   pdfUrl: "https://example.com/valka-s-mloky.pdf",
@@ -38,6 +40,8 @@ export const sampleBooks: Book[] = [
     subtitle: null,
     partTitle: null,
     imageUrl: "https://covers.openlibrary.org/b/id/240726-M.jpg",
+    imageWidth: 300,
+    imageHeight: 450,
     description:
       "Román o vynálezci výbušniny, která může zničit svět. Příběh sleduje mladého chemika, který objeví tajemnou látku schopnou obrovské destrukce.",
     pdfUrl: "https://example.com/krakatit.pdf",
@@ -60,6 +64,8 @@ export const sampleBooks: Book[] = [
     subtitle: null,
     partTitle: null,
     imageUrl: "https://covers.openlibrary.org/b/id/8225261-M.jpg",
+    imageWidth: 310,
+    imageHeight: 475,
     description:
       "Satirický román o konfliktu mezi lidstvem a inteligentními mloky. Čapkovo dílo je varováním před technologickým pokrokem bez etických zásad.",
     pdfUrl: null,
@@ -82,6 +88,8 @@ export const sampleBooks: Book[] = [
     subtitle: null,
     partTitle: null,
     imageUrl: "https://covers.openlibrary.org/b/id/123456-M.jpg",
+    imageWidth: 280,
+    imageHeight: 420,
     description:
       "Klasický český román o životě na venkově v 19. století. Příběh zachycuje idylický svět moravské vesnice očima dítěte.",
     pdfUrl: "https://example.com/babicka.pdf",
@@ -104,6 +112,8 @@ export const sampleBooks: Book[] = [
     subtitle: null,
     partTitle: null,
     imageUrl: "https://covers.openlibrary.org/b/id/456789-M.jpg",
+    imageWidth: 320,
+    imageHeight: 480,
     description:
       "Satirický román o prostém vojákovi během první světové války. Dílo plné humoru a kritiky vojenského systému.",
     pdfUrl: "https://example.com/svejk.pdf",
@@ -126,6 +136,8 @@ export const sampleBooks: Book[] = [
     subtitle: null,
     partTitle: null,
     imageUrl: "https://covers.openlibrary.org/b/id/789012-M.jpg",
+    imageWidth: 290,
+    imageHeight: 435,
     description:
       "Filozofická pohádka o malém princi, který cestuje mezi planetami a hledá smysl života a přátelství.",
     pdfUrl: "https://example.com/maly-princ.pdf",
@@ -148,6 +160,8 @@ export const sampleBooks: Book[] = [
     subtitle: null,
     partTitle: null,
     imageUrl: "https://covers.openlibrary.org/b/id/654321-M.jpg",
+    imageWidth: 300,
+    imageHeight: 460,
     description:
       "Sbírka balad inspirovaných lidovou slovesností. Erbenovy básně zachycují tajemný svět českých pověstí a legend.",
     pdfUrl: null,
@@ -170,6 +184,8 @@ export const sampleBooks: Book[] = [
     subtitle: null,
     partTitle: null,
     imageUrl: "https://covers.openlibrary.org/b/id/345678-M.jpg",
+    imageWidth: 270,
+    imageHeight: 410,
     description:
       "Romantická básnická povídka o lásce, zradě a pomstě. Jedno z nejvýznamnějších děl české literatury.",
     pdfUrl: "https://example.com/maj.pdf",
@@ -192,6 +208,8 @@ export const sampleBooks: Book[] = [
     subtitle: null,
     partTitle: null,
     imageUrl: null,
+    imageWidth: null,
+    imageHeight: null,
     description:
       "Hra, která do světa uvedla slovo 'robot'. Vědeckofantastické drama o umělé inteligenci.",
     pdfUrl: "https://example.com/rur.pdf",

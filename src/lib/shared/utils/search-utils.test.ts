@@ -13,6 +13,8 @@ function makeBook(overrides: Partial<Book> & { title: string; author: string }):
     subtitle: null,
     partTitle: null,
     imageUrl: null,
+    imageWidth: null,
+    imageHeight: null,
     description: null,
     pdfUrl: null,
     epubUrl: null,

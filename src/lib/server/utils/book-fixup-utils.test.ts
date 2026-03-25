@@ -20,6 +20,8 @@ describe("Book Fixup Utils", () => {
     subtitle: "Original Subtitle",
     partTitle: null,
     imageUrl: "https://example.com/image.jpg",
+    imageWidth: null,
+    imageHeight: null,
     description: "Original description",
     pdfUrl: "https://example.com/book.pdf",
     epubUrl: "https://example.com/book.epub",

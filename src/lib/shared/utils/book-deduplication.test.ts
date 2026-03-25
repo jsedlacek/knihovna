@@ -15,6 +15,8 @@ function createTestBook(overrides: Partial<Book> = {}): Book {
     publisher: "Test Publisher",
     year: null,
     imageUrl: null,
+    imageWidth: null,
+    imageHeight: null,
     detailUrl: "https://example.com/book",
     pdfUrl: null,
     epubUrl: null,
