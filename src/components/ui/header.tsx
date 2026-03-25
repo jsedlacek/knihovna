@@ -56,7 +56,7 @@ export function Header({ breadcrumbs, searchQuery }: HeaderProps) {
           <a href="/" className="shrink-0 flex items-center gap-1">
             <BookIcon className="size-6" />
             {!hasBreadcrumbs(breadcrumbs) && (
-              <span className="text-base font-bold">Nejlepší e-knihy zdarma</span>
+              <span className="text-lg font-bold">Nejlepší e-knihy zdarma</span>
             )}
           </a>
           {hasBreadcrumbs(breadcrumbs) && (

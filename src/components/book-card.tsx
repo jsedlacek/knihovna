@@ -35,14 +35,14 @@ export function BookCard({ book, index }: BookCardProps) {
             {(book.partTitle || book.subtitle) && ` (${book.partTitle || book.subtitle})`}
           </a>
         </h3>
-        <p className="text-sm text-muted-foreground mb-3">{formatAuthorName(book.author)}</p>
+        <p className="text-base text-muted-foreground mb-3">{formatAuthorName(book.author)}</p>
         <p
           className="text-base text-card-foreground mb-2 leading-relaxed line-clamp-3"
           title={book.description ?? undefined}
         >
           {book.description}
         </p>
-        <div className="text-sm text-muted-foreground mb-3">
+        <div className="text-base text-muted-foreground mb-3">
           {book.rating ? (
             <div className="flex items-center">
               <span className="inline-flex items-center">

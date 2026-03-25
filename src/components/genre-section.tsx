@@ -26,12 +26,12 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
     <section className="space-y-4">
       <div className="flex justify-between items-start">
         <div>
-          <h2 className="text-xl font-bold mb-3">
+          <h2 className="text-2xl font-bold mb-3">
             <a href={`/${genreKey}`} className="text-link hover:underline">
               {genreConfig.name}
             </a>
           </h2>
-          <p className="text-sm text-muted-foreground">{genreConfig.description}</p>
+          <p className="text-base text-muted-foreground">{genreConfig.description}</p>
         </div>
       </div>
 
@@ -60,17 +60,17 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
               <a
                 href={getBookDetailPath(book)}
                 title={book.title}
-                className="text-sm font-medium leading-snug line-clamp-2 hover:underline block"
+                className="text-base font-medium leading-snug line-clamp-2 hover:underline block"
               >
                 {book.title}
               </a>
               <p
-                className="text-sm text-muted-foreground leading-snug truncate"
+                className="text-base text-muted-foreground leading-snug truncate"
                 title={book.author}
               >
                 {book.author}
               </p>
-              <div className="text-sm text-muted-foreground flex items-center">
+              <div className="text-base text-muted-foreground flex items-center">
                 {book.rating ? (
                   <span className="inline-flex items-center">
                     <span>{formatNumberCzech(Math.round(book.rating * 10) / 10)}</span>
