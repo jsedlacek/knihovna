@@ -1,10 +1,7 @@
-import { StarIcon } from "lucide-react";
-
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
-import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
-import { BookCover } from "./ui/book-cover.tsx";
+import { BookCardMini } from "./ui/book-card-mini.tsx";
 import { Button } from "./ui/button.tsx";
 
 const DEFAULT_ASPECT_RATIO = 0.67; // typical book cover (2:3)
@@ -48,38 +45,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
               className="min-w-0 sm:basis-0"
               style={{ flexGrow: aspectRatio }}
             >
-              <BookCover
-                src={book.imageUrl}
-                alt={`${book.title} cover`}
-                href={getBookDetailPath(book)}
-                external={false}
-                className="w-full mb-2"
-                width={300}
-                aspectRatio={aspectRatio}
-              />
-              <a
-                href={getBookDetailPath(book)}
-                title={book.title}
-                className="text-base font-medium leading-snug line-clamp-2 hover:underline"
-              >
-                {book.title}
-              </a>
-              <p
-                className="text-base text-muted-foreground leading-snug truncate"
-                title={book.author}
-              >
-                {book.author}
-              </p>
-              <div className="text-base text-muted-foreground flex items-center">
-                {book.rating ? (
-                  <span className="inline-flex items-center">
-                    <span>{formatNumberCzech(Math.round(book.rating * 10) / 10)}</span>
-                    <StarIcon className="ml-1 size-2.5 fill-current" />
-                  </span>
-                ) : (
-                  "N/A"
-                )}
-              </div>
+              <BookCardMini book={book} />
             </div>
           );
         })}
