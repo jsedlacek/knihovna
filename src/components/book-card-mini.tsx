@@ -29,7 +29,7 @@ export function BookCardMini({ book }: BookCardMiniProps) {
       <a
         href={getBookDetailPath(book)}
         title={book.title}
-        className="text-base font-medium leading-snug line-clamp-2 hover:underline"
+        className="text-base font-medium leading-snug line-clamp-2 text-link hover:underline"
       >
         {book.title}
       </a>
