@@ -72,22 +72,22 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
             />
             <div className="flex-1 space-y-3">
               <div>
-                <h2 className="text-lg font-bold mb-1">{fullTitle}</h2>
-                <p className="text-sm text-muted-foreground">{authorName}</p>
+                <h2 className="text-xl font-bold mb-1">{fullTitle}</h2>
+                <p className="text-base text-muted-foreground">{authorName}</p>
                 {book.genre && (
-                  <div className="text-xs text-muted-foreground mt-1">
+                  <div className="text-sm text-muted-foreground mt-1">
                     {getGenreName(book.genreId)}
                   </div>
                 )}
                 {(book.publisher || book.year) && (
-                  <div className="text-xs text-muted-foreground mt-1">
+                  <div className="text-sm text-muted-foreground mt-1">
                     {[book.publisher, book.year].filter(Boolean).join(", ")}
                   </div>
                 )}
               </div>
 
               {book.rating && (
-                <div className="flex items-center text-sm">
+                <div className="flex items-center text-base">
                   <span className="font-semibold">
                     {formatNumberCzech(Math.round(book.rating * 10) / 10)}
                   </span>
@@ -110,14 +110,16 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
 
               <div className="hidden sm:block space-y-3">
                 {book.description && (
-                  <p className="text-sm text-card-foreground leading-relaxed">{book.description}</p>
+                  <p className="text-base text-card-foreground leading-relaxed">
+                    {book.description}
+                  </p>
                 )}
 
                 <Link
                   href={book.detailUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center text-xs text-link underline"
+                  className="inline-flex items-center text-sm text-link underline"
                 >
                   Zobrazit v Městské knihovně
                   <ExternalLinkIcon className="ml-1 size-3" />

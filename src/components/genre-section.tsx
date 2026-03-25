@@ -24,53 +24,48 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
     <section className="space-y-4">
       <div className="flex justify-between items-start">
         <div>
-          <h2 className="text-lg font-bold mb-3">
+          <h2 className="text-xl font-bold mb-3">
             <a href={`/${genreKey}`} className="text-link hover:underline">
               {genreConfig.name}
             </a>
           </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground">{genreConfig.description}</p>
+          <p className="text-sm text-muted-foreground">{genreConfig.description}</p>
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap sm:flex-nowrap gap-4 sm:gap-6">
         {books.map((book, index) => (
           <div
             key={`${genreKey}-${book.title}-${book.author}-${index}`}
-            className="grid grid-cols-[min-content] max-w-48"
+            className="flex-1 min-w-[calc(50%-8px)] sm:min-w-0"
           >
             <BookCover
               src={book.imageUrl}
               alt={`${book.title} cover`}
               href={getBookDetailPath(book)}
               external={false}
-              className="h-40 w-auto min-w-24 max-w-none mb-2"
-              height={160}
+              className="h-48 sm:h-64 w-auto min-w-24 max-w-full mb-2"
+              height={256}
             />
-            <div className="w-0 min-w-full space-y-0.5">
-              <a
-                href={getBookDetailPath(book)}
-                title={book.title}
-                className="text-xs font-medium leading-snug line-clamp-2 hover:underline"
-              >
-                {book.title}
-              </a>
-              <p
-                className="text-xs text-muted-foreground leading-snug truncate"
-                title={book.author}
-              >
-                {book.author}
-              </p>
-              <div className="text-xs text-muted-foreground flex items-center">
-                {book.rating ? (
-                  <span className="inline-flex items-center">
-                    <span>{formatNumberCzech(Math.round(book.rating * 10) / 10)}</span>
-                    <StarIcon className="ml-1 size-2.5 fill-current" />
-                  </span>
-                ) : (
-                  "N/A"
-                )}
-              </div>
+            <a
+              href={getBookDetailPath(book)}
+              title={book.title}
+              className="text-sm font-medium leading-snug line-clamp-2 hover:underline block"
+            >
+              {book.title}
+            </a>
+            <p className="text-sm text-muted-foreground leading-snug truncate" title={book.author}>
+              {book.author}
+            </p>
+            <div className="text-sm text-muted-foreground flex items-center">
+              {book.rating ? (
+                <span className="inline-flex items-center">
+                  <span>{formatNumberCzech(Math.round(book.rating * 10) / 10)}</span>
+                  <StarIcon className="ml-1 size-2.5 fill-current" />
+                </span>
+              ) : (
+                "N/A"
+              )}
             </div>
           </div>
         ))}

@@ -56,11 +56,11 @@ export function Header({ breadcrumbs, searchQuery }: HeaderProps) {
           <a href="/" className="shrink-0 flex items-center gap-1">
             <BookIcon className="size-6" />
             {!hasBreadcrumbs(breadcrumbs) && (
-              <span className="text-sm font-bold">Nejlepší e-knihy zdarma</span>
+              <span className="text-base font-bold">Nejlepší e-knihy zdarma</span>
             )}
           </a>
           {hasBreadcrumbs(breadcrumbs) && (
-            <nav className="flex items-center text-sm text-muted-foreground min-w-0">
+            <nav className="flex items-center text-base text-muted-foreground min-w-0">
               <span className="flex items-center shrink-0">
                 <a href="/" className="text-link underline whitespace-nowrap ml-1">
                   Domů
@@ -95,7 +95,7 @@ export function Header({ breadcrumbs, searchQuery }: HeaderProps) {
             name="q"
             placeholder="Hledat knihy…"
             defaultValue={searchQuery}
-            className="w-full pl-9 pr-3 py-2 rounded-full border border-border bg-muted text-xs tracking-wide placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-border"
+            className="w-full pl-9 pr-3 py-2 rounded-full border border-border bg-muted text-sm tracking-wide placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-border"
           />
         </form>
       </div>

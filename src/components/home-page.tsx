@@ -39,7 +39,7 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
       {/* Main content */}
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6 sm:space-y-8">
         <section className="space-y-4">
-          <div className="text-sm leading-relaxed space-y-4">
+          <div className="text-base leading-relaxed space-y-4">
             <p>
               Tady najdete <span className="font-semibold">{formatNumberCzech(bookCount)}</span>{" "}
               románů, klasiky, poezie i divadla – všechno, co má od čtenářů aspoň čtyři hvězdičky. A

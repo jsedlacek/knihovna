@@ -9,7 +9,7 @@ export function Footer({ lastUpdated }: FooterProps) {
   return (
     <footer className="mt-auto pt-12">
       <Divider inverse />
-      <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 text-sm text-muted-foreground">
+      <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 text-base text-muted-foreground">
         {lastUpdated && <div>Aktualizováno {lastUpdated}</div>}
         <div className={lastUpdated ? "mt-2" : ""}>
           Zdroje:{" "}

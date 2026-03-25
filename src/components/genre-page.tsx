@@ -67,8 +67,8 @@ export function GenrePage({
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <section className="space-y-4">
           <div>
-            <h2 className="text-lg font-bold">{genreConfig.name}</h2>
-            <p className="text-sm text-muted-foreground mt-1">
+            <h2 className="text-xl font-bold">{genreConfig.name}</h2>
+            <p className="text-base text-muted-foreground mt-1">
               {genreConfig.description} ({formatNumberCzech(totalCount)}{" "}
               {totalCount === 1 ? "kniha" : totalCount < 5 ? "knihy" : "knih"})
             </p>

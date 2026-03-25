@@ -21,8 +21,8 @@ export function SearchPage({ query, books, lastUpdated }: SearchPageProps) {
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <section className="space-y-4">
           <div>
-            <h2 className="text-lg font-bold">Výsledky hledání</h2>
-            <p className="text-sm text-muted-foreground mt-1">
+            <h2 className="text-xl font-bold">Výsledky hledání</h2>
+            <p className="text-base text-muted-foreground mt-1">
               {isShortQuery
                 ? `Zadejte alespoň ${MIN_SEARCH_LENGTH} znaky pro vyhledávání.`
                 : query.length === 0
