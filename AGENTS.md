@@ -25,6 +25,8 @@ Czech e-books static site showcasing free e-books from Prague Municipal Library 
 - **No `any` types** — strict TypeScript
 - **No markdown docs** — code should be self-documenting
 - **Co-located tests** alongside source files using `node:test`
+- **`src/components/ui/`** — generic, reusable UI primitives with no domain/business logic (e.g., `CoverImage`, `Button`, `Card`). Props are generic types, no `Book` imports.
+- **`src/components/`** — domain-specific components that depend on business types like `Book`, app routes, or domain utilities (e.g., `BookCard`, `BookCardMini`, `GenreSection`)
 
 ## Testing
 
