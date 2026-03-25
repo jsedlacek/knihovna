@@ -43,6 +43,7 @@ jobs:
           path: |
             data/
             public/data/
+          key: data-cache-preview
           restore-keys: |
             data-cache-
 
