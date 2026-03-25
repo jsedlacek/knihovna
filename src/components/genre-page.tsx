@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { BookCardMini } from "#@/components/book-card-mini.tsx";
+import { BookGrid } from "#@/components/book-grid.tsx";
 import { Button } from "#@/components/ui/button.tsx";
 import { Footer } from "#@/components/ui/footer.tsx";
 import { Header } from "#@/components/ui/header.tsx";
@@ -76,13 +76,7 @@ export function GenrePage({
         </section>
         <section className="space-y-4">
           {books.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-6 sm:gap-x-6 sm:gap-y-8">
-              {books.map((book) => (
-                <div key={`${genreKey}-${book.titulKey}`} className="min-w-0">
-                  <BookCardMini book={book} />
-                </div>
-              ))}
-            </div>
+            <BookGrid books={books} keyPrefix={`${genreKey}-`} />
           ) : (
             <p className="text-muted-foreground text-center py-8">
               V této kategorii nejsou momentálně k dispozici žádné knihy.
