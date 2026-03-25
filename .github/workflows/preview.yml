@@ -3,6 +3,7 @@ name: Preview Deployment
 on:
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, closed]
 
 concurrency:
   group: preview-${{ github.event.pull_request.number }}
@@ -11,6 +12,7 @@ concurrency:
 jobs:
   preview:
     runs-on: ubuntu-latest
+    if: github.event.action != 'closed'
     env:
       FORCE_COLOR: 1
       WORKER_NAME: knihovna-preview-pr-${{ github.event.pull_request.number }}
