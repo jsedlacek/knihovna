@@ -46,8 +46,8 @@ jobs:
       - name: Deploy preview to Cloudflare Workers
         id: deploy
         run: |
-          PREVIEW_URL=$(wrangler deploy --name "$WORKER_NAME" --no-bundle 2>&1 | grep -oP 'https://[^\s]+\.workers\.dev')
-          echo "preview_url=$PREVIEW_URL" >> "$GITHUB_OUTPUT"
+          wrangler deploy --name "$WORKER_NAME"
+          echo "preview_url=https://${WORKER_NAME}.workers.dev" >> "$GITHUB_OUTPUT"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
