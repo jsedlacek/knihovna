@@ -5,26 +5,15 @@ export interface LinkProps {
   children: ReactNode;
   href: string;
   external?: boolean;
-  target?: string;
-  rel?: string;
   className?: string;
   title?: string;
 }
 
-export function Link({
-  children,
-  href,
-  external = true,
-  target,
-  rel,
-  className,
-  title,
-}: LinkProps) {
+export function Link({ children, href, external = true, className, title }: LinkProps) {
   return (
     <a
       href={href}
-      target={target ?? (external ? "_blank" : undefined)}
-      rel={rel ?? (external ? "noopener noreferrer" : undefined)}
+      {...(external && { target: "_blank", rel: "noopener noreferrer" })}
       className={cn("text-link hover:underline", className)}
       title={title}
     >

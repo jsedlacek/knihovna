@@ -103,8 +103,6 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
 
                 <Link
                   href={book.detailUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="inline-flex items-center text-base text-link underline"
                 >
                   Zobrazit v Městské knihovně
@@ -141,8 +139,6 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
 
             <Link
               href={book.detailUrl}
-              target="_blank"
-              rel="noopener noreferrer"
               className="inline-flex items-center text-base text-link underline"
             >
               Zobrazit v Městské knihovně
