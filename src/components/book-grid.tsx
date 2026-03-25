@@ -35,6 +35,14 @@ export function BookGrid({ books, keyPrefix = "" }: BookGridProps) {
               </div>
             );
           })}
+          {row.length < ITEMS_PER_ROW &&
+            Array.from({ length: ITEMS_PER_ROW - row.length }, (_, i) => (
+              <div
+                key={`spacer-${i}`}
+                className="hidden sm:block sm:basis-0"
+                style={{ flexGrow: DEFAULT_ASPECT_RATIO }}
+              />
+            ))}
         </div>
       ))}
     </div>
