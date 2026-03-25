@@ -75,14 +75,14 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
             <div className="flex-1 space-y-3">
               <div>
                 <h2 className="text-2xl font-bold mb-1">{fullTitle}</h2>
-                <p className="text-base text-muted-foreground">{authorName}</p>
+                <p className="text-lg text-muted-foreground">{authorName}</p>
                 {book.genre && (
-                  <div className="text-base text-muted-foreground mt-1">
+                  <div className="text-sm text-muted-foreground mt-1">
                     {getGenreName(book.genreId)}
                   </div>
                 )}
                 {(book.publisher || book.year) && (
-                  <div className="text-base text-muted-foreground mt-1">
+                  <div className="text-sm text-muted-foreground mt-1">
                     {[book.publisher, book.year].filter(Boolean).join(", ")}
                   </div>
                 )}
