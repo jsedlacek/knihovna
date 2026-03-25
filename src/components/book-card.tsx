@@ -27,6 +27,9 @@ export function BookCard({ book, index }: BookCardProps) {
         href={getBookDetailPath(book)}
         external={false}
         width={112}
+        {...(book.imageWidth && book.imageHeight
+          ? { aspectRatio: book.imageWidth / book.imageHeight }
+          : {})}
       />
       <div className="flex-1">
         <h3 className="font-bold text-base mb-0.5">

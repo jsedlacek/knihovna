@@ -22,11 +22,10 @@ export function BookCover({
   height,
   aspectRatio,
 }: BookCoverProps) {
-  const style: React.CSSProperties | undefined = className
-    ? aspectRatio
-      ? { aspectRatio: String(aspectRatio) }
-      : undefined
-    : { width, height };
+  const style: React.CSSProperties = {
+    ...(className ? {} : { width, height }),
+    ...(aspectRatio ? { aspectRatio: String(aspectRatio) } : {}),
+  };
   const sizeClasses = className || "";
   const baseClasses = `${sizeClasses} border border-border`.trim();
   const imageClasses = href ? `${baseClasses} hover:opacity-80 transition-opacity` : baseClasses;

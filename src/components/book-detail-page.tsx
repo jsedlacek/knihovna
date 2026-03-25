@@ -69,6 +69,9 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
               className="w-32 sm:w-40"
               width={160}
               height={240}
+              {...(book.imageWidth && book.imageHeight
+                ? { aspectRatio: book.imageWidth / book.imageHeight }
+                : {})}
             />
             <div className="flex-1 space-y-3">
               <div>
