@@ -10,23 +10,21 @@ export function Footer({ lastUpdated }: FooterProps) {
     <footer className="mt-auto pt-12">
       <Divider inverse />
       <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 text-base text-muted-foreground">
-        {lastUpdated && <div>Aktualizováno {lastUpdated}</div>}
-        <div className={lastUpdated ? "mt-2" : ""}>
-          Zdroje:{" "}
+        <p>
+          {lastUpdated ? `Data byla stažena ${lastUpdated} z ` : "Data pochází z "}
           <Link href="https://mlp.cz" className="underline">
-            Městská knihovna v Praze
+            Městské knihovny v Praze
           </Link>
-          ,{" "}
+          {" a "}
           <Link href="https://goodreads.com" className="underline">
             Goodreads
           </Link>
-        </div>
-        <div className="mt-2">
-          Autor:{" "}
+          {". Vytvořil "}
           <Link href="https://jakub.contact/" className="underline">
             Jakub Sedláček
           </Link>
-        </div>
+          .
+        </p>
       </div>
     </footer>
   );
