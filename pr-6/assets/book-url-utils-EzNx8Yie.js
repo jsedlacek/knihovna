@@ -1,1 +1,0 @@
-import{i as e}from"./preload-helper-Ct0g9wfa.js";function t(e){return e.toLowerCase().normalize(`NFD`).replace(/[\u0300-\u036f]/g,``).replace(/[^a-z0-9]+/g,`-`).replace(/^-|-$/g,``)}function n(e){return`/kniha/${t(e.title)}-${e.titulKey}`}var r=e((()=>{}));export{r as n,n as t};
