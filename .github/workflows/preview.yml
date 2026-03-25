@@ -37,8 +37,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Generate mock data for preview
-        run: node scripts/generate-mock-data.js
+      - name: Restore data cache
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            data/
+            public/data/
+          restore-keys: |
+            data-cache-
+
+      - name: Generate mock data fallback
+        run: |
+          if [ ! -f public/data/books.json ]; then
+            echo "No cached data found, generating mock data"
+            node scripts/generate-mock-data.js
+          fi
 
       - name: Build site
         run: pnpm run build
