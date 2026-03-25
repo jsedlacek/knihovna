@@ -1,5 +1,7 @@
 @import "@fontsource/libre-baskerville/latin-400.css";
+@import "@fontsource/libre-baskerville/latin-ext-400.css";
 @import "@fontsource/libre-baskerville/latin-700.css";
+@import "@fontsource/libre-baskerville/latin-ext-700.css";
 @import "tailwindcss";
 
 :root {
