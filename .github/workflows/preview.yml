@@ -46,7 +46,7 @@ jobs:
       - name: Deploy preview to Cloudflare Workers
         id: deploy
         run: |
-          wrangler deploy --name "$WORKER_NAME"
+          npx wrangler deploy --name "$WORKER_NAME"
           echo "preview_url=https://${WORKER_NAME}.workers.dev" >> "$GITHUB_OUTPUT"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -91,7 +91,7 @@ jobs:
     steps:
       - name: Delete preview worker
         run: |
-          npx wrangler delete --name "$WORKER_NAME" --force
+          npm install -g wrangler && wrangler delete --name "$WORKER_NAME" --force
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
