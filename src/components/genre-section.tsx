@@ -60,7 +60,7 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
               <a
                 href={getBookDetailPath(book)}
                 title={book.title}
-                className="text-base font-medium leading-snug line-clamp-2 hover:underline block"
+                className="text-base font-medium leading-snug line-clamp-2 hover:underline"
               >
                 {book.title}
               </a>
