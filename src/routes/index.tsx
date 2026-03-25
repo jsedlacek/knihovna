@@ -52,7 +52,7 @@ const getHomeData = createServerFn({
 
     const genres: BookGenre[] = Object.entries(booksByGenre).map(([genre, books]) => ({
       genre: genre as GenreGroup,
-      books: pickFeaturedBooks(books, 5),
+      books: pickFeaturedBooks(books, 4),
       bookCount: books.length,
     }));
 
