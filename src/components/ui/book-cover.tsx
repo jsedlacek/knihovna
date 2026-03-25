@@ -9,6 +9,7 @@ export interface BookCoverProps {
   className?: string;
   width?: number;
   height?: number;
+  aspectRatio?: number;
 }
 
 export function BookCover({
@@ -19,8 +20,13 @@ export function BookCover({
   className,
   width,
   height,
+  aspectRatio,
 }: BookCoverProps) {
-  const style: React.CSSProperties | undefined = className ? undefined : { width, height };
+  const style: React.CSSProperties | undefined = className
+    ? aspectRatio
+      ? { aspectRatio: String(aspectRatio) }
+      : undefined
+    : { width, height };
   const sizeClasses = className || "";
   const baseClasses = `${sizeClasses} border border-border`.trim();
   const imageClasses = href ? `${baseClasses} hover:opacity-80 transition-opacity` : baseClasses;

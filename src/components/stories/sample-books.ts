@@ -40,8 +40,8 @@ export const sampleBooks: Book[] = [
     subtitle: null,
     partTitle: null,
     imageUrl: "https://covers.openlibrary.org/b/id/240726-M.jpg",
-    imageWidth: 300,
-    imageHeight: 450,
+    imageWidth: 340,
+    imageHeight: 400,
     description:
       "Román o vynálezci výbušniny, která může zničit svět. Příběh sleduje mladého chemika, který objeví tajemnou látku schopnou obrovské destrukce.",
     pdfUrl: "https://example.com/krakatit.pdf",
@@ -88,8 +88,8 @@ export const sampleBooks: Book[] = [
     subtitle: null,
     partTitle: null,
     imageUrl: "https://covers.openlibrary.org/b/id/123456-M.jpg",
-    imageWidth: 280,
-    imageHeight: 420,
+    imageWidth: 260,
+    imageHeight: 400,
     description:
       "Klasický český román o životě na venkově v 19. století. Příběh zachycuje idylický svět moravské vesnice očima dítěte.",
     pdfUrl: "https://example.com/babicka.pdf",

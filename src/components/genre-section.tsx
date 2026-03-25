@@ -7,6 +7,8 @@ import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
 import { BookCover } from "./ui/book-cover.tsx";
 import { Button } from "./ui/button.tsx";
 
+const DEFAULT_ASPECT_RATIO = 0.67; // typical book cover (2:3)
+
 interface GenreSectionProps {
   books: Book[];
   genreKey: keyof typeof GENRE_GROUPS;
@@ -33,25 +35,32 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:flex sm:justify-between gap-4 sm:gap-6">
-        {books.map((book, index) => (
-          <div
-            key={`${genreKey}-${book.title}-${book.author}-${index}`}
-            className="grid grid-cols-[min-content] min-w-0"
-          >
-            <BookCover
-              src={book.imageUrl}
-              alt={`${book.title} cover`}
-              href={getBookDetailPath(book)}
-              external={false}
-              className="h-40 sm:h-48 w-auto min-w-24 max-w-none mb-2"
-              height={192}
-            />
-            <div className="w-0 min-w-full space-y-0.5">
+      <div className="grid grid-cols-2 sm:flex gap-4 sm:gap-6">
+        {books.map((book, index) => {
+          const aspectRatio =
+            book.imageWidth && book.imageHeight
+              ? book.imageWidth / book.imageHeight
+              : DEFAULT_ASPECT_RATIO;
+
+          return (
+            <div
+              key={`${genreKey}-${book.title}-${book.author}-${index}`}
+              className="min-w-0 sm:basis-0"
+              style={{ flexGrow: aspectRatio }}
+            >
+              <BookCover
+                src={book.imageUrl}
+                alt={`${book.title} cover`}
+                href={getBookDetailPath(book)}
+                external={false}
+                className="w-full mb-2"
+                width={300}
+                aspectRatio={aspectRatio}
+              />
               <a
                 href={getBookDetailPath(book)}
                 title={book.title}
-                className="text-sm font-medium leading-snug line-clamp-2 hover:underline"
+                className="text-sm font-medium leading-snug line-clamp-2 hover:underline block"
               >
                 {book.title}
               </a>
@@ -72,8 +81,8 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
                 )}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="flex items-center gap-4 pt-2">

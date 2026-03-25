@@ -154,6 +154,8 @@ async function main() {
           subtitle: null,
           partTitle: null,
           imageUrl: null,
+          imageWidth: null,
+          imageHeight: null,
           description: null,
           pdfUrl: null,
           epubUrl: null,

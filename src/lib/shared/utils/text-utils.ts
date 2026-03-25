@@ -97,6 +97,51 @@ export async function getBestImageUrl(originalUrl: string | null): Promise<strin
 }
 
 /**
+ * Fetches image dimensions by downloading the image and reading its header.
+ * Returns { width, height } or null if the image can't be fetched.
+ */
+export async function getImageDimensions(
+  imageUrl: string | null,
+): Promise<{ width: number; height: number } | null> {
+  if (!imageUrl) return null;
+  try {
+    const response = await fetch(imageUrl);
+    if (!response.ok) return null;
+    const buffer = await response.arrayBuffer();
+    const bytes = new Uint8Array(buffer);
+
+    // JPEG: scan for SOF0/SOF2 markers (0xFF 0xC0 or 0xFF 0xC2)
+    if (bytes[0] === 0xff && bytes[1] === 0xd8) {
+      let offset = 2;
+      while (offset < bytes.length - 9) {
+        if (bytes[offset] !== 0xff) break;
+        const marker = bytes[offset + 1]!;
+        // SOF0 (0xC0) or SOF2 (0xC2) — baseline or progressive JPEG
+        if (marker === 0xc0 || marker === 0xc2) {
+          const height = (bytes[offset + 5]! << 8) | bytes[offset + 6]!;
+          const width = (bytes[offset + 7]! << 8) | bytes[offset + 8]!;
+          return { width, height };
+        }
+        // Skip to next marker using segment length
+        const segmentLength = (bytes[offset + 2]! << 8) | bytes[offset + 3]!;
+        offset += 2 + segmentLength;
+      }
+    }
+
+    // PNG: dimensions at fixed offset in IHDR chunk
+    if (bytes[0] === 0x89 && bytes[1] === 0x50) {
+      const width = (bytes[16]! << 24) | (bytes[17]! << 16) | (bytes[18]! << 8) | bytes[19]!;
+      const height = (bytes[20]! << 24) | (bytes[21]! << 16) | (bytes[22]! << 8) | bytes[23]!;
+      return { width, height };
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Cleans text for use in a search query by removing special characters and normalizing whitespace.
  * @param text The text to clean.
  * @returns A cleaned string suitable for a search query.

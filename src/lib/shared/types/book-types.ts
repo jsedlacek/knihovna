@@ -13,6 +13,8 @@ export interface MlpBookDetails {
   subtitle: string | null;
   partTitle: string | null;
   imageUrl: string | null;
+  imageWidth: number | null;
+  imageHeight: number | null;
   description: string | null;
   pdfUrl: string | null;
   epubUrl: string | null;

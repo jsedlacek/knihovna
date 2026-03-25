@@ -1,6 +1,6 @@
 import { fetchJson } from "#@/lib/server/utils/fetch-utils.ts";
 import { createLogger } from "#@/lib/server/utils/logger.ts";
-import { getBestImageUrl } from "#@/lib/shared/utils/text-utils.ts";
+import { getBestImageUrl, getImageDimensions } from "#@/lib/shared/utils/text-utils.ts";
 import {
   MLP_API_URL,
   MLP_BASE_URL,
@@ -214,6 +214,8 @@ export function parseApiBookDetails(source: MlpApiHitSource): MlpBookDetails {
     subtitle: extractSubtitle(source),
     partTitle: extractPartTitle(source),
     imageUrl,
+    imageWidth: null,
+    imageHeight: null,
     description,
     pdfUrl,
     epubUrl,
@@ -237,6 +239,8 @@ export async function fetchMlpBookDetails(titulKey: number): Promise<MlpBookDeta
       subtitle: null,
       partTitle: null,
       imageUrl: null,
+      imageWidth: null,
+      imageHeight: null,
       description: null,
       pdfUrl: null,
       epubUrl: null,
@@ -247,6 +251,11 @@ export async function fetchMlpBookDetails(titulKey: number): Promise<MlpBookDeta
 
   const details = parseApiBookDetails(data.hits.hits[0]!._source);
   details.imageUrl = await getBestImageUrl(details.imageUrl);
+  const dimensions = await getImageDimensions(details.imageUrl);
+  if (dimensions) {
+    details.imageWidth = dimensions.width;
+    details.imageHeight = dimensions.height;
+  }
   return details;
 }
 
