@@ -1,11 +1,8 @@
-import { DownloadIcon, FileTextIcon, StarIcon } from "lucide-react";
+import { DownloadIcon, FileTextIcon } from "lucide-react";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
-import {
-  formatAuthorName,
-  formatNumberCompact,
-  formatNumberCzech,
-} from "#@/lib/shared/utils/text-utils.ts";
+import { formatAuthorName } from "#@/lib/shared/utils/text-utils.ts";
 import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
+import { BookRating } from "./book-rating.tsx";
 import { CoverImage } from "./ui/cover-image.tsx";
 import { Button } from "./ui/button.tsx";
 import { Link } from "./ui/link.tsx";
@@ -34,10 +31,10 @@ export function BookCard({ book, index }: BookCardProps) {
       />
       <div className="flex-1">
         <h3 className="font-bold text-base mb-0.5">
-          <a href={getBookDetailPath(book)} className="text-link hover:underline">
+          <Link href={getBookDetailPath(book)} external={false}>
             {book.title}
             {(book.partTitle || book.subtitle) && ` (${book.partTitle || book.subtitle})`}
-          </a>
+          </Link>
         </h3>
         <p className="text-sm text-muted-foreground mb-3">{formatAuthorName(book.author)}</p>
         <p
@@ -46,36 +43,8 @@ export function BookCard({ book, index }: BookCardProps) {
         >
           {book.description}
         </p>
-        <div className="text-sm text-muted-foreground mb-3">
-          {book.rating ? (
-            <div className="flex items-center">
-              <span className="inline-flex items-center">
-                <span className="font-semibold">
-                  {formatNumberCzech(Math.round(book.rating * 10) / 10)}
-                </span>
-                <StarIcon className="ml-1 size-2.5 fill-current mr-2" />
-              </span>
-
-              <span>
-                (
-                {book.ratingsCount &&
-                  (book.url ? (
-                    <Link href={book.url} className="underline">
-                      {formatNumberCompact(book.ratingsCount)}
-                      &nbsp;hodnocení
-                    </Link>
-                  ) : (
-                    <span>
-                      {formatNumberCompact(book.ratingsCount)}
-                      &nbsp;hodnocení
-                    </span>
-                  ))}
-                )
-              </span>
-            </div>
-          ) : (
-            "Bez hodnocení"
-          )}
+        <div className="mb-3">
+          <BookRating rating={book.rating} ratingsCount={book.ratingsCount} url={book.url} />
         </div>
         <div className="flex gap-2 flex-wrap">
           {book.epubUrl && (

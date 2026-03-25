@@ -1,9 +1,8 @@
-import { StarIcon } from "lucide-react";
-
 import type { Book } from "#@/lib/shared/types/book-types.ts";
-import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
+import { BookRating } from "./book-rating.tsx";
 import { CoverImage } from "./ui/cover-image.tsx";
+import { Link } from "./ui/link.tsx";
 
 const DEFAULT_ASPECT_RATIO = 0.67; // typical book cover (2:3)
 
@@ -26,26 +25,18 @@ export function BookCardMini({ book }: BookCardMiniProps) {
         width={300}
         aspectRatio={aspectRatio}
       />
-      <a
+      <Link
         href={getBookDetailPath(book)}
+        external={false}
         title={book.title}
-        className="text-base font-medium leading-snug line-clamp-2 text-link hover:underline"
+        className="text-base font-medium leading-snug line-clamp-2"
       >
         {book.title}
-      </a>
+      </Link>
       <p className="text-sm text-muted-foreground leading-snug truncate" title={book.author}>
         {book.author}
       </p>
-      <div className="text-sm text-muted-foreground flex items-center">
-        {book.rating ? (
-          <span className="inline-flex items-center">
-            <span>{formatNumberCzech(Math.round(book.rating * 10) / 10)}</span>
-            <StarIcon className="ml-1 size-2.5 fill-current" />
-          </span>
-        ) : (
-          "N/A"
-        )}
-      </div>
+      <BookRating rating={book.rating} />
     </>
   );
 }

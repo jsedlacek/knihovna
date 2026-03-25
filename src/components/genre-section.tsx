@@ -3,6 +3,7 @@ import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 import { BookCardMini } from "./book-card-mini.tsx";
 import { Button } from "./ui/button.tsx";
+import { Link } from "./ui/link.tsx";
 
 const DEFAULT_ASPECT_RATIO = 0.67; // typical book cover (2:3)
 
@@ -24,9 +25,9 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
       <div className="flex justify-between items-start">
         <div>
           <h2 className="text-2xl font-bold mb-3">
-            <a href={`/${genreKey}`} className="text-link hover:underline">
+            <Link href={`/${genreKey}`} external={false}>
               {genreConfig.name}
-            </a>
+            </Link>
           </h2>
           <p className="text-base text-muted-foreground">{genreConfig.description}</p>
         </div>

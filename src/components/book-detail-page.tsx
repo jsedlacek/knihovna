@@ -1,11 +1,8 @@
-import { DownloadIcon, ExternalLinkIcon, FileTextIcon, StarIcon } from "lucide-react";
+import { DownloadIcon, ExternalLinkIcon, FileTextIcon } from "lucide-react";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
-import {
-  formatAuthorName,
-  formatNumberCompact,
-  formatNumberCzech,
-} from "#@/lib/shared/utils/text-utils.ts";
+import { formatAuthorName } from "#@/lib/shared/utils/text-utils.ts";
 import { getGenreGroupKey, getGenreName, GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
+import { BookRating } from "./book-rating.tsx";
 import { CoverImage } from "./ui/cover-image.tsx";
 import { Button } from "./ui/button.tsx";
 import { Footer } from "./ui/footer.tsx";
@@ -89,25 +86,12 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
               </div>
 
               {book.rating && (
-                <div className="flex items-center text-base">
-                  <span className="font-semibold">
-                    {formatNumberCzech(Math.round(book.rating * 10) / 10)}
-                  </span>
-                  <StarIcon className="ml-1 size-3 fill-current mr-2" />
-                  {book.ratingsCount && (
-                    <span className="text-muted-foreground">
-                      (
-                      {book.url ? (
-                        <Link href={book.url} className="underline">
-                          {formatNumberCompact(book.ratingsCount)} hodnocení
-                        </Link>
-                      ) : (
-                        <span>{formatNumberCompact(book.ratingsCount)} hodnocení</span>
-                      )}
-                      )
-                    </span>
-                  )}
-                </div>
+                <BookRating
+                  rating={book.rating}
+                  ratingsCount={book.ratingsCount}
+                  url={book.url}
+                  size="base"
+                />
               )}
 
               <div className="hidden sm:block space-y-3">
