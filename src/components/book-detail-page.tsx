@@ -47,7 +47,7 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Header title={book.title} />
+      <Header />
 
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <article className="space-y-4 sm:space-y-0">
