@@ -1,4 +1,4 @@
-import{n as e}from"./chunk-BneVvdWh.js";import{n as t,t as n}from"./book-rating-2NbXryjB.js";var r,i,a,o,s,c,l;e((()=>{t(),r={title:`Components/BookRating`,component:n,parameters:{layout:`centered`},tags:[`autodocs`]},i={args:{rating:4.5,ratingsCount:987,url:`https://goodreads.com/book/show/123`}},a={args:{rating:4.2,ratingsCount:1500}},o={args:{rating:3.8}},s={args:{rating:null}},c={args:{rating:4.5,ratingsCount:3200,url:`https://goodreads.com/book/show/123`,size:`base`}},i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
+import{n as e}from"./chunk-BneVvdWh.js";import{n as t,t as n}from"./book-rating-CjyixWWJ.js";var r,i,a,o,s,c,l;e((()=>{t(),r={title:`Components/BookRating`,component:n,parameters:{layout:`centered`},tags:[`autodocs`]},i={args:{rating:4.5,ratingsCount:987,url:`https://goodreads.com/book/show/123`}},a={args:{rating:4.2,ratingsCount:1500}},o={args:{rating:3.8}},s={args:{rating:null}},c={args:{rating:4.5,ratingsCount:3200,url:`https://goodreads.com/book/show/123`,size:`base`}},i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
   args: {
     rating: 4.5,
     ratingsCount: 987,
