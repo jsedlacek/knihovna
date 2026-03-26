@@ -57,7 +57,7 @@ export function SearchPage({ query, books, lastUpdated }: SearchPageProps) {
                     : `Nalezeno ${formatNumberCzech(books.length)} ${books.length === 1 ? "kniha" : books.length < 5 ? "knihy" : "knih"} pro „${query}"`}
             </p>
             {query.length === 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-3 flex flex-wrap items-center gap-2">
                 <span className="text-sm text-muted-foreground">Zkuste:</span>
                 {searchTips.map((tip) => (
                   <a
