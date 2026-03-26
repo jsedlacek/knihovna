@@ -35,7 +35,8 @@ export function GenreSection({ books, genreKey, bookCount }: GenreSectionProps) 
 
       <div className="flex items-center gap-4 pt-2">
         <Button href={`/${genreKey}`} variant="primary">
-          Prohlédnout {genreConfig.nameAccusative} ({formatNumberCzech(bookCount)} knih) ☞
+          Prohlédnout {genreConfig.nameAccusative} ({formatNumberCzech(bookCount)} knih){" "}
+          <span className="text-lg">☞</span>
         </Button>
       </div>
     </section>
