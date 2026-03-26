@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { BookCard } from "#@/components/book-card.tsx";
+import { BookGrid } from "#@/components/book-grid.tsx";
 import { Button } from "#@/components/ui/button.tsx";
 import { Footer } from "#@/components/ui/footer.tsx";
 import { Header } from "#@/components/ui/header.tsx";
@@ -75,19 +75,13 @@ export function GenrePage({
           </div>
         </section>
         <section className="space-y-4">
-          <div className="space-y-12">
-            {books.length > 0 ? (
-              books.map((book, index) => (
-                <div key={`${genreKey}-${book.titulKey}`}>
-                  <BookCard book={book} index={index} />
-                </div>
-              ))
-            ) : (
-              <p className="text-muted-foreground text-center py-8">
-                V této kategorii nejsou momentálně k dispozici žádné knihy.
-              </p>
-            )}
-          </div>
+          {books.length > 0 ? (
+            <BookGrid books={books} keyPrefix={`${genreKey}-`} />
+          ) : (
+            <p className="text-muted-foreground text-center py-8">
+              V této kategorii nejsou momentálně k dispozici žádné knihy.
+            </p>
+          )}
           {nextCursor !== null ? (
             <div className="flex justify-center pt-8">
               <Button onClick={loadMore} disabled={loading}>
