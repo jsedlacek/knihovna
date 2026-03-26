@@ -74,7 +74,7 @@ export function SearchPage({ query, books, lastUpdated }: SearchPageProps) {
           <div className="space-y-12">
             {books.map((book, index) => (
               <div key={book.titulKey}>
-                <BookCard book={book} index={index} />
+                <BookCard book={book} index={index} hideActions />
               </div>
             ))}
           </div>

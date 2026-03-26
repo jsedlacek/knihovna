@@ -10,9 +10,10 @@ import { Link } from "./ui/link.tsx";
 interface BookCardProps {
   book: Book;
   index: number;
+  hideActions?: boolean;
 }
 
-export function BookCard({ book, index }: BookCardProps) {
+export function BookCard({ book, index, hideActions }: BookCardProps) {
   return (
     <article
       key={`${book.title}-${book.author}-${index}`}
@@ -46,25 +47,27 @@ export function BookCard({ book, index }: BookCardProps) {
         <div className="mb-3">
           <BookRating rating={book.rating} ratingsCount={book.ratingsCount} url={book.url} />
         </div>
-        <div className="flex gap-2 flex-wrap">
-          {book.epubUrl && (
-            <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
-              <DownloadIcon className="mr-1.5 size-3.5" />
-              Stáhnout EPUB
-            </Button>
-          )}
-          {book.pdfUrl && (
-            <Button
-              href={book.pdfUrl}
-              variant="secondary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FileTextIcon className="mr-1.5 size-3.5" />
-              Zobrazit PDF
-            </Button>
-          )}
-        </div>
+        {!hideActions && (
+          <div className="flex gap-2 flex-wrap">
+            {book.epubUrl && (
+              <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
+                <DownloadIcon className="mr-1.5 size-3.5" />
+                Stáhnout EPUB
+              </Button>
+            )}
+            {book.pdfUrl && (
+              <Button
+                href={book.pdfUrl}
+                variant="secondary"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FileTextIcon className="mr-1.5 size-3.5" />
+                Zobrazit PDF
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </article>
   );
