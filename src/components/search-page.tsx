@@ -6,6 +6,15 @@ import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { MIN_SEARCH_LENGTH } from "#@/lib/shared/utils/search-utils.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 
+const searchTips = [
+  { query: "Čapek", label: "Čapek" },
+  { query: "Sherlock", label: "Sherlock" },
+  { query: "Hrabal", label: "Hrabal" },
+  { query: "pohádky", label: "pohádky" },
+  { query: "Hugo", label: "Hugo" },
+  { query: "básně", label: "básně" },
+];
+
 interface SearchPageProps {
   query: string;
   books: Book[];
@@ -47,6 +56,20 @@ export function SearchPage({ query, books, lastUpdated }: SearchPageProps) {
                     ? `Pro „${query}" nebyly nalezeny žádné knihy.`
                     : `Nalezeno ${formatNumberCzech(books.length)} ${books.length === 1 ? "kniha" : books.length < 5 ? "knihy" : "knih"} pro „${query}"`}
             </p>
+            {query.length === 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                <span className="text-sm text-muted-foreground">Zkuste:</span>
+                {searchTips.map((tip) => (
+                  <a
+                    key={tip.query}
+                    href={`/hledat?q=${encodeURIComponent(tip.query)}`}
+                    className="text-sm px-3 py-1 rounded-full border border-border bg-muted hover:bg-border transition-colors"
+                  >
+                    {tip.label}
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
           <div className="space-y-12">
             {books.map((book, index) => (
