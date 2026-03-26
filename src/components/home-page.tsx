@@ -43,7 +43,8 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
             <p>
               Vítej v knihovně! Tady najdeš{" "}
               <span className="font-semibold">{formatNumberCzech(bookCount)}</span> románů, básní a
-              divadelních her – všechno, co má od čtenářů aspoň čtyři hvězdičky. A hlavně,{" "}
+              divadelních her – všechno, co má od čtenářů aspoň{" "}
+              <span className="font-semibold">čtyři hvězdičky</span>. A hlavně,{" "}
               <span className="font-semibold">zdarma ke stažení</span>.
             </p>
           </div>
