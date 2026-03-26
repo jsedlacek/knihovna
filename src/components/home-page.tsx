@@ -41,9 +41,10 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
         <section className="space-y-4">
           <div className="text-base leading-relaxed space-y-4">
             <p>
-              Tady najdete <span className="font-semibold">{formatNumberCzech(bookCount)}</span>{" "}
-              románů, básní a divadelních her – všechno, co má od čtenářů aspoň čtyři hvězdičky. A
-              hlavně, zdarma ke stažení.
+              Vítej v knihovně! Tady najdeš{" "}
+              <span className="font-semibold">{formatNumberCzech(bookCount)}</span> románů, básní a
+              divadelních her – všechno, co má od čtenářů aspoň čtyři hvězdičky. A hlavně,{" "}
+              <span className="font-semibold">zdarma ke stažení</span>.
             </p>
           </div>
           <p className="text-center text-muted-foreground text-2xl">❦</p>
