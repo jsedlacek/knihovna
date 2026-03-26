@@ -1,7 +1,7 @@
 import { DownloadIcon, ExternalLinkIcon, FileTextIcon } from "lucide-react";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { formatAuthorName } from "#@/lib/shared/utils/text-utils.ts";
-import { getGenreName } from "#@/lib/shared/utils/genre-utils.ts";
+import { getGenreGroupKey, getGenreName } from "#@/lib/shared/utils/genre-utils.ts";
 import { BookRating } from "./book-rating.tsx";
 import { CoverImage } from "./ui/cover-image.tsx";
 import { Button } from "./ui/button.tsx";
@@ -67,7 +67,12 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
                 <p className="text-lg text-muted-foreground">{authorName}</p>
                 {book.genre && (
                   <div className="text-sm text-muted-foreground mt-1">
-                    {getGenreName(book.genreId)}
+                    <a
+                      href={`/${getGenreGroupKey(book.genreId)}`}
+                      className="text-link hover:underline"
+                    >
+                      {getGenreName(book.genreId)}
+                    </a>
                   </div>
                 )}
                 {(book.publisher || book.year) && (
