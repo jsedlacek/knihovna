@@ -26,9 +26,9 @@ export function Header({ title, searchQuery }: HeaderProps) {
               <a
                 href="/hledat"
                 aria-label="Hledat"
-                className="size-10 bg-foreground rounded-lg flex items-center justify-center cursor-pointer"
+                className="size-10 rounded-full border-2 border-foreground flex items-center justify-center cursor-pointer"
               >
-                <SearchIcon className="size-5 text-background" />
+                <SearchIcon className="size-5" />
               </a>
             )}
           </div>
