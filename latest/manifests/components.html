@@ -576,7 +576,7 @@
 <header>
   <div class="wrap">
     <h1>Manifest Debugger</h1>
-    <div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><span class="filter-pill ok" aria-disabled="true">14 components ok</span><a class="filter-pill info" data-k="infos" href="#filter-infos">14/14 infos</a><span class="filter-pill ok" aria-disabled="true">43 stories ok</span></div>
+    <div class="summary"><a class="filter-pill all" data-k="all" href="#filter-all">All</a><span class="filter-pill ok" aria-disabled="true">14 components ok</span><a class="filter-pill info" data-k="infos" href="#filter-infos">14/14 infos</a><span class="filter-pill ok" aria-disabled="true">40 stories ok</span></div>
   </div>
 </header>
 <main>
@@ -1699,9 +1699,9 @@ genreKey: unknown</code></pre>
     <div class="title">
       <h2><span class="status-dot dot-ok"></span> Header</h2>
       <div class="badges">
-        <label for="c-10-ui-header-props" class="badge ok as-toggle">2 prop types</label>
+        
         <label for="c-10-ui-header-info" class="badge info as-toggle">1 info</label>
-        <label for="c-10-ui-header-stories" class="badge ok as-toggle">4 stories</label>
+        <label for="c-10-ui-header-stories" class="badge ok as-toggle">1 story</label>
         
       </div>
     </div>
@@ -1716,7 +1716,7 @@ genreKey: unknown</code></pre>
   <input id="c-10-ui-header-info" class="tg tg-info" type="checkbox" hidden />
   <input id="c-10-ui-header-stories" class="tg tg-stories" type="checkbox" hidden />
   
-  <input id="c-10-ui-header-props" class="tg tg-props" type="checkbox" hidden />
+  
 
   <div class="panels">
     
@@ -1729,19 +1729,6 @@ genreKey: unknown</code></pre>
     </div>
         </div>
     
-        <div class="panel panel-props">
-          <div class="note ok">
-            <div class="row">
-              <span class="ex-name">Prop types <small>(react-docgen)</small></span>
-              <span class="badge ok">2 prop types</span>
-            </div>
-            <pre><code>Component: src/components/ui/header.tsx::Header</code></pre>
-            <pre><code>Props:</code></pre>
-            <pre><code>breadcrumbs?: BreadcrumbItem[]
-
-searchQuery?: string</code></pre>
-          </div>
-        </div>
     
         <div class="panel panel-stories">
           
@@ -1763,34 +1750,6 @@ searchQuery?: string</code></pre>
               
               
               <pre><code>const Default = () =&gt; &lt;Header /&gt;;</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">With Breadcrumbs</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const WithBreadcrumbs = () =&gt; &lt;Header breadcrumbs={[{ label: &quot;Beletrie&quot; }]} /&gt;;</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">With Genre And Book</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const WithGenreAndBook = () =&gt; &lt;Header
-    breadcrumbs={[{ label: &quot;Beletrie&quot;, href: &quot;/beletrie&quot; }, { label: &quot;Válka s mloky&quot; }]} /&gt;;</code></pre>
-            </div>
-            <div class="note ok">
-              <div class="row">
-                <span class="ex-name">With Search Query</span>
-                <span class="badge ok">story ok</span>
-              </div>
-              
-              
-              <pre><code>const WithSearchQuery = () =&gt; &lt;Header searchQuery=&quot;Čapek&quot; breadcrumbs={[{ label: &quot;Hledání&quot; }]} /&gt;;</code></pre>
             </div>
         </div>
     
