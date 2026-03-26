@@ -1,3 +1,4 @@
+import { SearchIcon } from "lucide-react";
 import { BookCard } from "#@/components/book-card.tsx";
 import { Footer } from "#@/components/ui/footer.tsx";
 import { Header } from "#@/components/ui/header.tsx";
@@ -16,16 +17,32 @@ export function SearchPage({ query, books, lastUpdated }: SearchPageProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <Header searchQuery={query} />
+      <Header />
 
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <section className="space-y-4">
+          <h2 className="text-2xl font-bold">Hledání</h2>
+          <form action="/hledat" method="get" className="relative">
+            <SearchIcon
+              size={18}
+              aria-hidden="true"
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+            />
+            <input
+              type="search"
+              name="q"
+              placeholder="Hledat knihy…"
+              defaultValue={query}
+              autoFocus
+              className="w-full pl-11 pr-4 py-3 rounded-full border border-border bg-muted text-base tracking-wide placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-border"
+            />
+          </form>
           <div>
-            <p className="text-base text-muted-foreground mt-1">
+            <p className="text-base text-muted-foreground">
               {isShortQuery
                 ? `Zadejte alespoň ${MIN_SEARCH_LENGTH} znaky pro vyhledávání.`
                 : query.length === 0
-                  ? "Zadejte hledaný výraz do pole výše."
+                  ? "Zadejte hledaný výraz."
                   : books.length === 0
                     ? `Pro „${query}" nebyly nalezeny žádné knihy.`
                     : `Nalezeno ${formatNumberCzech(books.length)} ${books.length === 1 ? "kniha" : books.length < 5 ? "knihy" : "knih"} pro „${query}"`}
