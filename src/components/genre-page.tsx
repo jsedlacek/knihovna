@@ -62,17 +62,14 @@ export function GenrePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Header breadcrumbs={[{ label: genreConfig.name }]} />
+      <Header title={genreConfig.name} />
 
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <section className="space-y-4">
-          <div>
-            <h2 className="text-2xl font-bold">{genreConfig.name}</h2>
-            <p className="text-base text-muted-foreground mt-1">
-              {genreConfig.description} ({formatNumberCzech(totalCount)}{" "}
-              {totalCount === 1 ? "kniha" : totalCount < 5 ? "knihy" : "knih"})
-            </p>
-          </div>
+          <p className="text-base text-muted-foreground">
+            {genreConfig.description} ({formatNumberCzech(totalCount)}{" "}
+            {totalCount === 1 ? "kniha" : totalCount < 5 ? "knihy" : "knih"})
+          </p>
         </section>
         <section className="space-y-4">
           {books.length > 0 ? (

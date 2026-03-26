@@ -17,21 +17,21 @@ export const Default: Story = {
   args: {},
 };
 
-export const WithBreadcrumbs: Story = {
+export const WithTitle: Story = {
   args: {
-    breadcrumbs: [{ label: "Beletrie" }],
+    title: "Beletrie",
   },
 };
 
-export const WithGenreAndBook: Story = {
+export const WithLongTitle: Story = {
   args: {
-    breadcrumbs: [{ label: "Beletrie", href: "/beletrie" }, { label: "Válka s mloky" }],
+    title: "Velmi dlouhý název knihy, který se nevejde na jeden řádek",
   },
 };
 
 export const WithSearchQuery: Story = {
   args: {
     searchQuery: "Čapek",
-    breadcrumbs: [{ label: "Hledání" }],
+    title: "Hledání",
   },
 };

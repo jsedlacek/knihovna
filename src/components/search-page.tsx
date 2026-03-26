@@ -16,13 +16,12 @@ export function SearchPage({ query, books, lastUpdated }: SearchPageProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <Header searchQuery={query} breadcrumbs={[{ label: "Hledání" }]} />
+      <Header searchQuery={query} title="Hledání" />
 
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
         <section className="space-y-4">
           <div>
-            <h2 className="text-2xl font-bold">Výsledky hledání</h2>
-            <p className="text-base text-muted-foreground mt-1">
+            <p className="text-base text-muted-foreground">
               {isShortQuery
                 ? `Zadejte alespoň ${MIN_SEARCH_LENGTH} znaky pro vyhledávání.`
                 : query.length === 0
