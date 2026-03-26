@@ -122,16 +122,7 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
           </div>
 
           <div className="sm:hidden space-y-3">
-            {book.description && (
-              <p className="text-base text-card-foreground leading-relaxed">{book.description}</p>
-            )}
-
-            <Link href={book.detailUrl} className="inline-flex items-center text-base">
-              Zobrazit v Městské knihovně
-              <ExternalLinkIcon className="ml-1 size-3" />
-            </Link>
-
-            <div className="flex gap-2 flex-wrap pt-2">
+            <div className="flex gap-2 flex-wrap">
               {book.epubUrl && (
                 <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
                   <DownloadIcon className="mr-1.5 size-3.5" />
@@ -150,6 +141,15 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
                 </Button>
               )}
             </div>
+
+            {book.description && (
+              <p className="text-base text-card-foreground leading-relaxed">{book.description}</p>
+            )}
+
+            <Link href={book.detailUrl} className="inline-flex items-center text-base">
+              Zobrazit v Městské knihovně
+              <ExternalLinkIcon className="ml-1 size-3" />
+            </Link>
           </div>
         </article>
         <p className="text-center text-muted-foreground pt-8 text-2xl">❧</p>
