@@ -17,21 +17,8 @@ export const Default: Story = {
   args: {},
 };
 
-export const WithTitle: Story = {
-  args: {
-    title: "Beletrie",
-  },
-};
-
-export const WithLongTitle: Story = {
-  args: {
-    title: "Velmi dlouhý název knihy, který se nevejde na jeden řádek",
-  },
-};
-
 export const WithSearchQuery: Story = {
   args: {
     searchQuery: "Čapek",
-    title: "Hledání",
   },
 };

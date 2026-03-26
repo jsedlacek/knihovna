@@ -1,14 +1,13 @@
 import { BookOpenTextIcon, SearchIcon } from "lucide-react";
 
 export interface HeaderProps {
-  title?: string;
   searchQuery?: string;
 }
 
 const showSearchInput = (searchQuery: string | undefined): searchQuery is string =>
   searchQuery !== undefined;
 
-export function Header({ title, searchQuery }: HeaderProps) {
+export function Header({ searchQuery }: HeaderProps) {
   return (
     <header>
       <div className="w-full max-w-4xl mx-auto p-4 sm:p-6">
@@ -20,7 +19,6 @@ export function Header({ title, searchQuery }: HeaderProps) {
           >
             <BookOpenTextIcon className="size-5 text-background" />
           </a>
-          {title && <span className="text-base font-bold truncate min-w-0">{title}</span>}
           <div className="ml-auto shrink-0">
             {!showSearchInput(searchQuery) && (
               <a
