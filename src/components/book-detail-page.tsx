@@ -86,70 +86,35 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
                 />
               )}
 
-              <div className="hidden sm:block space-y-3">
-                {book.description && (
-                  <p className="text-base text-card-foreground leading-relaxed">
-                    {book.description}
-                  </p>
+              <div className="flex gap-2 flex-wrap">
+                {book.epubUrl && (
+                  <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
+                    <DownloadIcon className="mr-1.5 size-3.5" />
+                    Stáhnout EPUB
+                  </Button>
                 )}
-
-                <Link href={book.detailUrl} className="inline-flex items-center text-base">
-                  Zobrazit v Městské knihovně
-                  <ExternalLinkIcon className="ml-1 size-3" />
-                </Link>
-
-                <div className="flex gap-2 flex-wrap pt-2">
-                  {book.epubUrl && (
-                    <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
-                      <DownloadIcon className="mr-1.5 size-3.5" />
-                      Stáhnout EPUB
-                    </Button>
-                  )}
-                  {book.pdfUrl && (
-                    <Button
-                      href={book.pdfUrl}
-                      variant="secondary"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <FileTextIcon className="mr-1.5 size-3.5" />
-                      Zobrazit PDF
-                    </Button>
-                  )}
-                </div>
+                {book.pdfUrl && (
+                  <Button
+                    href={book.pdfUrl}
+                    variant="secondary"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FileTextIcon className="mr-1.5 size-3.5" />
+                    Zobrazit PDF
+                  </Button>
+                )}
               </div>
-            </div>
-          </div>
 
-          <div className="sm:hidden space-y-3">
-            <div className="flex gap-2 flex-wrap">
-              {book.epubUrl && (
-                <Button href={book.epubUrl} variant="primary" rel="noopener noreferrer">
-                  <DownloadIcon className="mr-1.5 size-3.5" />
-                  Stáhnout EPUB
-                </Button>
+              {book.description && (
+                <p className="text-base text-card-foreground leading-relaxed">{book.description}</p>
               )}
-              {book.pdfUrl && (
-                <Button
-                  href={book.pdfUrl}
-                  variant="secondary"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FileTextIcon className="mr-1.5 size-3.5" />
-                  Zobrazit PDF
-                </Button>
-              )}
+
+              <Link href={book.detailUrl} className="inline-flex items-center text-base">
+                Zobrazit v Městské knihovně
+                <ExternalLinkIcon className="ml-1 size-3" />
+              </Link>
             </div>
-
-            {book.description && (
-              <p className="text-base text-card-foreground leading-relaxed">{book.description}</p>
-            )}
-
-            <Link href={book.detailUrl} className="inline-flex items-center text-base">
-              Zobrazit v Městské knihovně
-              <ExternalLinkIcon className="ml-1 size-3" />
-            </Link>
           </div>
         </article>
         <p className="text-center text-muted-foreground pt-8 text-2xl">❧</p>
