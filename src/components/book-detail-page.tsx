@@ -1,6 +1,7 @@
 import { DownloadIcon, ExternalLinkIcon, FileTextIcon } from "lucide-react";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { formatAuthorName } from "#@/lib/shared/utils/text-utils.ts";
+import { getAuthorDetailPath, getAuthorSlug } from "#@/lib/shared/utils/book-url-utils.ts";
 import { getGenreGroupKey, getGenreName } from "#@/lib/shared/utils/genre-utils.ts";
 import { BookRating } from "./book-rating.tsx";
 import { CoverImage } from "./ui/cover-image.tsx";
@@ -64,7 +65,11 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
             <div className="flex-1 space-y-3">
               <div>
                 <h2 className="text-2xl font-bold mb-1">{fullTitle}</h2>
-                <p className="text-lg text-muted-foreground">{authorName}</p>
+                <p className="text-lg text-muted-foreground">
+                  <Link href={getAuthorDetailPath(getAuthorSlug(book.author))} external={false}>
+                    {authorName}
+                  </Link>
+                </p>
                 {book.genre && (
                   <div className="text-sm text-muted-foreground mt-1">
                     <a

@@ -1,5 +1,10 @@
 import type { Book } from "#@/lib/shared/types/book-types.ts";
-import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
+import {
+  getAuthorDetailPath,
+  getAuthorSlug,
+  getBookDetailPath,
+} from "#@/lib/shared/utils/book-url-utils.ts";
+import { formatAuthorName } from "#@/lib/shared/utils/text-utils.ts";
 import { BookRating } from "./book-rating.tsx";
 import { CoverImage } from "./ui/cover-image.tsx";
 import { Link } from "./ui/link.tsx";
@@ -33,9 +38,14 @@ export function BookCardMini({ book }: BookCardMiniProps) {
       >
         {book.title}
       </Link>
-      <p className="text-sm text-muted-foreground leading-snug truncate" title={book.author}>
-        {book.author}
-      </p>
+      <Link
+        href={getAuthorDetailPath(getAuthorSlug(book.author))}
+        external={false}
+        className="text-sm text-muted-foreground leading-snug truncate block"
+        title={formatAuthorName(book.author)}
+      >
+        {formatAuthorName(book.author)}
+      </Link>
       <BookRating rating={book.rating} />
     </>
   );
