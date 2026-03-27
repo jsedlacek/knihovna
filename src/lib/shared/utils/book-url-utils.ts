@@ -1,3 +1,5 @@
+import { formatAuthorName } from "./text-utils.ts";
+
 /**
  * Create a slug from a title for use in URLs.
  */
@@ -18,4 +20,12 @@ export function parseTitulKeyFromSlug(slug: string): number | null {
   const match = slug.match(/-(\d+)$/);
   const value = match?.[1];
   return value ? Number.parseInt(value, 10) : null;
+}
+
+export function getAuthorSlug(author: string): string {
+  return createSlug(formatAuthorName(author));
+}
+
+export function getAuthorDetailPath(authorSlug: string): string {
+  return `/autor/${authorSlug}`;
 }

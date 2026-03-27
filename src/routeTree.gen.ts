@@ -13,6 +13,7 @@ import { Route as HledatRouteImport } from './routes/hledat'
 import { Route as GenreRouteImport } from './routes/$genre'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as KnihaBookSlugRouteImport } from './routes/kniha/$bookSlug'
+import { Route as AutorAuthorSlugRouteImport } from './routes/autor/$authorSlug'
 
 const HledatRoute = HledatRouteImport.update({
   id: '/hledat',
@@ -34,17 +35,24 @@ const KnihaBookSlugRoute = KnihaBookSlugRouteImport.update({
   path: '/kniha/$bookSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AutorAuthorSlugRoute = AutorAuthorSlugRouteImport.update({
+  id: '/autor/$authorSlug',
+  path: '/autor/$authorSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$genre': typeof GenreRoute
   '/hledat': typeof HledatRoute
+  '/autor/$authorSlug': typeof AutorAuthorSlugRoute
   '/kniha/$bookSlug': typeof KnihaBookSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$genre': typeof GenreRoute
   '/hledat': typeof HledatRoute
+  '/autor/$authorSlug': typeof AutorAuthorSlugRoute
   '/kniha/$bookSlug': typeof KnihaBookSlugRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,33 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$genre': typeof GenreRoute
   '/hledat': typeof HledatRoute
+  '/autor/$authorSlug': typeof AutorAuthorSlugRoute
   '/kniha/$bookSlug': typeof KnihaBookSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$genre' | '/hledat' | '/kniha/$bookSlug'
+  fullPaths:
+    | '/'
+    | '/$genre'
+    | '/hledat'
+    | '/autor/$authorSlug'
+    | '/kniha/$bookSlug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$genre' | '/hledat' | '/kniha/$bookSlug'
-  id: '__root__' | '/' | '/$genre' | '/hledat' | '/kniha/$bookSlug'
+  to: '/' | '/$genre' | '/hledat' | '/autor/$authorSlug' | '/kniha/$bookSlug'
+  id:
+    | '__root__'
+    | '/'
+    | '/$genre'
+    | '/hledat'
+    | '/autor/$authorSlug'
+    | '/kniha/$bookSlug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GenreRoute: typeof GenreRoute
   HledatRoute: typeof HledatRoute
+  AutorAuthorSlugRoute: typeof AutorAuthorSlugRoute
   KnihaBookSlugRoute: typeof KnihaBookSlugRoute
 }
 
@@ -99,6 +120,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KnihaBookSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/autor/$authorSlug': {
+      id: '/autor/$authorSlug'
+      path: '/autor/$authorSlug'
+      fullPath: '/autor/$authorSlug'
+      preLoaderRoute: typeof AutorAuthorSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -106,6 +134,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GenreRoute: GenreRoute,
   HledatRoute: HledatRoute,
+  AutorAuthorSlugRoute: AutorAuthorSlugRoute,
   KnihaBookSlugRoute: KnihaBookSlugRoute,
 }
 export const routeTree = rootRouteImport

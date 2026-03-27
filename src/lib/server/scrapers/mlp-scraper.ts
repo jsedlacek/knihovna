@@ -26,6 +26,7 @@ interface MlpApiOsoba {
   role_kod: string;
   role: string;
   prozahlavi?: string;
+  aut_head_key?: string;
 }
 
 interface MlpApiOch {
@@ -139,18 +140,27 @@ function extractPartTitle(source: MlpApiHitSource): string | null {
 }
 
 /**
- * Extract author name from osoba array.
+ * Extract author name and key from osoba array.
  * Prefers the entry with prozahlavi="1", then falls back to first author.
  */
-function extractAuthor(source: MlpApiHitSource): string {
-  if (!source.osoba?.length) return "Unknown Author";
+function extractAuthor(source: MlpApiHitSource): { name: string; key: number | null } {
+  if (!source.osoba?.length) return { name: "Unknown Author", key: null };
 
   const authors = source.osoba.filter((o) => o.role_kod === "aut");
-  if (authors.length === 0) return cleanAuthorName(source.osoba[0]!.jmeno) || "Unknown Author";
+  if (authors.length === 0) {
+    const first = source.osoba[0]!;
+    return {
+      name: cleanAuthorName(first.jmeno) || "Unknown Author",
+      key: first.aut_head_key ? Number(first.aut_head_key) : null,
+    };
+  }
 
   const primary = authors.find((a) => a.prozahlavi === "1");
   const author = primary ?? authors[0]!;
-  return cleanAuthorName(author.jmeno) || "Unknown Author";
+  return {
+    name: cleanAuthorName(author.jmeno) || "Unknown Author",
+    key: author.aut_head_key ? Number(author.aut_head_key) : null,
+  };
 }
 
 /**
@@ -168,10 +178,11 @@ function extractYear(source: MlpApiHitSource): number | null {
 export function parseApiBookListing(source: MlpApiHitSource): MlpBookListing {
   const title = extractTitle(source);
   const slug = createSlug(title);
+  const { name: author } = extractAuthor(source);
   return {
     titulKey: source.titul_key,
     title,
-    author: extractAuthor(source),
+    author,
     publisher: source.nakladatelstvi?.[0] || null,
     year: extractYear(source),
     detailUrl: `${MLP_BASE_URL}/katalog/titul/${slug}/${source.titul_key}/`,
@@ -210,6 +221,9 @@ export function parseApiBookDetails(source: MlpApiHitSource): MlpBookDetails {
   // Description: prefer long annotation, fall back to short
   const description = source.anotace_dlouha?.[0] || source.anotace?.[0] || null;
 
+  // Author key from osoba array
+  const { key: authorKey } = extractAuthor(source);
+
   return {
     subtitle: extractSubtitle(source),
     partTitle: extractPartTitle(source),
@@ -221,6 +235,7 @@ export function parseApiBookDetails(source: MlpApiHitSource): MlpBookDetails {
     epubUrl,
     genreId,
     genre,
+    authorKey,
   };
 }
 
@@ -246,6 +261,7 @@ export async function fetchMlpBookDetails(titulKey: number): Promise<MlpBookDeta
       epubUrl: null,
       genreId: null,
       genre: null,
+      authorKey: null,
     };
   }
 

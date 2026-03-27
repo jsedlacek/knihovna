@@ -3,7 +3,7 @@ name: Preview Deployment
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened, closed]
+    types: [opened, synchronize, reopened, closed, labeled]
 
 concurrency:
   group: preview-${{ github.event.pull_request.number }}
@@ -48,6 +48,21 @@ jobs:
           key: data-cache-preview
           restore-keys: |
             data-cache-
+
+      - name: Scrape data
+        if: contains(github.event.pull_request.labels.*.name, 'scrape')
+        run: pnpm scrape
+        env:
+          LOG_LEVEL: info
+
+      - name: Save data cache
+        if: contains(github.event.pull_request.labels.*.name, 'scrape')
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            data/
+            public/data/
+          key: data-cache-preview
 
       - name: Generate mock data fallback
         run: |

@@ -23,6 +23,7 @@ function createTestBook(overrides: Partial<Book> = {}): Book {
     description: "Test description",
     genreId: null,
     genre: null,
+    authorKey: null,
     rating: 4.0,
     ratingsCount: 100,
     url: "https://example.com/book",
