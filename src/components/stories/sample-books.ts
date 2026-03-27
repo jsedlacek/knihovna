@@ -1,4 +1,4 @@
-import type { Book } from "#@/lib/shared/types/book-types.ts";
+import type { Author, Book } from "#@/lib/shared/types/book-types.ts";
 
 const SCRAPED_AT = "2024-01-15T10:30:00Z";
 
@@ -255,6 +255,40 @@ export function createGenresFromBooks(books: Book[]) {
     bookCount: genreBooks.length,
   }));
 }
+
+/** A sample author with all fields populated. */
+export const sampleAuthor: Author = {
+  name: "Čapek, Karel",
+  slug: "karel-capek",
+  description:
+    "Narozen 9. 1. 1890 v Malých Svatoňovicích u Trutnova, zemřel 25. 12. 1938 v Praze. PhDr., prozaik, žurnalista, dramatik, esejista, básník, autor knih pro děti, překladatel z francouzštiny.",
+  imageUrl: "https://covers.openlibrary.org/b/id/8225261-M.jpg",
+  imageWidth: 200,
+  imageHeight: 200,
+  born: "1890-1938",
+};
+
+/** A sample author without photo. */
+export const sampleAuthorNoPhoto: Author = {
+  name: "Němcová, Božena",
+  slug: "bozena-nemcova",
+  description: "Česká spisovatelka, zakladatelka novodobé české prózy.",
+  imageUrl: null,
+  imageWidth: null,
+  imageHeight: null,
+  born: "1820-1862",
+};
+
+/** A sample author with minimal data. */
+export const sampleAuthorMinimal: Author = {
+  name: "Hašek, Jaroslav",
+  slug: "jaroslav-hasek",
+  description: null,
+  imageUrl: null,
+  imageWidth: null,
+  imageHeight: null,
+  born: null,
+};
 
 export const mockTimestamp = {
   lastUpdated: "2024-12-15T10:30:00.000Z",
