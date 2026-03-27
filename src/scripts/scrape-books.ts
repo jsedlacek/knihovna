@@ -161,6 +161,7 @@ async function main() {
           epubUrl: null,
           genreId: null,
           genre: null,
+          authorKey: null,
           rating: null,
           ratingsCount: null,
           url: null,

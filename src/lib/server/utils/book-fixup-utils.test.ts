@@ -27,6 +27,7 @@ describe("Book Fixup Utils", () => {
     epubUrl: "https://example.com/book.epub",
     genreId: "F1a2b",
     genre: "Fiction for adults",
+    authorKey: null,
     rating: 4.5,
     ratingsCount: 100,
     url: "https://goodreads.com/book/123",

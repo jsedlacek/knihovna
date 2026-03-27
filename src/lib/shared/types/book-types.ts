@@ -20,6 +20,18 @@ export interface MlpBookDetails {
   epubUrl: string | null;
   genreId: string | null;
   genre: string | null;
+  authorKey: number | null;
+}
+
+// Author data scraped from MLP osoba API
+export interface Author {
+  name: string;
+  slug: string;
+  description: string | null;
+  imageUrl: string | null;
+  imageWidth: number | null;
+  imageHeight: number | null;
+  born: string | null;
 }
 
 // Data scraped from Goodreads
