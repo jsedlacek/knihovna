@@ -1,5 +1,5 @@
 import { env } from "cloudflare:workers";
-import type { Book, TimestampData } from "../shared/types/book-types.ts";
+import type { Author, Book, TimestampData } from "../shared/types/book-types.ts";
 import { createLogger } from "./utils/logger.ts";
 
 const log = createLogger("books");
@@ -14,6 +14,13 @@ export async function getBooks(): Promise<Book[]> {
   const books = await fetchAsset<Book[]>("data/books.json");
   log.info("getBooks", { duration: performance.now() - start, count: books.length });
   return books;
+}
+
+export async function getAuthors(): Promise<Author[]> {
+  const start = performance.now();
+  const authors = await fetchAsset<Author[]>("data/authors.json");
+  log.info("getAuthors", { duration: performance.now() - start, count: authors.length });
+  return authors;
 }
 
 export async function getLastUpdated(): Promise<TimestampData> {
