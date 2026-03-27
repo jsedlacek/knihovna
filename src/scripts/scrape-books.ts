@@ -186,6 +186,7 @@ async function main() {
     const booksNeedingDetails = Array.from(booksMap.values()).filter((book) => {
       if (!matchesSelectiveCriteria(book)) return false;
       if (argv.force || argv.forceMlp) return true;
+      if (book.authorKey == null) return true;
       return !book.mlpScrapedAt || new Date(book.mlpScrapedAt) < oneMonthAgo;
     });
 
@@ -330,7 +331,7 @@ async function main() {
   // Collect unique authorKeys from processed books
   const authorKeys = new Set<number>();
   for (const book of processedBooks) {
-    if (book.authorKey !== null) {
+    if (book.authorKey != null) {
       authorKeys.add(book.authorKey);
     }
   }
