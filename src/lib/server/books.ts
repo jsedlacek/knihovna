@@ -18,9 +18,14 @@ export async function getBooks(): Promise<Book[]> {
 
 export async function getAuthors(): Promise<Author[]> {
   const start = performance.now();
-  const authors = await fetchAsset<Author[]>("data/authors.json");
-  log.info("getAuthors", { duration: performance.now() - start, count: authors.length });
-  return authors;
+  try {
+    const authors = await fetchAsset<Author[]>("data/authors.json");
+    log.info("getAuthors", { duration: performance.now() - start, count: authors.length });
+    return authors;
+  } catch {
+    log.info("getAuthors: authors.json not found, returning empty array");
+    return [];
+  }
 }
 
 export async function getLastUpdated(): Promise<TimestampData> {
