@@ -42,7 +42,7 @@ export function SearchPage({ query, books, lastUpdated }: SearchPageProps) {
               name="q"
               placeholder="Hledat knihy…"
               defaultValue={query}
-              autoFocus
+              autoFocus={query.length === 0}
               className="w-full pl-11 pr-4 py-3 rounded-full border border-border bg-muted text-base tracking-wide placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-border"
             />
           </form>
