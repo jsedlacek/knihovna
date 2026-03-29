@@ -60,4 +60,4 @@ Examples from this project:
 - `pages-homepage--default`
 - `pages-searchpage--default`
 
-To find available stories, look for `*.stories.tsx` files in `src/components/`.
+To list available stories, run `pnpm stories` or filter with `pnpm stories <keyword>`.
