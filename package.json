@@ -28,8 +28,8 @@
     "format:check": "oxfmt --check",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
-    "screenshot": "node scripts/screenshot.ts",
-    "stories": "node scripts/list-stories.ts"
+    "storybook:screenshot": "node scripts/screenshot.ts",
+    "storybook:stories": "node scripts/list-stories.ts"
   },
   "dependencies": {
     "@fontsource/libre-baskerville": "^5.2.10",

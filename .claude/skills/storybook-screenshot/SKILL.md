@@ -37,7 +37,7 @@ for i in $(seq 1 30); do curl -s -o /dev/null http://localhost:6006 && break || 
 3. **Take the screenshot** using the project's screenshot script:
 
 ```bash
-pnpm screenshot "<url>" /tmp/screenshot.png
+pnpm storybook:screenshot "<url>" /tmp/screenshot.png
 ```
 
 4. **Upload** the screenshot so the user can view it:
@@ -60,4 +60,4 @@ Examples from this project:
 - `pages-homepage--default`
 - `pages-searchpage--default`
 
-To list available stories, run `pnpm stories` or filter with `pnpm stories <keyword>`.
+To list available stories, run `pnpm storybook:stories` or filter with `pnpm storybook:stories <keyword>`.
