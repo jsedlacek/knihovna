@@ -2,7 +2,7 @@
 name: storybook-screenshot
 description: Take a screenshot of a Storybook story and display it for visual review.
 allowed-tools: Bash(*), Read
-argument-hint: "[story-id or url]"
+argument-hint: "[story-id]"
 ---
 
 # Storybook Screenshot
@@ -11,42 +11,24 @@ Take a screenshot of a Storybook story and display it.
 
 ## Usage
 
-- `/storybook-screenshot components-bookcardmini--default` — screenshot a story by ID
-- `/storybook-screenshot http://localhost:6006/iframe.html?id=...` — screenshot a full URL
+- `/storybook-screenshot components-bookcardmini--default`
+- `/storybook-screenshot pages-homepage--default`
 
 ## Steps
 
-1. **Ensure Storybook is running** on port 6006:
+1. **Take the screenshot** (starts Storybook automatically if not running):
 
 ```bash
-curl -s -o /dev/null http://localhost:6006 && echo "running" || echo "not running"
+pnpm storybook:screenshot "$ARGUMENTS" /tmp/screenshot.png
 ```
 
-If not running, start it and wait:
-
-```bash
-pnpm storybook --no-open &>/tmp/storybook.log &
-# Wait for it to be ready (up to 60s)
-for i in $(seq 1 30); do curl -s -o /dev/null http://localhost:6006 && break || sleep 2; done
-```
-
-2. **Build the URL** from the argument:
-   - If `$ARGUMENTS` starts with `http`, use it directly as the URL
-   - Otherwise, treat it as a story ID and build: `http://localhost:6006/iframe.html?id=$ARGUMENTS&viewMode=story`
-
-3. **Take the screenshot** using the project's screenshot script:
-
-```bash
-pnpm storybook:screenshot "<url>" /tmp/screenshot.png
-```
-
-4. **Upload** the screenshot so the user can view it:
+2. **Upload** the screenshot so the user can view it:
 
 ```bash
 curl -s -F "reqtype=fileupload" -F "fileToUpload=@/tmp/screenshot.png" https://catbox.moe/user/api.php
 ```
 
-5. **Share the link** with the user directly in the conversation, and **comment** on what you see in the screenshot. Also read the image with the Read tool for your own review.
+3. **Share the link** with the user directly in the conversation, and **comment** on what you see in the screenshot. Also read the image with the Read tool for your own review.
 
 ## Story ID Format
 
