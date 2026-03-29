@@ -78,7 +78,9 @@ export function SearchPage({ query, books, lastUpdated }: SearchPageProps) {
               </div>
             ))}
           </div>
-          {books.length > 0 && <p className="text-center text-muted-foreground pt-8 text-2xl">❧</p>}
+          {books.length > 0 && (
+            <p className="text-center text-muted-foreground pt-8 text-4xl opacity-40">❧</p>
+          )}
         </section>
       </main>
 

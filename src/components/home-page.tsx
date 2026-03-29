@@ -48,7 +48,7 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
               <span className="font-semibold">zdarma ke stažení</span>.
             </p>
           </div>
-          <p className="text-center text-muted-foreground text-2xl">❦</p>
+          <p className="text-center text-muted-foreground text-4xl opacity-40">❦</p>
         </section>
 
         {/* Genre sections */}
@@ -66,7 +66,7 @@ export function HomePage({ bookCount, genres, lastUpdated }: HomePageProps) {
             </p>
           </section>
         ) : (
-          <p className="text-center text-muted-foreground pt-8 text-2xl">❧</p>
+          <p className="text-center text-muted-foreground pt-8 text-4xl opacity-40">❧</p>
         )}
       </main>
 
