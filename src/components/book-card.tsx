@@ -45,7 +45,7 @@ export function BookCard({ book, index, hideActions }: BookCardProps) {
           <Link
             href={getAuthorDetailPath(getAuthorSlug(book.author))}
             external={false}
-            className="text-muted-foreground"
+            className="text-muted-foreground underline"
           >
             {formatAuthorName(book.author)}
           </Link>
