@@ -1,11 +1,7 @@
 import { DownloadIcon, FileTextIcon } from "lucide-react";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { formatAuthorName } from "#@/lib/shared/utils/text-utils.ts";
-import {
-  getAuthorDetailPath,
-  getAuthorSlug,
-  getBookDetailPath,
-} from "#@/lib/shared/utils/book-url-utils.ts";
+import { getBookDetailPath } from "#@/lib/shared/utils/book-url-utils.ts";
 import { BookRating } from "./book-rating.tsx";
 import { CoverImage } from "./ui/cover-image.tsx";
 import { Button } from "./ui/button.tsx";
@@ -41,11 +37,7 @@ export function BookCard({ book, index, hideActions }: BookCardProps) {
             {(book.partTitle || book.subtitle) && ` (${book.partTitle || book.subtitle})`}
           </Link>
         </h3>
-        <p className="text-sm text-muted-foreground mb-3">
-          <Link href={getAuthorDetailPath(getAuthorSlug(book.author))} external={false}>
-            {formatAuthorName(book.author)}
-          </Link>
-        </p>
+        <p className="text-sm text-muted-foreground mb-3">{formatAuthorName(book.author)}</p>
         <p
           className="text-base text-card-foreground mb-2 leading-relaxed line-clamp-3"
           title={book.description ?? undefined}
