@@ -1,0 +1,21 @@
+import{n as e}from"./chunk-BneVvdWh.js";import{a as t,i as n}from"./book-rating-BpKWbd1y.js";import{n as r,s as i}from"./sample-books-CKYmzDyB.js";import{r as a,t as o}from"./lucide-react-DDyM9MeV.js";import{t as s}from"./jsx-runtime-Bn1Ys6_W.js";import{n as c,t as l}from"./footer-DvsRYPqD.js";import{n as u,t as d}from"./header-B9V8j4fs.js";import{n as f,t as p}from"./book-card-ClscGa6D.js";var m=e((()=>{}));function h({query:e,books:t,lastUpdated:r}){let i=e.length>0&&e.length<2;return(0,g.jsxs)(`div`,{className:`min-h-screen flex flex-col bg-background text-foreground`,children:[(0,g.jsx)(d,{}),(0,g.jsx)(`main`,{className:`w-full max-w-4xl mx-auto p-4 sm:p-6 space-y-6`,children:(0,g.jsxs)(`section`,{className:`space-y-4`,children:[(0,g.jsx)(`h2`,{className:`text-2xl font-bold`,children:`Hledání`}),(0,g.jsxs)(`form`,{action:`/hledat`,method:`get`,className:`relative`,children:[(0,g.jsx)(a,{size:18,"aria-hidden":`true`,className:`absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none`}),(0,g.jsx)(`input`,{type:`search`,name:`q`,placeholder:`Hledat knihy…`,defaultValue:e,autoFocus:e.length===0,className:`w-full pl-11 pr-4 py-3 rounded-full border border-border bg-muted text-base tracking-wide placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-border`})]}),(0,g.jsxs)(`div`,{children:[(0,g.jsx)(`p`,{className:`text-base text-muted-foreground`,children:i?`Zadejte alespoň 2 znaky pro vyhledávání.`:e.length===0?`Zadejte hledaný výraz.`:t.length===0?`Pro „${e}" nebyly nalezeny žádné knihy.`:`Nalezeno ${n(t.length)} ${t.length===1?`kniha`:t.length<5?`knihy`:`knih`} pro „${e}"`}),e.length===0&&(0,g.jsxs)(`div`,{className:`mt-3 flex flex-wrap items-center gap-2`,children:[(0,g.jsx)(`span`,{className:`text-sm text-muted-foreground`,children:`Zkuste:`}),_.map(e=>(0,g.jsx)(`a`,{href:`/hledat?q=${encodeURIComponent(e.query)}`,className:`text-sm px-3 py-1 rounded-full border border-border bg-muted hover:bg-border transition-colors`,children:e.label},e.query))]})]}),(0,g.jsx)(`div`,{className:`space-y-12`,children:t.map((e,t)=>(0,g.jsx)(`div`,{children:(0,g.jsx)(p,{book:e,index:t,hideActions:!0})},e.titulKey))}),t.length>0&&(0,g.jsx)(`p`,{className:`text-center text-muted-foreground pt-8 text-4xl`,children:`❧`})]})}),(0,g.jsx)(l,{lastUpdated:r})]})}var g,_,v=e((()=>{o(),f(),c(),u(),m(),t(),g=s(),_=[{query:`Čapek`,label:`Čapek`},{query:`Sherlock`,label:`Sherlock`},{query:`Hrabal`,label:`Hrabal`},{query:`pohádky`,label:`pohádky`},{query:`Hugo`,label:`Hugo`},{query:`básně`,label:`básně`}],h.__docgenInfo={description:``,methods:[],displayName:`SearchPage`,props:{query:{required:!0,tsType:{name:`string`},description:``},books:{required:!0,tsType:{name:`Array`,elements:[{name:`Book`}],raw:`Book[]`},description:``},lastUpdated:{required:!1,tsType:{name:`string`},description:``}}}})),y,b,x,S,C,w;e((()=>{v(),r(),y={title:`Pages/SearchPage`,component:h,parameters:{layout:`fullscreen`},tags:[`autodocs`]},b={args:{query:`Čapek`,books:i.slice(0,3)}},x={args:{query:`neexistující kniha`,books:[]}},S={args:{query:`a`,books:[]}},C={args:{query:``,books:[]}},b.parameters={...b.parameters,docs:{...b.parameters?.docs,source:{originalSource:`{
+  args: {
+    query: "Čapek",
+    books: sampleBooks.slice(0, 3)
+  }
+}`,...b.parameters?.docs?.source}}},x.parameters={...x.parameters,docs:{...x.parameters?.docs,source:{originalSource:`{
+  args: {
+    query: "neexistující kniha",
+    books: []
+  }
+}`,...x.parameters?.docs?.source}}},S.parameters={...S.parameters,docs:{...S.parameters?.docs,source:{originalSource:`{
+  args: {
+    query: "a",
+    books: []
+  }
+}`,...S.parameters?.docs?.source}}},C.parameters={...C.parameters,docs:{...C.parameters?.docs,source:{originalSource:`{
+  args: {
+    query: "",
+    books: []
+  }
+}`,...C.parameters?.docs?.source}}},w=[`WithResults`,`NoResults`,`ShortQuery`,`EmptyQuery`]}))();export{C as EmptyQuery,x as NoResults,S as ShortQuery,b as WithResults,w as __namedExportsOrder,y as default};
