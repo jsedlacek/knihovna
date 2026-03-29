@@ -28,7 +28,7 @@
     "format:check": "oxfmt --check",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
-    "screenshot": "node --experimental-strip-types scripts/screenshot.ts"
+    "screenshot": "node scripts/screenshot.ts"
   },
   "dependencies": {
     "@fontsource/libre-baskerville": "^5.2.10",
