@@ -9,7 +9,7 @@ if (!url) {
 }
 
 const browser = await chromium.launch({
-  executablePath: "/usr/bin/google-chrome-stable",
+  executablePath: process.env.CHROME_PATH ?? "/usr/bin/google-chrome-stable",
   args: ["--no-sandbox", "--disable-gpu"],
 });
 
