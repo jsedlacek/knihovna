@@ -10,6 +10,14 @@ const config: StorybookConfig = {
     if (process.env.STORYBOOK_BASE) {
       config.base = process.env.STORYBOOK_BASE;
     }
+
+    // Disable image proxy so cover images load directly from their source URLs
+    // (the Cloudflare /cdn-cgi/image proxy is not available in Storybook)
+    config.define = {
+      ...config.define,
+      "import.meta.env.VITE_IMAGE_PROXY_ENABLED": JSON.stringify("false"),
+    };
+
     // Remove Cloudflare and TanStack plugins — they prevent iframe.html from
     // being emitted during the Vite build. Use flat(Infinity) because these
     // plugins are often returned as deeply nested arrays.
