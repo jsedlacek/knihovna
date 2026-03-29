@@ -66,7 +66,11 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
               <div>
                 <h2 className="text-2xl font-bold mb-1">{fullTitle}</h2>
                 <p className="text-lg text-muted-foreground">
-                  <Link href={getAuthorDetailPath(getAuthorSlug(book.author))} external={false}>
+                  <Link
+                    href={getAuthorDetailPath(getAuthorSlug(book.author))}
+                    external={false}
+                    className="text-muted-foreground"
+                  >
                     {authorName}
                   </Link>
                 </p>
