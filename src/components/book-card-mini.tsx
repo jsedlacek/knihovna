@@ -41,7 +41,7 @@ export function BookCardMini({ book }: BookCardMiniProps) {
       <Link
         href={getAuthorDetailPath(getAuthorSlug(book.author))}
         external={false}
-        className="text-sm text-muted-foreground leading-snug truncate block"
+        className="text-sm leading-snug truncate block"
         title={formatAuthorName(book.author)}
       >
         {formatAuthorName(book.author)}
