@@ -27,7 +27,8 @@
     "format": "oxfmt --write",
     "format:check": "oxfmt --check",
     "storybook": "storybook dev -p 6006",
-    "storybook:build": "storybook build"
+    "storybook:build": "storybook build",
+    "screenshot": "node --experimental-strip-types scripts/screenshot.ts"
   },
   "dependencies": {
     "@fontsource/libre-baskerville": "^5.2.10",
@@ -60,6 +61,7 @@
     "cheerio": "^1.2.0",
     "domhandler": "^6.0.1",
     "oxlint": "^1.57.0",
+    "puppeteer-core": "^24.40.0",
     "storybook": "^10.3.3",
     "tailwindcss": "^4.2.2",
     "vite": "^8.0.3",
