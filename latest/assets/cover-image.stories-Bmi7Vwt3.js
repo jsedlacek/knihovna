@@ -1,4 +1,4 @@
-import{n as e}from"./chunk-BneVvdWh.js";import{n as t,t as n}from"./cover-image-CsRhvVx9.js";var r,i,a,o;e((()=>{t(),r={title:`UI/CoverImage`,component:n,parameters:{layout:`centered`},tags:[`autodocs`]},i={args:{src:`https://covers.openlibrary.org/b/id/240726-M.jpg`,alt:`Sample book cover`}},a={args:{alt:`Book with placeholder cover`}},i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
+import{n as e}from"./chunk-BneVvdWh.js";import{n as t,t as n}from"./cover-image-CshAzHpN.js";var r,i,a,o;e((()=>{t(),r={title:`UI/CoverImage`,component:n,parameters:{layout:`centered`},tags:[`autodocs`]},i={args:{src:`https://covers.openlibrary.org/b/id/240726-M.jpg`,alt:`Sample book cover`}},a={args:{alt:`Book with placeholder cover`}},i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{
   args: {
     src: "https://covers.openlibrary.org/b/id/240726-M.jpg",
     alt: "Sample book cover"
