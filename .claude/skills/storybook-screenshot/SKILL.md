@@ -2,7 +2,7 @@
 name: storybook-screenshot
 description: Take a screenshot of a Storybook story and display it for visual review.
 allowed-tools: Bash(*), Read
-argument-hint: "[story-id or url]"
+argument-hint: "[story-id]"
 ---
 
 # Storybook Screenshot
@@ -11,8 +11,8 @@ Take a screenshot of a Storybook story and display it.
 
 ## Usage
 
-- `/storybook-screenshot components-bookcardmini--default` — screenshot a story by ID
-- `/storybook-screenshot http://localhost:6006/iframe.html?id=...` — screenshot a full URL
+- `/storybook-screenshot components-bookcardmini--default`
+- `/storybook-screenshot pages-homepage--default`
 
 ## Steps
 
