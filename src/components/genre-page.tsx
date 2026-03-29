@@ -91,9 +91,7 @@ export function GenrePage({
               </Button>
             </div>
           ) : (
-            books.length > 0 && (
-              <p className="text-center text-muted-foreground pt-8 text-4xl opacity-40">❧</p>
-            )
+            books.length > 0 && <p className="text-center text-muted-foreground pt-8 text-4xl">❧</p>
           )}
         </section>
       </main>

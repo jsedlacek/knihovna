@@ -127,7 +127,7 @@ export function BookDetailPage({ book, lastUpdated }: BookDetailPageProps) {
             </div>
           </div>
         </article>
-        <p className="text-center text-muted-foreground pt-8 text-4xl opacity-40">❧</p>
+        <p className="text-center text-muted-foreground pt-8 text-4xl">❧</p>
       </main>
 
       <Footer lastUpdated={lastUpdated} />
