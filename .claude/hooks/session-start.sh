@@ -28,7 +28,5 @@ pnpm install
 
 # Install Google Chrome for Storybook screenshots
 if ! which google-chrome-stable &>/dev/null; then
-  wget -q "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" -O /tmp/chrome.deb
-  apt-get install -y -f /tmp/chrome.deb
-  rm /tmp/chrome.deb
+  apt-get install -y -qq google-chrome-stable
 fi
