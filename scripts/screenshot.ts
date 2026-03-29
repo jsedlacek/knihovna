@@ -1,5 +1,6 @@
-import { execSync, spawn } from "node:child_process";
+import { execSync } from "node:child_process";
 import { chromium } from "playwright-core";
+import { ensureStorybook, STORYBOOK_BASE } from "./ensure-storybook.ts";
 
 const url = process.argv[2];
 const output = process.argv[3] ?? "/tmp/screenshot.png";
@@ -9,40 +10,11 @@ if (!url) {
   process.exit(1);
 }
 
-const STORYBOOK_PORT = 6006;
-const STORYBOOK_BASE = `http://localhost:${STORYBOOK_PORT}`;
-
 const resolvedUrl = url.startsWith("http")
   ? url
   : `${STORYBOOK_BASE}/iframe.html?id=${url}&viewMode=story`;
 
-async function ensureStorybook(): Promise<boolean> {
-  try {
-    await fetch(STORYBOOK_BASE);
-    return false;
-  } catch {
-    console.error("Starting Storybook...");
-    spawn("pnpm", ["storybook", "--no-open"], {
-      stdio: "ignore",
-      detached: true,
-    }).unref();
-
-    for (let i = 0; i < 30; i++) {
-      await new Promise((r) => setTimeout(r, 2000));
-      try {
-        await fetch(STORYBOOK_BASE);
-        return true;
-      } catch {}
-    }
-    console.error("Storybook failed to start");
-    process.exit(1);
-  }
-}
-
-const wasStarted = await ensureStorybook();
-if (wasStarted) {
-  console.error("Storybook started");
-}
+await ensureStorybook();
 
 const browser = await chromium.launch({
   executablePath: execSync(
