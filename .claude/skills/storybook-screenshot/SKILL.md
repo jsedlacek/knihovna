@@ -56,7 +56,7 @@ Examples from this project:
 
 - `components-bookcardmini--default`
 - `components-bookcard--default`
-- `components-bookdetailpage--default`
+- `pages-bookdetailpage--default`
 - `pages-homepage--default`
 - `pages-searchpage--default`
 
