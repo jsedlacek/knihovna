@@ -16,6 +16,7 @@ describe("Book Fixup Utils", () => {
     author: "Original Author",
     publisher: "Original Publisher",
     year: 2020,
+    createdAt: "2024-01-01T12:00:00Z",
     detailUrl: "https://search.mlp.cz/cz/titul/test-book/999999/",
     subtitle: "Original Subtitle",
     partTitle: null,

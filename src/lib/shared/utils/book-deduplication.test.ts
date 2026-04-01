@@ -10,6 +10,7 @@ function createTestBook(overrides: Partial<Book> = {}): Book {
   return {
     titulKey: 99999,
     title: "Test Book",
+    createdAt: "2024-01-01T12:00:00Z",
     partTitle: null,
     author: "Test Author",
     publisher: "Test Publisher",

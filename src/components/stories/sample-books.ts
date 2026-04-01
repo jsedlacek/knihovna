@@ -26,6 +26,7 @@ export const sampleBook: Book = {
   url: "https://goodreads.com/book/valka-s-mloky",
   mlpScrapedAt: SCRAPED_AT,
   goodreadsScrapedAt: SCRAPED_AT,
+  createdAt: SCRAPED_AT,
 };
 
 /** A diverse set of sample books across genres. */
@@ -53,6 +54,7 @@ export const sampleBooks: Book[] = [
     url: "https://goodreads.com/book/krakatit",
     mlpScrapedAt: SCRAPED_AT,
     goodreadsScrapedAt: SCRAPED_AT,
+    createdAt: SCRAPED_AT,
   },
   {
     titulKey: 1002,
@@ -77,6 +79,7 @@ export const sampleBooks: Book[] = [
     url: "https://goodreads.com/book/valka-s-mloky",
     mlpScrapedAt: SCRAPED_AT,
     goodreadsScrapedAt: SCRAPED_AT,
+    createdAt: SCRAPED_AT,
   },
   {
     titulKey: 1003,
@@ -101,6 +104,7 @@ export const sampleBooks: Book[] = [
     url: "https://goodreads.com/book/babicka",
     mlpScrapedAt: SCRAPED_AT,
     goodreadsScrapedAt: SCRAPED_AT,
+    createdAt: SCRAPED_AT,
   },
   {
     titulKey: 1004,
@@ -125,6 +129,7 @@ export const sampleBooks: Book[] = [
     url: "https://goodreads.com/book/svejk",
     mlpScrapedAt: SCRAPED_AT,
     goodreadsScrapedAt: SCRAPED_AT,
+    createdAt: SCRAPED_AT,
   },
   {
     titulKey: 1005,
@@ -149,6 +154,7 @@ export const sampleBooks: Book[] = [
     url: "https://goodreads.com/book/maly-princ",
     mlpScrapedAt: SCRAPED_AT,
     goodreadsScrapedAt: SCRAPED_AT,
+    createdAt: SCRAPED_AT,
   },
   {
     titulKey: 1006,
@@ -173,6 +179,7 @@ export const sampleBooks: Book[] = [
     url: "https://goodreads.com/book/kytice",
     mlpScrapedAt: SCRAPED_AT,
     goodreadsScrapedAt: SCRAPED_AT,
+    createdAt: SCRAPED_AT,
   },
   {
     titulKey: 1007,
@@ -197,6 +204,7 @@ export const sampleBooks: Book[] = [
     url: "https://goodreads.com/book/maj",
     mlpScrapedAt: SCRAPED_AT,
     goodreadsScrapedAt: SCRAPED_AT,
+    createdAt: SCRAPED_AT,
   },
   {
     titulKey: 1008,
@@ -221,6 +229,7 @@ export const sampleBooks: Book[] = [
     url: "https://goodreads.com/book/rur",
     mlpScrapedAt: SCRAPED_AT,
     goodreadsScrapedAt: SCRAPED_AT,
+    createdAt: SCRAPED_AT,
   },
 ];
 

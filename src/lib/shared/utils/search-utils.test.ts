@@ -7,6 +7,7 @@ import { searchBooks } from "./search-utils.ts";
 function makeBook(overrides: Partial<Book> & { title: string; author: string }): Book {
   return {
     titulKey: 1,
+    createdAt: "2024-01-01T12:00:00Z",
     detailUrl: "",
     publisher: null,
     year: null,
@@ -30,7 +31,12 @@ function makeBook(overrides: Partial<Book> & { title: string; author: string }):
 }
 
 const books: Book[] = [
-  makeBook({ titulKey: 1, title: "Válka s mloky", author: "Čapek, Karel" }),
+  makeBook({
+    titulKey: 1,
+    createdAt: "2024-01-01T12:00:00Z",
+    title: "Válka s mloky",
+    author: "Čapek, Karel",
+  }),
   makeBook({ titulKey: 2, title: "R.U.R.", author: "Čapek, Karel" }),
   makeBook({ titulKey: 3, title: "Babička", author: "Němcová, Božena" }),
   makeBook({ titulKey: 4, title: "Máj", author: "Mácha, Karel Hynek" }),

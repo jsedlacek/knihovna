@@ -103,6 +103,10 @@ async function main() {
 
   // Migrate existing books: use titulKey if present, otherwise extract from detailUrl
   for (const book of existingBooks) {
+    if (!book.createdAt) {
+      book.createdAt = new Date().toISOString();
+    }
+
     if (book.titulKey) {
       booksMap.set(book.titulKey, book);
     } else if (book.detailUrl) {
@@ -166,6 +170,7 @@ async function main() {
           url: null,
           mlpScrapedAt: null,
           goodreadsScrapedAt: null,
+          createdAt: new Date().toISOString(),
         });
         newBooksCount++;
       }

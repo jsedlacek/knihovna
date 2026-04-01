@@ -34,6 +34,7 @@ export interface GoodreadsData {
 export interface Book extends MlpBookListing, MlpBookDetails, GoodreadsData {
   mlpScrapedAt: string | null;
   goodreadsScrapedAt: string | null;
+  createdAt: string;
 }
 
 // A complete book object from the MLP source
