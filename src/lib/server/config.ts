@@ -25,3 +25,22 @@ export const OUTPUT_FILE = join(
   "data",
   "books.json",
 );
+
+export const RAW_AUTHORS_FILE = join(
+  import.meta.dirname,
+  "..",
+  "..",
+  "..",
+  "data",
+  "authors-raw.json",
+);
+
+export const AUTHORS_OUTPUT_FILE = join(
+  import.meta.dirname,
+  "..",
+  "..",
+  "..",
+  "public",
+  "data",
+  "authors.json",
+);

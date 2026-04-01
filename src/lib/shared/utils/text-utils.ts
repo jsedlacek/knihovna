@@ -64,15 +64,17 @@ export async function urlExists(url: string): Promise<boolean> {
  */
 export function getHighResImageUrl(lowResUrl: string): string | null {
   try {
-    // Handle the format: https://web2.mlp.cz/koweb/00/05/07/22/Small.17.jpg
+    // Handle book covers: https://web2.mlp.cz/koweb/00/05/07/22/Small.17.jpg
     // Convert to: https://web2.mlp.cz/koweb/00/05/07/22/17.jpg
+    // Also handle author photos: https://web2.mlp.cz/koweb/00/01/12/50/_OSOBY.Small.61.jpg
+    // Convert to: https://web2.mlp.cz/koweb/00/01/12/50/_OSOBY.61.jpg
     const smallMatch = lowResUrl.match(
-      /^(https:\/\/web2\.mlp\.cz\/koweb\/\d{2}\/\d{2}\/\d{2}\/\d{2}\/)Small\.(\d+)\.jpg$/,
+      /^(https:\/\/web2\.mlp\.cz\/koweb\/\d{2}\/\d{2}\/\d{2}\/\d{2}\/)(_OSOBY\.)?Small\.(\d+)\.jpg$/,
     );
 
     if (smallMatch) {
-      const [, basePath, imageNumber] = smallMatch;
-      return `${basePath}${imageNumber}.jpg`;
+      const [, basePath, prefix, imageNumber] = smallMatch;
+      return `${basePath}${prefix ?? ""}${imageNumber}.jpg`;
     }
 
     return null;

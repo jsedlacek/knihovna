@@ -21,6 +21,7 @@ function makeBook(overrides: Partial<Book> & { title: string; author: string }):
     epubUrl: null,
     genreId: null,
     genre: null,
+    authorKey: null,
     rating: null,
     ratingsCount: null,
     url: null,

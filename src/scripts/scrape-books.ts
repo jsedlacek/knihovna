@@ -4,19 +4,24 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import pMap from "p-map";
 import pRetry from "p-retry";
+import { fetchMlpAuthorDetails } from "#@/lib/server/scrapers/author-scraper.ts";
 import { scrapeGoodreads } from "#@/lib/server/scrapers/goodreads-scraper.ts";
 import { fetchMlpBookDetails, scrapeMlpListingPages } from "#@/lib/server/scrapers/mlp-scraper.ts";
 import { applyBookFixupsToArray } from "#@/lib/server/utils/book-fixup-utils.ts";
 import {
+  loadExistingAuthors,
   loadExistingBooks,
+  saveAuthors,
   saveBooks,
+  saveProcessedAuthors,
   saveProcessedBooks,
 } from "#@/lib/server/utils/file-utils.ts";
 import { configureLogging, createLogger } from "#@/lib/server/utils/logger.ts";
 import { saveScrapingTimestamp } from "#@/lib/server/utils/timestamp-utils.ts";
 import { CONCURRENCY } from "#@/lib/shared/config/scraper-config.ts";
 import { filterBlockedBooks } from "#@/lib/shared/config/book-block-list.ts";
-import type { Book } from "#@/lib/shared/types/book-types.ts";
+import type { Author, Book } from "#@/lib/shared/types/book-types.ts";
+import { getAuthorSlug } from "#@/lib/shared/utils/book-url-utils.ts";
 import { deduplicateBooks } from "#@/lib/shared/utils/book-deduplication.ts";
 import { sortBooksByScore } from "#@/lib/shared/utils/book-scoring.ts";
 
@@ -165,6 +170,7 @@ async function main() {
           epubUrl: null,
           genreId: null,
           genre: null,
+          authorKey: null,
           rating: null,
           ratingsCount: null,
           url: null,
@@ -185,6 +191,7 @@ async function main() {
     const booksNeedingDetails = Array.from(booksMap.values()).filter((book) => {
       if (!matchesSelectiveCriteria(book)) return false;
       if (argv.force || argv.forceMlp) return true;
+      if (book.authorKey == null) return true;
       return !book.mlpScrapedAt || new Date(book.mlpScrapedAt) < oneMonthAgo;
     });
 
@@ -322,6 +329,81 @@ async function main() {
   const processedBooks = sortBooksByScore(filteredBooks);
   await saveProcessedBooks(processedBooks);
   log.info("Pre-processed books", { raw: allBooks.length, processed: processedBooks.length });
+
+  // 7. Author Scraping Phase
+  log.info("Starting author scraping");
+
+  // Collect unique authorKeys from processed books
+  const authorKeys = new Set<number>();
+  for (const book of processedBooks) {
+    if (book.authorKey != null) {
+      authorKeys.add(book.authorKey);
+    }
+  }
+  log.info("Unique authors in processed books", { count: authorKeys.size });
+
+  // Load existing authors for incremental scraping
+  const existingAuthors = await loadExistingAuthors();
+  const authorsMap = new Map<number, Author & { authorKey: number; scrapedAt: string | null }>();
+  for (const author of existingAuthors as Array<
+    Author & { authorKey: number; scrapedAt: string | null }
+  >) {
+    authorsMap.set(author.authorKey, author);
+  }
+
+  // Determine which authors need scraping
+  const authorsToScrape = Array.from(authorKeys).filter((key) => {
+    if (argv.force) return true;
+    const existing = authorsMap.get(key);
+    if (!existing?.scrapedAt) return true;
+    return new Date(existing.scrapedAt) < oneMonthAgo;
+  });
+  log.info("Authors needing scraping", { count: authorsToScrape.length });
+
+  if (authorsToScrape.length > 0) {
+    let progress = 0;
+    await pMap(
+      authorsToScrape,
+      async (authorKey) => {
+        progress++;
+        log.info("Fetching author details", { progress, total: authorsToScrape.length, authorKey });
+        try {
+          const details = await pRetry(() => fetchMlpAuthorDetails(authorKey), {
+            retries: 10,
+            minTimeout: 1000,
+            maxTimeout: 30000,
+            onFailedAttempt: ({ attemptNumber, retriesLeft }) => {
+              log.warn("Retrying author fetch", { attempt: attemptNumber, retriesLeft, authorKey });
+            },
+          });
+
+          if (!details.name) return;
+
+          const slug = getAuthorSlug(details.name);
+          authorsMap.set(authorKey, {
+            ...details,
+            slug,
+            authorKey,
+            scrapedAt: new Date().toISOString(),
+          });
+        } catch (error) {
+          log.error("Failed author fetch after all retries", { authorKey, err: error });
+        }
+      },
+      { concurrency: CONCURRENCY, stopOnError: false },
+    );
+  }
+
+  // Save raw authors
+  const allAuthors = Array.from(authorsMap.values());
+  await saveAuthors(allAuthors);
+
+  // Save processed authors (only those with books in the processed list)
+  const processedAuthorsData: Author[] = allAuthors
+    .filter((a) => authorKeys.has(a.authorKey))
+    .map(({ authorKey: _authorKey, scrapedAt: _scrapedAt, ...author }) => author);
+  await saveProcessedAuthors(processedAuthorsData);
+  log.info("Authors scraped", { raw: allAuthors.length, processed: processedAuthorsData.length });
 
   // Save the timestamp of successful completion
   await saveScrapingTimestamp();

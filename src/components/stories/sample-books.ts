@@ -1,4 +1,4 @@
-import type { Book } from "#@/lib/shared/types/book-types.ts";
+import type { Author, Book } from "#@/lib/shared/types/book-types.ts";
 
 const SCRAPED_AT = "2024-01-15T10:30:00Z";
 
@@ -21,6 +21,7 @@ export const sampleBook: Book = {
   epubUrl: "https://example.com/valka-s-mloky.epub",
   genreId: "A1",
   genre: "beletrie",
+  authorKey: 1125061,
   rating: 4.5,
   ratingsCount: 987,
   url: "https://goodreads.com/book/valka-s-mloky",
@@ -49,6 +50,7 @@ export const sampleBooks: Book[] = [
     epubUrl: "https://example.com/krakatit.epub",
     genreId: "A1",
     genre: "beletrie",
+    authorKey: 1125061,
     rating: 4.6,
     ratingsCount: 1234,
     url: "https://goodreads.com/book/krakatit",
@@ -74,6 +76,7 @@ export const sampleBooks: Book[] = [
     epubUrl: "https://example.com/valka-s-mloky.epub",
     genreId: "A1",
     genre: "beletrie",
+    authorKey: 1125061,
     rating: 4.5,
     ratingsCount: 987,
     url: "https://goodreads.com/book/valka-s-mloky",
@@ -99,6 +102,7 @@ export const sampleBooks: Book[] = [
     epubUrl: "https://example.com/babicka.epub",
     genreId: "A1",
     genre: "beletrie",
+    authorKey: 1125062,
     rating: 4.3,
     ratingsCount: 2100,
     url: "https://goodreads.com/book/babicka",
@@ -124,6 +128,7 @@ export const sampleBooks: Book[] = [
     epubUrl: "https://example.com/svejk.epub",
     genreId: "A1",
     genre: "beletrie",
+    authorKey: 1125063,
     rating: 4.5,
     ratingsCount: 3210,
     url: "https://goodreads.com/book/svejk",
@@ -149,6 +154,7 @@ export const sampleBooks: Book[] = [
     epubUrl: "https://example.com/maly-princ.epub",
     genreId: "L1",
     genre: "deti",
+    authorKey: 1125064,
     rating: 4.7,
     ratingsCount: 5432,
     url: "https://goodreads.com/book/maly-princ",
@@ -174,6 +180,7 @@ export const sampleBooks: Book[] = [
     epubUrl: "https://example.com/kytice.epub",
     genreId: "B1",
     genre: "poezie",
+    authorKey: 1125065,
     rating: 4.2,
     ratingsCount: 1543,
     url: "https://goodreads.com/book/kytice",
@@ -199,6 +206,7 @@ export const sampleBooks: Book[] = [
     epubUrl: "https://example.com/maj.epub",
     genreId: "B1",
     genre: "poezie",
+    authorKey: 1125066,
     rating: 4.1,
     ratingsCount: 890,
     url: "https://goodreads.com/book/maj",
@@ -224,6 +232,7 @@ export const sampleBooks: Book[] = [
     epubUrl: "https://example.com/rur.epub",
     genreId: "C1",
     genre: "divadlo",
+    authorKey: 1125061,
     rating: 4.4,
     ratingsCount: 756,
     url: "https://goodreads.com/book/rur",
@@ -255,6 +264,40 @@ export function createGenresFromBooks(books: Book[]) {
     bookCount: genreBooks.length,
   }));
 }
+
+/** A sample author with all fields populated. */
+export const sampleAuthor: Author = {
+  name: "Čapek, Karel",
+  slug: "karel-capek",
+  description:
+    "Narozen 9. 1. 1890 v Malých Svatoňovicích u Trutnova, zemřel 25. 12. 1938 v Praze. PhDr., prozaik, žurnalista, dramatik, esejista, básník, autor knih pro děti, překladatel z francouzštiny.",
+  imageUrl: "https://covers.openlibrary.org/b/id/8225261-M.jpg",
+  imageWidth: 200,
+  imageHeight: 200,
+  born: "1890-1938",
+};
+
+/** A sample author without photo. */
+export const sampleAuthorNoPhoto: Author = {
+  name: "Němcová, Božena",
+  slug: "bozena-nemcova",
+  description: "Česká spisovatelka, zakladatelka novodobé české prózy.",
+  imageUrl: null,
+  imageWidth: null,
+  imageHeight: null,
+  born: "1820-1862",
+};
+
+/** A sample author with minimal data. */
+export const sampleAuthorMinimal: Author = {
+  name: "Hašek, Jaroslav",
+  slug: "jaroslav-hasek",
+  description: null,
+  imageUrl: null,
+  imageWidth: null,
+  imageHeight: null,
+  born: null,
+};
 
 export const mockTimestamp = {
   lastUpdated: "2024-12-15T10:30:00.000Z",

@@ -1,0 +1,53 @@
+{
+    "took": 1,
+    "timed_out": false,
+    "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 1,
+            "relation": "eq"
+        },
+        "max_score": 1.0,
+        "hits": [
+            {
+                "_index": "osoba-v3",
+                "_id": "1125061",
+                "_score": 1.0,
+                "_source": {
+                    "key": 1125061,
+                    "key_old": 0,
+                    "jmeno": "\u010capek, Karel",
+                    "char": "",
+                    "narozen": "1890-1938",
+                    "narozen_int": 1890,
+                    "pozn": "Narozen 9. 1. 1890 v Mal\u00fdch Svato\u0148ovic\u00edch u Trutnova, zem\u0159el 25. 12. 1938 v Praze. PhDr., prozaik, \u017eurnalista, dramatik, esejista, b\u00e1sn\u00edk, autor knih pro d\u011bti, p\u0159ekladatel z francouz\u0161tiny, liter\u00e1rn\u00ed, v\u00fdtvarn\u00fd a divadeln\u00ed kritik, estetik, filosof, filmov\u00fd libretista.",
+                    "pseudonym": {
+                        "key": 1125061,
+                        "jmeno": "\u010capeks, Karels"
+                    },
+                    "kan": 0,
+                    "obr": true,
+                    "obr_small": true,
+                    "indextime": "2026-03-01T02:20:50.869+01:00",
+                    "modified": "2021-02-25 21:00:16.6850",
+                    "marc_entita": "AUTJA",
+                    "tituly_pocet": {
+                        "dostupne_autor": 915,
+                        "nedostupne_autor": 222,
+                        "dostupne_o_kom": 442,
+                        "nedostupne_o_kom": 75
+                    },
+                    "zobrazit": true,
+                    "zobrazit_nedostupne": true,
+                    "has_autor_titul": true,
+                    "has_autor_titul_nedostupne": true
+                }
+            }
+        ]
+    }
+}

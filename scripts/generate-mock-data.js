@@ -11,6 +11,7 @@ import { dirname } from "node:path";
 
 const DATA_DIR = "public/data";
 const BOOKS_FILE = `${DATA_DIR}/books.json`;
+const AUTHORS_FILE = `${DATA_DIR}/authors.json`;
 const LAST_UPDATED_FILE = `${DATA_DIR}/last-updated.json`;
 
 async function ensureDirectoryExists(filePath) {
@@ -42,6 +43,7 @@ async function generateMockBooks() {
       epubUrl: "https://example.com/mock-book.epub",
       genreId: "A1",
       genre: "Mock Genre",
+      authorKey: 9999999,
 
       // GoodreadsData fields
       rating: 4.0,
@@ -57,6 +59,24 @@ async function generateMockBooks() {
   await ensureDirectoryExists(BOOKS_FILE);
   await writeFile(BOOKS_FILE, JSON.stringify(mockBooks, null, 2));
   console.log(`Created mock ${BOOKS_FILE}`);
+}
+
+async function generateMockAuthors() {
+  const mockAuthors = [
+    {
+      name: "Mock Author",
+      slug: "mock-author",
+      description: "Mock author for testing purposes.",
+      imageUrl: null,
+      imageWidth: null,
+      imageHeight: null,
+      born: null,
+    },
+  ];
+
+  await ensureDirectoryExists(AUTHORS_FILE);
+  await writeFile(AUTHORS_FILE, JSON.stringify(mockAuthors, null, 2));
+  console.log(`Created mock ${AUTHORS_FILE}`);
 }
 
 async function generateMockLastUpdated() {
@@ -84,6 +104,12 @@ async function main() {
     await generateMockBooks();
   } else {
     console.log(`${BOOKS_FILE} already exists, skipping mock generation`);
+  }
+
+  if (!existsSync(AUTHORS_FILE)) {
+    await generateMockAuthors();
+  } else {
+    console.log(`${AUTHORS_FILE} already exists, skipping mock generation`);
   }
 
   if (!existsSync(LAST_UPDATED_FILE)) {
