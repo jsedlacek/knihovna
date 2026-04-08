@@ -6,7 +6,7 @@ interface NoScriptPaginationProps {
 }
 
 function getPageHref(page: number): string {
-  return page === 1 ? "" : `?strana=${String(page)}`;
+  return page === 1 ? "." : `?strana=${String(page)}`;
 }
 
 export function NoScriptPageIndicator({ currentPage, totalPages }: NoScriptPaginationProps) {
