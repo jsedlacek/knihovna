@@ -24,11 +24,19 @@ export const getAuthorBooks = createServerFn({
 })
   .middleware([errorLogging])
   .inputValidator(
-    (d: { authorSlug: string; cursor?: number }): { authorSlug: string; cursor: number } => {
-      return { authorSlug: d.authorSlug, cursor: d.cursor ?? 0 };
+    (d: {
+      authorSlug: string;
+      cursor?: number;
+      limit?: number;
+    }): { authorSlug: string; cursor: number; limit: number } => {
+      return {
+        authorSlug: d.authorSlug,
+        cursor: d.cursor ?? 0,
+        limit: d.limit ?? PAGE_SIZE,
+      };
     },
   )
-  .handler(async ({ data: { authorSlug, cursor } }): Promise<AuthorBooksResult> => {
+  .handler(async ({ data: { authorSlug, cursor, limit } }): Promise<AuthorBooksResult> => {
     const totalStart = performance.now();
 
     const [authors, books] = await Promise.all([getAuthors(), getBooks()]);
@@ -45,15 +53,21 @@ export const getAuthorBooks = createServerFn({
       count: authorBooks.length,
     });
 
-    const page = authorBooks.slice(cursor, cursor + PAGE_SIZE);
-    const nextCursor = cursor + PAGE_SIZE < authorBooks.length ? cursor + PAGE_SIZE : null;
+    const page = authorBooks.slice(cursor, cursor + limit);
+    const nextCursor = cursor + limit < authorBooks.length ? cursor + limit : null;
 
     return { author, books: page, totalCount: authorBooks.length, nextCursor };
   });
 
 export const Route = createFileRoute("/autor/$authorSlug")({
-  loader: async ({ params }) => {
-    return getAuthorBooks({ data: { authorSlug: params.authorSlug, cursor: 0 } });
+  validateSearch: (search: Record<string, unknown>) => ({
+    strana: Math.max(1, Math.floor(Number(search["strana"]) || 1)),
+  }),
+  loaderDeps: ({ search }) => ({ strana: search["strana"] }),
+  loader: async ({ params, deps: { strana } }) => {
+    return getAuthorBooks({
+      data: { authorSlug: params.authorSlug, cursor: 0, limit: strana * PAGE_SIZE },
+    });
   },
   head: ({ loaderData }) => {
     if (!loaderData?.author) {
@@ -93,6 +107,7 @@ const rootRouteApi = getRouteApi("__root__");
 
 function AuthorComponent() {
   const { author, books, totalCount, nextCursor } = Route.useLoaderData();
+  const { strana } = Route.useSearch();
   const { lastUpdated } = rootRouteApi.useLoaderData();
 
   return (
@@ -102,6 +117,7 @@ function AuthorComponent() {
       totalCount={totalCount}
       initialNextCursor={nextCursor}
       lastUpdated={lastUpdated}
+      currentPage={strana}
       onLoadMore={async (slug, cursor) => {
         const result = await getAuthorBooks({ data: { authorSlug: slug, cursor } });
         return { books: result.books, nextCursor: result.nextCursor };

@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { BookGrid } from "#@/components/book-grid.tsx";
-import { Button } from "#@/components/ui/button.tsx";
+import { getButtonClasses } from "#@/components/ui/button.tsx";
 import { Footer } from "#@/components/ui/footer.tsx";
 import { Header } from "#@/components/ui/header.tsx";
 import type { Author, Book } from "#@/lib/shared/types/book-types.ts";
@@ -17,6 +17,7 @@ interface AuthorPageProps {
   totalCount: number;
   initialNextCursor: number | null;
   lastUpdated?: string;
+  currentPage?: number;
   onLoadMore?: (authorSlug: string, cursor: number) => Promise<AuthorLoadMoreResult>;
 }
 
@@ -26,11 +27,13 @@ export function AuthorPage({
   totalCount,
   initialNextCursor,
   lastUpdated,
+  currentPage = 1,
   onLoadMore,
 }: AuthorPageProps) {
   const [books, setBooks] = useState(initialBooks);
   const [nextCursor, setNextCursor] = useState(initialNextCursor);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(currentPage);
 
   const displayName = formatAuthorName(author.name);
 
@@ -41,6 +44,7 @@ export function AuthorPage({
       const result = await onLoadMore(author.slug, nextCursor);
       setBooks((prev) => [...prev, ...result.books]);
       setNextCursor(result.nextCursor);
+      setPage((p) => p + 1);
     } finally {
       setLoading(false);
     }
@@ -101,11 +105,21 @@ export function AuthorPage({
           )}
           {nextCursor !== null ? (
             <div className="flex justify-center pt-8">
-              <Button onClick={loadMore} disabled={loading}>
+              <a
+                href={`?strana=${String(page + 1)}`}
+                className={getButtonClasses(
+                  "primary",
+                  loading ? "opacity-50 pointer-events-none" : undefined,
+                )}
+                onClick={(e) => {
+                  e.preventDefault();
+                  loadMore();
+                }}
+              >
                 {loading
                   ? "Načítání…"
                   : `Načíst další (${formatNumberCzech(totalCount - books.length)} zbývá)`}
-              </Button>
+              </a>
             </div>
           ) : (
             books.length > 0 && <p className="text-center text-muted-foreground pt-8 text-4xl">❧</p>
