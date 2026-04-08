@@ -3,10 +3,7 @@ import { BookGrid } from "#@/components/book-grid.tsx";
 import { getButtonClasses } from "#@/components/ui/button.tsx";
 import { Footer } from "#@/components/ui/footer.tsx";
 import { Header } from "#@/components/ui/header.tsx";
-import {
-  NoScriptPageIndicator,
-  NoScriptPagination,
-} from "#@/components/ui/noscript-pagination.tsx";
+import { PageIndicator, PageNavigation } from "#@/components/ui/pagination.tsx";
 import type { Author, Book } from "#@/lib/shared/types/book-types.ts";
 import { formatAuthorName, formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 
@@ -100,7 +97,7 @@ export function AuthorPage({
             {formatNumberCzech(totalCount)}{" "}
             {totalCount === 1 ? "kniha" : totalCount < 5 ? "knihy" : "knih"}
           </p>
-          <NoScriptPageIndicator currentPage={currentPage} totalPages={totalPages} />
+          <PageIndicator currentPage={currentPage} totalPages={totalPages} />
         </section>
         <section className="space-y-4">
           {books.length > 0 ? (
@@ -110,7 +107,7 @@ export function AuthorPage({
               Žádné knihy tohoto autora nejsou momentálně k dispozici.
             </p>
           )}
-          <NoScriptPagination currentPage={currentPage} totalPages={totalPages} />
+          <PageNavigation currentPage={currentPage} totalPages={totalPages} />
           {nextCursor !== null && currentPage === 1 ? (
             <div className="flex justify-center pt-8">
               <a
