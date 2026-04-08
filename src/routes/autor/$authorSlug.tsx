@@ -102,6 +102,8 @@ function AuthorComponent() {
   const { strana } = Route.useSearch();
   const { lastUpdated } = rootRouteApi.useLoaderData();
 
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+
   return (
     <AuthorPage
       author={author}
@@ -110,6 +112,7 @@ function AuthorComponent() {
       initialNextCursor={nextCursor}
       lastUpdated={lastUpdated}
       currentPage={strana}
+      totalPages={totalPages}
       onLoadMore={async (slug, cursor) => {
         const result = await getAuthorBooks({ data: { authorSlug: slug, cursor } });
         return { books: result.books, nextCursor: result.nextCursor };

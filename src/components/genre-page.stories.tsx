@@ -44,6 +44,7 @@ export const WithLoadMore: Story = {
     totalCount: 30,
     initialNextCursor: 4,
     genreKey: "beletrie",
+    totalPages: 2,
     onLoadMore: mockLoadMore,
   },
 };

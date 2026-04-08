@@ -3,6 +3,7 @@ import { BookGrid } from "#@/components/book-grid.tsx";
 import { getButtonClasses } from "#@/components/ui/button.tsx";
 import { Footer } from "#@/components/ui/footer.tsx";
 import { Header } from "#@/components/ui/header.tsx";
+import { NoScriptPagination } from "#@/components/ui/noscript-pagination.tsx";
 import type { Author, Book } from "#@/lib/shared/types/book-types.ts";
 import { formatAuthorName, formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
 
@@ -18,6 +19,7 @@ interface AuthorPageProps {
   initialNextCursor: number | null;
   lastUpdated?: string;
   currentPage?: number;
+  totalPages?: number;
   onLoadMore?: (authorSlug: string, cursor: number) => Promise<AuthorLoadMoreResult>;
 }
 
@@ -28,6 +30,7 @@ export function AuthorPage({
   initialNextCursor,
   lastUpdated,
   currentPage = 1,
+  totalPages = 1,
   onLoadMore,
 }: AuthorPageProps) {
   const [books, setBooks] = useState(initialBooks);
@@ -103,18 +106,7 @@ export function AuthorPage({
               Žádné knihy tohoto autora nejsou momentálně k dispozici.
             </p>
           )}
-          {currentPage > 1 && (
-            <noscript>
-              <div className="flex justify-center pt-4">
-                <a
-                  href={currentPage === 2 ? "?" : `?strana=${String(currentPage - 1)}`}
-                  className={getButtonClasses("secondary")}
-                >
-                  ← Předchozí strana
-                </a>
-              </div>
-            </noscript>
-          )}
+          <NoScriptPagination currentPage={currentPage} totalPages={totalPages} />
           {nextCursor !== null ? (
             <div className="flex justify-center pt-8">
               <a
@@ -130,7 +122,7 @@ export function AuthorPage({
               >
                 {loading
                   ? "Načítání…"
-                  : `Načíst další (${formatNumberCzech(totalCount - books.length)} zbývá)`}
+                  : `Načíst další (${formatNumberCzech(totalCount - nextCursor)} zbývá)`}
               </a>
             </div>
           ) : (

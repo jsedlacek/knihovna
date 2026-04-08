@@ -120,6 +120,8 @@ function GenreComponent() {
     return null;
   }
 
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+
   return (
     <GenrePage
       initialBooks={books}
@@ -128,6 +130,7 @@ function GenreComponent() {
       genreKey={genre}
       lastUpdated={lastUpdated}
       currentPage={strana}
+      totalPages={totalPages}
       onLoadMore={async (g, cursor) => {
         return getGenreBooks({ data: { genre: g, cursor } });
       }}
