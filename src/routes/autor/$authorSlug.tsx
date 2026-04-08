@@ -52,13 +52,14 @@ export const getAuthorBooks = createServerFn({
   });
 
 export const Route = createFileRoute("/autor/$authorSlug")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    strana: Math.max(1, Math.floor(Number(search["strana"]) || 1)),
-  }),
+  validateSearch: (search: Record<string, unknown>) => {
+    const raw = Number(search["strana"]);
+    return { strana: raw >= 1 ? Math.floor(raw) : undefined };
+  },
   loaderDeps: ({ search }) => ({ strana: search["strana"] }),
   loader: async ({ params, deps: { strana } }) => {
     return getAuthorBooks({
-      data: { authorSlug: params.authorSlug, cursor: (strana - 1) * PAGE_SIZE },
+      data: { authorSlug: params.authorSlug, cursor: ((strana ?? 1) - 1) * PAGE_SIZE },
     });
   },
   head: ({ loaderData }) => {
@@ -111,7 +112,7 @@ function AuthorComponent() {
       totalCount={totalCount}
       initialNextCursor={nextCursor}
       lastUpdated={lastUpdated}
-      currentPage={strana}
+      currentPage={strana ?? 1}
       totalPages={totalPages}
       onLoadMore={async (slug, cursor) => {
         const result = await getAuthorBooks({ data: { authorSlug: slug, cursor } });

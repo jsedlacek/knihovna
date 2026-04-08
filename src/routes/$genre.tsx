@@ -61,9 +61,10 @@ export const getGenreBooks = createServerFn({
   });
 
 export const Route = createFileRoute("/$genre")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    strana: Math.max(1, Math.floor(Number(search["strana"]) || 1)),
-  }),
+  validateSearch: (search: Record<string, unknown>) => {
+    const raw = Number(search["strana"]);
+    return { strana: raw >= 1 ? Math.floor(raw) : undefined };
+  },
   loaderDeps: ({ search }) => ({ strana: search["strana"] }),
   loader: async ({ params, deps: { strana } }) => {
     if (!isValidGenre(params.genre)) {
@@ -71,7 +72,7 @@ export const Route = createFileRoute("/$genre")({
     }
 
     return getGenreBooks({
-      data: { genre: params.genre, cursor: (strana - 1) * PAGE_SIZE },
+      data: { genre: params.genre, cursor: ((strana ?? 1) - 1) * PAGE_SIZE },
     });
   },
   head: ({ params }) => {
@@ -129,7 +130,7 @@ function GenreComponent() {
       initialNextCursor={nextCursor}
       genreKey={genre}
       lastUpdated={lastUpdated}
-      currentPage={strana}
+      currentPage={strana ?? 1}
       totalPages={totalPages}
       onLoadMore={async (g, cursor) => {
         return getGenreBooks({ data: { genre: g, cursor } });
