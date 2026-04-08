@@ -3,7 +3,10 @@ import { BookGrid } from "#@/components/book-grid.tsx";
 import { getButtonClasses } from "#@/components/ui/button.tsx";
 import { Footer } from "#@/components/ui/footer.tsx";
 import { Header } from "#@/components/ui/header.tsx";
-import { NoScriptPagination } from "#@/components/ui/noscript-pagination.tsx";
+import {
+  NoScriptPageIndicator,
+  NoScriptPagination,
+} from "#@/components/ui/noscript-pagination.tsx";
 import type { Book } from "#@/lib/shared/types/book-types.ts";
 import { GENRE_GROUPS } from "#@/lib/shared/utils/genre-utils.ts";
 import { formatNumberCzech } from "#@/lib/shared/utils/text-utils.ts";
@@ -80,6 +83,7 @@ export function GenrePage({
               {totalCount === 1 ? "kniha" : totalCount < 5 ? "knihy" : "knih"})
             </p>
           </div>
+          <NoScriptPageIndicator currentPage={currentPage} totalPages={totalPages} />
         </section>
         <section className="space-y-4">
           {books.length > 0 ? (
