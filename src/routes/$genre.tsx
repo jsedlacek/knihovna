@@ -29,22 +29,14 @@ export const getGenreBooks = createServerFn({
 })
   .middleware([errorLogging])
   .inputValidator(
-    (d: {
-      genre: string;
-      cursor?: number;
-      limit?: number;
-    }): { genre: GenreGroup; cursor: number; limit: number } => {
+    (d: { genre: string; cursor?: number }): { genre: GenreGroup; cursor: number } => {
       if (!(d.genre in GENRE_GROUPS)) {
         throw new Error(`Invalid genre: ${d.genre}`);
       }
-      return {
-        genre: d.genre as GenreGroup,
-        cursor: d.cursor ?? 0,
-        limit: d.limit ?? PAGE_SIZE,
-      };
+      return { genre: d.genre as GenreGroup, cursor: d.cursor ?? 0 };
     },
   )
-  .handler(async ({ data: { genre, cursor, limit } }): Promise<GenreBooksResult> => {
+  .handler(async ({ data: { genre, cursor } }): Promise<GenreBooksResult> => {
     const totalStart = performance.now();
 
     const fetchStart = performance.now();
@@ -60,8 +52,8 @@ export const getGenreBooks = createServerFn({
       count: genreBooks.length,
     });
 
-    const page = genreBooks.slice(cursor, cursor + limit);
-    const nextCursor = cursor + limit < genreBooks.length ? cursor + limit : null;
+    const page = genreBooks.slice(cursor, cursor + PAGE_SIZE);
+    const nextCursor = cursor + PAGE_SIZE < genreBooks.length ? cursor + PAGE_SIZE : null;
 
     log.info("Genre handler", { step: "total", duration: performance.now() - totalStart });
 
@@ -79,7 +71,7 @@ export const Route = createFileRoute("/$genre")({
     }
 
     return getGenreBooks({
-      data: { genre: params.genre, cursor: 0, limit: strana * PAGE_SIZE },
+      data: { genre: params.genre, cursor: (strana - 1) * PAGE_SIZE },
     });
   },
   head: ({ params }) => {

@@ -86,6 +86,18 @@ export function GenrePage({
               V této kategorii nejsou momentálně k dispozici žádné knihy.
             </p>
           )}
+          {currentPage > 1 && (
+            <noscript>
+              <div className="flex justify-center pt-4">
+                <a
+                  href={currentPage === 2 ? "?" : `?strana=${String(currentPage - 1)}`}
+                  className={getButtonClasses("secondary")}
+                >
+                  ← Předchozí strana
+                </a>
+              </div>
+            </noscript>
+          )}
           {nextCursor !== null ? (
             <div className="flex justify-center pt-8">
               <a

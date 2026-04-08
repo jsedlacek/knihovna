@@ -24,19 +24,11 @@ export const getAuthorBooks = createServerFn({
 })
   .middleware([errorLogging])
   .inputValidator(
-    (d: {
-      authorSlug: string;
-      cursor?: number;
-      limit?: number;
-    }): { authorSlug: string; cursor: number; limit: number } => {
-      return {
-        authorSlug: d.authorSlug,
-        cursor: d.cursor ?? 0,
-        limit: d.limit ?? PAGE_SIZE,
-      };
+    (d: { authorSlug: string; cursor?: number }): { authorSlug: string; cursor: number } => {
+      return { authorSlug: d.authorSlug, cursor: d.cursor ?? 0 };
     },
   )
-  .handler(async ({ data: { authorSlug, cursor, limit } }): Promise<AuthorBooksResult> => {
+  .handler(async ({ data: { authorSlug, cursor } }): Promise<AuthorBooksResult> => {
     const totalStart = performance.now();
 
     const [authors, books] = await Promise.all([getAuthors(), getBooks()]);
@@ -53,8 +45,8 @@ export const getAuthorBooks = createServerFn({
       count: authorBooks.length,
     });
 
-    const page = authorBooks.slice(cursor, cursor + limit);
-    const nextCursor = cursor + limit < authorBooks.length ? cursor + limit : null;
+    const page = authorBooks.slice(cursor, cursor + PAGE_SIZE);
+    const nextCursor = cursor + PAGE_SIZE < authorBooks.length ? cursor + PAGE_SIZE : null;
 
     return { author, books: page, totalCount: authorBooks.length, nextCursor };
   });
@@ -66,7 +58,7 @@ export const Route = createFileRoute("/autor/$authorSlug")({
   loaderDeps: ({ search }) => ({ strana: search["strana"] }),
   loader: async ({ params, deps: { strana } }) => {
     return getAuthorBooks({
-      data: { authorSlug: params.authorSlug, cursor: 0, limit: strana * PAGE_SIZE },
+      data: { authorSlug: params.authorSlug, cursor: (strana - 1) * PAGE_SIZE },
     });
   },
   head: ({ loaderData }) => {
