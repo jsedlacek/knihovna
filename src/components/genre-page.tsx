@@ -94,7 +94,7 @@ export function GenrePage({
             </p>
           )}
           <NoScriptPagination currentPage={currentPage} totalPages={totalPages} />
-          {nextCursor !== null ? (
+          {nextCursor !== null && currentPage === 1 ? (
             <div className="flex justify-center pt-8">
               <a
                 href={`?strana=${String(page + 1)}`}
@@ -113,7 +113,10 @@ export function GenrePage({
               </a>
             </div>
           ) : (
-            books.length > 0 && <p className="text-center text-muted-foreground pt-8 text-4xl">❧</p>
+            books.length > 0 &&
+            currentPage === 1 && (
+              <p className="text-center text-muted-foreground pt-8 text-4xl">❧</p>
+            )
           )}
         </section>
       </main>
