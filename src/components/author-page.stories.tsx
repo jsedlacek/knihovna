@@ -44,6 +44,7 @@ export const WithLoadMore: Story = {
     initialBooks: sampleBooks.slice(0, 4),
     totalCount: 30,
     initialNextCursor: 4,
+    totalPages: 2,
     onLoadMore: mockLoadMore,
   },
 };
