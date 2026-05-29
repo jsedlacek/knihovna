@@ -61,12 +61,19 @@ export const getGenreBooks = createServerFn({
   });
 
 export const Route = createFileRoute("/$genre")({
-  loader: async ({ params }) => {
+  validateSearch: (search: Record<string, unknown>) => {
+    const raw = Number(search["strana"]);
+    return { strana: raw >= 1 ? Math.floor(raw) : undefined };
+  },
+  loaderDeps: ({ search }) => ({ strana: search["strana"] }),
+  loader: async ({ params, deps: { strana } }) => {
     if (!isValidGenre(params.genre)) {
       throw notFound();
     }
 
-    return getGenreBooks({ data: { genre: params.genre, cursor: 0 } });
+    return getGenreBooks({
+      data: { genre: params.genre, cursor: ((strana ?? 1) - 1) * PAGE_SIZE },
+    });
   },
   head: ({ params }) => {
     if (!isValidGenre(params.genre)) {
@@ -107,11 +114,14 @@ const rootRouteApi = getRouteApi("__root__");
 function GenreComponent() {
   const { books, totalCount, nextCursor } = Route.useLoaderData();
   const { genre } = Route.useParams();
+  const { strana } = Route.useSearch();
   const { lastUpdated } = rootRouteApi.useLoaderData();
 
   if (!isValidGenre(genre)) {
     return null;
   }
+
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   return (
     <GenrePage
@@ -120,6 +130,8 @@ function GenreComponent() {
       initialNextCursor={nextCursor}
       genreKey={genre}
       lastUpdated={lastUpdated}
+      currentPage={strana ?? 1}
+      totalPages={totalPages}
       onLoadMore={async (g, cursor) => {
         return getGenreBooks({ data: { genre: g, cursor } });
       }}
