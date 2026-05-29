@@ -5,10 +5,12 @@ import { cleanSearchTerm, getTitleWithArabicNumerals } from "#@/lib/shared/utils
 import { loadFixture } from "#@/test/utils/test-utils.ts";
 import {
   extractBookCandidates,
+  extractBookCandidatesFromAutocomplete,
   findBookLinkFromSearch,
   parseGoodreadsBookData,
   scoreBookCandidate,
   selectBestBookCandidate,
+  selectBestGoodreadsCandidate,
   validateRating,
 } from "./goodreads-scraper.ts";
 
@@ -198,6 +200,55 @@ describe("Goodreads Scraper HTML Parsing", () => {
       const candidates = extractBookCandidates($);
 
       assert.strictEqual(candidates.length, 0);
+    });
+  });
+
+  describe("extractBookCandidatesFromAutocomplete", () => {
+    test("should extract candidates with rating data from autocomplete JSON", () => {
+      const candidates = extractBookCandidatesFromAutocomplete([
+        {
+          bookUrl: "/book/show/428287.Krakatit",
+          bookTitleBare: "Krakatit",
+          avgRating: "3.68",
+          ratingsCount: 2160,
+          author: { name: "Karel Čapek" },
+        },
+      ]);
+
+      assert.strictEqual(candidates.length, 1);
+      assert.strictEqual(candidates[0]?.url, "/book/show/428287.Krakatit");
+      assert.strictEqual(candidates[0]?.title, "Krakatit");
+      assert.strictEqual(candidates[0]?.author, "Karel Čapek");
+      assert.strictEqual(candidates[0]?.rating, 3.68);
+      assert.strictEqual(candidates[0]?.ratingsCount, 2160);
+    });
+
+    test("should select the best autocomplete candidate using existing scoring", () => {
+      const candidates = extractBookCandidatesFromAutocomplete([
+        {
+          bookUrl: "/book/show/12889978-expresionist-spisovatel",
+          bookTitleBare: "Expresionistí Spisovatelé: Karel Čapek, Krakatit, Hordubalové",
+          avgRating: "4.00",
+          ratingsCount: 1,
+          author: { name: "Source Wikipedia" },
+        },
+        {
+          bookUrl: "/book/show/428287.Krakatit",
+          bookTitleBare: "Krakatit",
+          avgRating: "3.68",
+          ratingsCount: 2160,
+          author: { name: "Karel Čapek" },
+        },
+      ]);
+
+      const result = selectBestGoodreadsCandidate(candidates, {
+        title: "Krakatit",
+        author: "Karel Čapek",
+      });
+
+      assert.strictEqual(result?.url, "/book/show/428287.Krakatit");
+      assert.strictEqual(result?.rating, 3.68);
+      assert.strictEqual(result?.ratingsCount, 2160);
     });
   });
 

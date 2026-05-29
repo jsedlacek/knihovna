@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import { createUrl, fetchHtml } from "#@/lib/server/utils/fetch-utils.ts";
+import { createUrl, fetchHtml, fetchJson } from "#@/lib/server/utils/fetch-utils.ts";
 import { createLogger } from "#@/lib/server/utils/logger.ts";
 import { GOODREADS_BASE_URL, MAX_RATING, MIN_RATING } from "#@/lib/shared/config/scraper-config.ts";
 
@@ -22,6 +22,23 @@ interface BookCandidate {
   author: string;
   ratingsCount: number;
   score: number;
+}
+
+interface GoodreadsAutocompleteAuthor {
+  name?: string;
+}
+
+interface GoodreadsAutocompleteItem {
+  bookUrl?: string;
+  title?: string;
+  bookTitleBare?: string;
+  avgRating?: number | string;
+  ratingsCount?: number;
+  author?: GoodreadsAutocompleteAuthor;
+}
+
+interface GoodreadsCandidate extends BookCandidate {
+  rating: number | null;
 }
 
 /**
@@ -212,6 +229,43 @@ export function selectBestBookCandidate(
   return scoredCandidates[0]?.url || null;
 }
 
+function parseAutocompleteRating(value: number | string | undefined): number | null {
+  if (value === undefined) return null;
+
+  const rating = typeof value === "number" ? value : Number.parseFloat(value);
+  return Number.isNaN(rating) ? null : rating;
+}
+
+export function extractBookCandidatesFromAutocomplete(
+  items: GoodreadsAutocompleteItem[],
+): GoodreadsCandidate[] {
+  return items
+    .map((item) => ({
+      url: item.bookUrl ?? "",
+      title: item.bookTitleBare ?? item.title ?? "",
+      author: item.author?.name ?? "",
+      ratingsCount: item.ratingsCount ?? 0,
+      rating: parseAutocompleteRating(item.avgRating),
+      score: 0,
+    }))
+    .filter((candidate) => candidate.url && candidate.title);
+}
+
+export function selectBestGoodreadsCandidate(
+  candidates: GoodreadsCandidate[],
+  searchBook: { title: string; author: string },
+): GoodreadsCandidate | null {
+  if (candidates.length === 0) return null;
+
+  const scoredCandidates = candidates.map((candidate) => ({
+    ...candidate,
+    score: scoreBookCandidate(candidate, searchBook),
+  }));
+
+  scoredCandidates.sort((a, b) => b.score - a.score);
+  return scoredCandidates[0] ?? null;
+}
+
 /**
  * Find the best matching book link from Goodreads search results HTML using scoring.
  */
@@ -268,29 +322,48 @@ export async function scrapeGoodreads(book: {
 
   try {
     // --- Helper function to perform a search query ---
-    const performSearch = async (title: string): Promise<string | null> => {
+    const performSearch = async (title: string): Promise<GoodreadsCandidate | null> => {
       const cleanedTitle = cleanSearchTerm(title);
       const searchQuery = encodeURIComponent(`${cleanedTitle} ${authorForSearch}`);
-      const searchUrl = `${GOODREADS_BASE_URL}/search?q=${searchQuery}&search_type=books`;
       log.info("Searching Goodreads", { title: cleanedTitle, author: authorForSearch });
+      const autocompleteUrl = `${GOODREADS_BASE_URL}/book/auto_complete?format=json&q=${searchQuery}`;
+      const autocompleteItems = await fetchJson<GoodreadsAutocompleteItem[]>(autocompleteUrl);
+      const autocompleteCandidates = extractBookCandidatesFromAutocomplete(autocompleteItems);
+      const autocompleteMatch = selectBestGoodreadsCandidate(autocompleteCandidates, {
+        title,
+        author: book.author,
+      });
+      if (autocompleteMatch) return autocompleteMatch;
+
+      const searchUrl = `${GOODREADS_BASE_URL}/search?q=${searchQuery}&search_type=books`;
       const searchHtml = await fetchHtml(searchUrl);
-      return findBookLinkFromSearch(searchHtml, { title, author: book.author });
+      const url = findBookLinkFromSearch(searchHtml, { title, author: book.author });
+      if (!url) return null;
+
+      return {
+        url,
+        title,
+        author: book.author,
+        ratingsCount: 0,
+        rating: null,
+        score: 0,
+      };
     };
 
     // 1. Primary search attempt
-    let bookUrlPath = await performSearch(book.title);
+    let candidate = await performSearch(book.title);
 
     // 2. Fallback search attempt if the primary one fails
-    if (!bookUrlPath) {
+    if (!candidate) {
       const fallbackTitle = getTitleWithArabicNumerals(book.title);
       // Only attempt fallback if the title was actually changed
       if (fallbackTitle !== book.title) {
         log.info("Primary search failed, trying fallback title");
-        bookUrlPath = await performSearch(fallbackTitle);
+        candidate = await performSearch(fallbackTitle);
       }
     }
 
-    if (!bookUrlPath) {
+    if (!candidate) {
       log.warn("No book link found after all attempts", { title: book.title });
       return {
         rating: null,
@@ -299,9 +372,16 @@ export async function scrapeGoodreads(book: {
       };
     }
 
-    const bookUrl = createUrl(GOODREADS_BASE_URL, bookUrlPath);
-    const bookHtml = await fetchHtml(bookUrl);
-    const { rating, ratingsCount } = parseGoodreadsBookData(bookHtml);
+    const bookUrl = createUrl(GOODREADS_BASE_URL, candidate.url);
+    let rating = candidate.rating;
+    let ratingsCount: number | null = candidate.ratingsCount;
+
+    if (rating === null || ratingsCount === null) {
+      const bookHtml = await fetchHtml(bookUrl);
+      const parsed = parseGoodreadsBookData(bookHtml);
+      rating = rating ?? parsed.rating;
+      ratingsCount = ratingsCount ?? parsed.ratingsCount;
+    }
 
     // Validate the rating data
     const { isValid, validatedRating, validatedCount } = validateRating(rating, ratingsCount);
