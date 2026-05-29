@@ -1,6 +1,18 @@
 import { execSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import { chromium } from "playwright-core";
 import { ensureStorybook, STORYBOOK_BASE } from "./ensure-storybook.ts";
+
+function findChrome(): string {
+  const macPaths = [
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Chromium.app/Contents/MacOS/Chromium",
+  ];
+  for (const p of macPaths) if (existsSync(p)) return p;
+  return execSync("which google-chrome-stable || which chromium-browser || which chromium", {
+    encoding: "utf-8",
+  }).trim();
+}
 
 const url = process.argv[2];
 const output = process.argv[3] ?? "/tmp/screenshot.png";
@@ -17,12 +29,7 @@ const resolvedUrl = url.startsWith("http")
 await ensureStorybook();
 
 const browser = await chromium.launch({
-  executablePath: execSync(
-    "which google-chrome-stable || which chromium-browser || which chromium",
-    {
-      encoding: "utf-8",
-    },
-  ).trim(),
+  executablePath: findChrome(),
   args: ["--no-sandbox", "--disable-gpu"],
 });
 
