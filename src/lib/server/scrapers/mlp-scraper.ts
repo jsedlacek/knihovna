@@ -1,3 +1,4 @@
+import pRetry, { type Options as RetryOptions } from "p-retry";
 import { fetchJson } from "#@/lib/server/utils/fetch-utils.ts";
 import { createLogger } from "#@/lib/server/utils/logger.ts";
 import { getBestImageUrl, getImageDimensions } from "#@/lib/shared/utils/text-utils.ts";
@@ -12,6 +13,20 @@ import { createSlug } from "#@/lib/shared/utils/book-url-utils.ts";
 import { cleanAuthorName, cleanTitle } from "#@/lib/shared/utils/text-utils.ts";
 
 const log = createLogger("mlp-scraper");
+
+const MLP_LISTING_RETRY_OPTIONS = {
+  retries: 10,
+  minTimeout: 1000,
+  maxTimeout: 30000,
+  unref: true,
+  onFailedAttempt: ({ attemptNumber, retriesLeft, error }) => {
+    log.warn("Retrying MLP listing fetch", {
+      attempt: attemptNumber,
+      retriesLeft,
+      err: error,
+    });
+  },
+} satisfies RetryOptions;
 
 // --- Elasticsearch API response types ---
 
@@ -275,6 +290,13 @@ export async function fetchMlpBookDetails(titulKey: number): Promise<MlpBookDeta
   return details;
 }
 
+export async function fetchMlpSearchPage(
+  url: string,
+  retryOptions: RetryOptions = MLP_LISTING_RETRY_OPTIONS,
+): Promise<MlpApiSearchResponse> {
+  return await pRetry(() => fetchJson<MlpApiSearchResponse>(url), retryOptions);
+}
+
 /**
  * Scrape all free e-books from MLP using the search API.
  * Returns listing data for all books. Detail data (downloads, genre) must be
@@ -289,7 +311,7 @@ export async function scrapeMlpListingPages(): Promise<MlpBookListing[]> {
     const url = `${MLP_API_URL}titul/search?filter%5Bformat%5D%5Beq%5D=e-kniha&size=${MLP_PAGE_SIZE}&from=${from}`;
     log.info("Fetching MLP API page", { from });
 
-    const data = await fetchJson<MlpApiSearchResponse>(url);
+    const data = await fetchMlpSearchPage(url);
     const hits = data.hits.hits;
 
     if (hits.length === 0) break;
