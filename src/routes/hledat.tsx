@@ -14,7 +14,7 @@ const searchBooksServerFn = createServerFn({
   method: "GET",
 })
   .middleware([errorLogging])
-  .inputValidator((d: { q: string }): { q: string } => ({
+  .validator((d: { q: string }): { q: string } => ({
     q: typeof d.q === "string" ? d.q : "",
   }))
   .handler(async ({ data: { q } }): Promise<SearchResult> => {

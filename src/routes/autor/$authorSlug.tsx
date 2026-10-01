@@ -23,7 +23,7 @@ export const getAuthorBooks = createServerFn({
   method: "GET",
 })
   .middleware([errorLogging])
-  .inputValidator(
+  .validator(
     (d: { authorSlug: string; cursor?: number }): { authorSlug: string; cursor: number } => {
       return { authorSlug: d.authorSlug, cursor: d.cursor ?? 0 };
     },

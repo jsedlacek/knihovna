@@ -28,14 +28,12 @@ export const getGenreBooks = createServerFn({
   method: "GET",
 })
   .middleware([errorLogging])
-  .inputValidator(
-    (d: { genre: string; cursor?: number }): { genre: GenreGroup; cursor: number } => {
-      if (!(d.genre in GENRE_GROUPS)) {
-        throw new Error(`Invalid genre: ${d.genre}`);
-      }
-      return { genre: d.genre as GenreGroup, cursor: d.cursor ?? 0 };
-    },
-  )
+  .validator((d: { genre: string; cursor?: number }): { genre: GenreGroup; cursor: number } => {
+    if (!(d.genre in GENRE_GROUPS)) {
+      throw new Error(`Invalid genre: ${d.genre}`);
+    }
+    return { genre: d.genre as GenreGroup, cursor: d.cursor ?? 0 };
+  })
   .handler(async ({ data: { genre, cursor } }): Promise<GenreBooksResult> => {
     const totalStart = performance.now();
 

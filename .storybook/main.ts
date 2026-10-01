@@ -11,6 +11,27 @@ const config: StorybookConfig = {
       config.base = process.env.STORYBOOK_BASE;
     }
 
+    config.build = {
+      ...config.build,
+      // Storybook ships its preview runtime as one prebundled module (~810 kB
+      // minified), which Rolldown cannot split. Keep it separate and give only
+      // Storybook a matching budget; the app retains Vite's default 500 kB limit.
+      chunkSizeWarningLimit: 850,
+      rolldownOptions: {
+        ...config.build?.rolldownOptions,
+        output: {
+          codeSplitting: {
+            groups: [
+              {
+                name: "storybook-runtime",
+                test: /[\\/]storybook[\\/]dist[\\/]preview[\\/]runtime\.js$/,
+              },
+            ],
+          },
+        },
+      },
+    };
+
     // Disable image proxy so cover images load directly from their source URLs
     // (the Cloudflare /cdn-cgi/image proxy is not available in Storybook)
     config.define = {

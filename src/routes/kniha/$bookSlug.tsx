@@ -10,7 +10,7 @@ const getBookBySlug = createServerFn({
   method: "GET",
 })
   .middleware([errorLogging])
-  .inputValidator((d: string): number => {
+  .validator((d: string): number => {
     const titulKey = parseTitulKeyFromSlug(d);
     if (titulKey === null) {
       throw new Error(`Invalid book slug: ${d}`);
