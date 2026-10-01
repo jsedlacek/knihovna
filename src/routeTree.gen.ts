@@ -9,15 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as HledatRouteImport } from './routes/hledat'
-import { Route as GenreRouteImport } from './routes/$genre'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as KnihaBookSlugRouteImport } from './routes/kniha/$bookSlug'
+import { Route as GenreRouteImport } from './routes/$genre'
+import { Route as HledatRouteImport } from './routes/hledat'
 import { Route as AutorAuthorSlugRouteImport } from './routes/autor/$authorSlug'
+import { Route as KnihaBookSlugRouteImport } from './routes/kniha/$bookSlug'
 
-const HledatRoute = HledatRouteImport.update({
-  id: '/hledat',
-  path: '/hledat',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GenreRoute = GenreRouteImport.update({
@@ -25,19 +25,19 @@ const GenreRoute = GenreRouteImport.update({
   path: '/$genre',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const KnihaBookSlugRoute = KnihaBookSlugRouteImport.update({
-  id: '/kniha/$bookSlug',
-  path: '/kniha/$bookSlug',
+const HledatRoute = HledatRouteImport.update({
+  id: '/hledat',
+  path: '/hledat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AutorAuthorSlugRoute = AutorAuthorSlugRouteImport.update({
   id: '/autor/$authorSlug',
   path: '/autor/$authorSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KnihaBookSlugRoute = KnihaBookSlugRouteImport.update({
+  id: '/kniha/$bookSlug',
+  path: '/kniha/$bookSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -66,11 +66,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/$genre'
-    | '/hledat'
-    | '/autor/$authorSlug'
-    | '/kniha/$bookSlug'
+    '/' | '/$genre' | '/hledat' | '/autor/$authorSlug' | '/kniha/$bookSlug'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/$genre' | '/hledat' | '/autor/$authorSlug' | '/kniha/$bookSlug'
   id:
@@ -92,11 +88,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/hledat': {
-      id: '/hledat'
-      path: '/hledat'
-      fullPath: '/hledat'
-      preLoaderRoute: typeof HledatRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$genre': {
@@ -106,18 +102,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GenreRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/kniha/$bookSlug': {
-      id: '/kniha/$bookSlug'
-      path: '/kniha/$bookSlug'
-      fullPath: '/kniha/$bookSlug'
-      preLoaderRoute: typeof KnihaBookSlugRouteImport
+    '/hledat': {
+      id: '/hledat'
+      path: '/hledat'
+      fullPath: '/hledat'
+      preLoaderRoute: typeof HledatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/autor/$authorSlug': {
@@ -125,6 +114,13 @@ declare module '@tanstack/react-router' {
       path: '/autor/$authorSlug'
       fullPath: '/autor/$authorSlug'
       preLoaderRoute: typeof AutorAuthorSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kniha/$bookSlug': {
+      id: '/kniha/$bookSlug'
+      path: '/kniha/$bookSlug'
+      fullPath: '/kniha/$bookSlug'
+      preLoaderRoute: typeof KnihaBookSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
