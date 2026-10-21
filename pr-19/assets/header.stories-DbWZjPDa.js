@@ -1,1 +1,0 @@
-import{n as e}from"./rolldown-runtime-sJBDdmOt.js";import{n as t,t as n}from"./header-D9fmDy0X.js";var r,i,a;function o(){return(o=e((()=>{t(),r={title:`UI/Header`,component:n,parameters:{layout:`fullscreen`},tags:[`autodocs`]},i={},a=[`Default`]})))()}o();export{i as Default,a as __namedExportsOrder,r as default};

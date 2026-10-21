@@ -1,1 +1,0 @@
-import{n as e}from"./rolldown-runtime-sJBDdmOt.js";import{n as t,t as n}from"./link-70SqcVYq.js";var r,i,a;function o(){return(o=e((()=>{t(),r={title:`UI/Link`,component:n,parameters:{layout:`centered`},tags:[`autodocs`]},i={args:{children:`Karel Čapek – Krakatit`,href:`#`}},a=[`Default`]})))()}o();export{i as Default,a as __namedExportsOrder,r as default};
