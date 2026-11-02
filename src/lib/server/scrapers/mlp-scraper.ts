@@ -18,7 +18,6 @@ const MLP_LISTING_RETRY_OPTIONS = {
   retries: 10,
   minTimeout: 1000,
   maxTimeout: 30000,
-  unref: true,
   onFailedAttempt: ({ attemptNumber, retriesLeft, error }) => {
     log.warn("Retrying MLP listing fetch", {
       attempt: attemptNumber,
